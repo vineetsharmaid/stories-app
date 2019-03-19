@@ -1,6 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
@@ -53,7 +54,9 @@ import { FrontendLayoutComponent } from './layouts/frontend-layout/frontend-layo
 @NgModule({
   imports: [
     BrowserAnimationsModule,
+    BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     SocialLoginModule,
     ComponentsModule,
