@@ -1,38 +1,411 @@
-
-<div class="container-fluid">
-  <h1>Basic Grid Structure</h1>
-  <p>Resize the browser window to see the effect.</p>
-  <p>The first, second and third row will automatically stack on top of each other when the screen is less than 576px wide.</p>
-  
-  <div class="container-fluid">
-    <!-- Control the column width, and how they should appear on different devices -->
+<!-- Section 1 (Content Blocks) -->
+<div class="container-fluid content_block_wrap">
     <div class="row">
-      <div class="col-sm-6" style="background-color:yellow;">50%</div>
-      <div class="col-sm-6" style="background-color:orange;">50%</div>
+        <div class="col-md-4">
+            <a href="#">
+                <div class="content_box cb1">
+                    <h3>Workplace Stories</h3>
+                    <p>Travel somewhere new for 5 minutes every day</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#">
+                <div class="content_box cb2">
+                    <h3>Business Stories</h3>
+                    <p>Explore the world by country and spectacular place</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="#">
+                <div class="content_box cb3">
+                    <p>Join our community of readers today to <br> discover a world of inspiring stories</p>
+                    <span class="box_btn">SIGN UP</span>
+                </div>
+            </a>
+        </div>
     </div>
-    <br>
-    
-    <div class="row">
-      <div class="col-sm-4" style="background-color:yellow;">33.33%</div>
-      <div class="col-sm-4" style="background-color:orange;">33.33%</div>
-      <div class="col-sm-4" style="background-color:yellow;">33.33%</div>
-    </div>
-    <br>
-
-    <!-- Or let Bootstrap automatically handle the layout -->
-    <div class="row">
-      <div class="col-sm" style="background-color:yellow;">25%</div>
-      <div class="col-sm" style="background-color:orange;">25%</div>
-      <div class="col-sm" style="background-color:yellow;">25%</div>
-      <div class="col-sm" style="background-color:orange;">25%</div>
-    </div>
-    <br>
-    
-    <div class="row">
-      <div class="col" style="background-color:yellow;">25%</div>
-      <div class="col" style="background-color:orange;">25%</div>
-      <div class="col" style="background-color:yellow;">25%</div>
-      <div class="col" style="background-color:orange;">25%</div>
-    </div>
-  </div>
 </div>
+<!-- Section 1 (Content Blocks) -->
+
+
+<!-- Section 2 -->
+<div class="container-fluid section_2">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="big_img_wrap">
+                <div class="img_attribution">© <a href="#">Alegra Ally</a></div>
+                <a href="#"><img src="/assets/img/story.jpg" alt=""></a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="right_line">
+                    <div class="right_inner">
+                        <a href="#" class="right_ancor">
+                            <span class="diamond_text">
+                                <span class="diamond_content">Featured Story</span>
+                            </span>
+                            <h3>Women at the End of the Land</h3>
+                            <div class="inner_divider"></div>
+                            <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
+                        </a>
+
+                        <div class="inner_link_bottom">
+                            <a href="#">Alegra Ally</a> &amp; <a href="#">Kim Frank</a>
+                        </div>
+
+                        <div class="right_inner_footer">
+                            <div class="right_inner_footer_top">
+                                <a href="#" class="coubt">Russia</a>
+                                <a href="#" class="coubt2">Indigenous</a>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section 2 -->
+
+
+<!-- Section 3 (Featured Stories) -->
+<div class="container-fluid feature_story_title_wrap">
+    <div class="row1">
+        <div class="col-md-12">
+            <h2>Featured Stories</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid feature_story_wrap">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="#">
+                        <div class="story_box">
+                            <div class="sb_img_big_wrap">
+                                <div class="wp_big"></div>
+                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                                <div class="overlay_dark"></div>
+                                <div class="story_content_wrap">
+                                    <div class="st_content_top">
+                                        <div class="story_tag_wrap">
+                                            <a href="#" class="dark_tag">Russia</a>
+                                            <a href="#" class="light_tag">Indigenous</a>
+                                        </div>
+                                        <h3>New Destination Ahead</h3>
+                                    </div>
+                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetur ac. Consectetur adipiscing elit. Vivamus auctor condimentum sem et gravida. Maecenas id enim...</p>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="#">
+                        <div class="story_box">
+                            <div class="sb_img_small_wrap">
+                                <div class="wp_big st_small1"></div>
+                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                                <div class="overlay_dark"></div>
+                                <div class="story_content_wrap">
+                                    <div class="st_content_top">
+                                        <div class="story_tag_wrap">
+                                            <a href="#" class="dark_tag">Russia</a>
+                                            <a href="#" class="light_tag">Indigenous</a>
+                                        </div>
+                                        <h3>New Destination Ahead</h3>
+                                    </div>
+                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetu</p>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#">
+                        <div class="story_box top30">
+                            <div class="sb_img_small_wrap">
+                                <div class="wp_big st_small2"></div>
+                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                                <div class="overlay_dark"></div>
+                                <div class="story_content_wrap">
+                                    <div class="st_content_top">
+                                        <div class="story_tag_wrap">
+                                            <a href="#" class="dark_tag">Russia</a>
+                                            <a href="#" class="light_tag">Indigenous</a>
+                                        </div>
+                                        <h3>New Destination Ahead</h3>
+                                    </div>
+                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetu</p>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section 3 (Featured Stories) -->
+
+
+<!-- Section 4 (Stories) -->
+<div class="container-fluid feature_story_title_wrap stories_title">
+    <div class="row1">
+        <div class="col-md-12">
+            <h2>Stories</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid main_story_wrap">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/story_1.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st2.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st3.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st4.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st5.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st6.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st5.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st4.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="#">
+                        <div class="story_outer_wrap">
+                            <div class="main_story_img_wrap">
+                                <img src="/assets/img/st2.jpg" alt="">
+                                <div class="overlay_dark"></div>
+                                <div class="story_text_block">
+                                    <div class="story_tag_wrap">
+                                        <span class="dark_tag">Russia</span>
+                                        <!-- <span class="light_tag">Russia</span> -->
+                                    </div>
+                                    <h3>New Destination Ahead</h3>
+                                </div>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> FASCINATING</li>
+                                    <li class="bookmark fr"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section 4 (Stories) -->

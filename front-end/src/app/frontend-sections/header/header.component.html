@@ -1,15 +1,146 @@
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="#"><img src="/assets/img/logo.png" alt=""></a>
+    <!-- Logo -->
+
+    <!-- Header Navigation -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav">
+      <li class="nav-item active"><a class="nav-link" href="#">Home Page</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          About Us
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Origins/Our Story</a>
+          <a class="dropdown-item" href="#">Our Purpose & Gamification</a>
+          <a class="dropdown-item" href="#">Our Founding Team</a>
+        </div>
+      </li>
+      <li class="nav-item nik_logo"><a class="nav-link" href="#"><img src="/assets/img/custom_logo.png" alt=""></a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Individual Story</a></li>
+      <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+    </ul>
+    </div>
+    <!-- Header Navigation -->
+
+    <!-- Header right section for Search and Login -->
+    <div class="header_right_wrap">
+      <a href="#" class="search_wrap"><img src="/assets/img/search.png" alt=""></a>
+      <div class="header_login_wrap">
+          <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true">Join</a> | <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false">Login</a>
+      </div>
+    </div>
+    <!-- Header right section for Search and Login -->
+
+</nav>
+<!-- Header -->
+
+
+<!-- Popup for login -->
+<div class="modal fade header_popup" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+</button>
+  <span class="top-right-nav" (click)="showHideLogin = !showHideLogin" [hidden]="showHideLogin">
+    Not yet a member?  
+    <a>Sign up</a>
+  </span>
+
+  <span class="top-right-nav" (click)="showHideLogin = !showHideLogin" [hidden]="!showHideLogin">
+    Already a member?
+    <a>Login</a>
+  </span>
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body" [hidden]="showHideLogin">
+        <h3 class="modal-title">Welcome back</h3>
+        <div class="login_social_wrap">
+            <a href="#" class="login_facebook"> <img src="images/fb.png" alt=""> Login with Facebook</a>
+            <a href="#" class="login_twt"> <img src="images/twt.png" alt=""> Login with Google</a>
+            <p class="login_divider">OR</p>
+        </div>
+        <form class="login_form">
+            <input type="email" name="" placeholder="Email">
+            <input type="password" name="" placeholder="Password">
+            <input type="submit" name="" value="LOGIN">
+        </form>
+        <a href="#" class="forgt_pass">Forgotten your password?</a>
+      </div>
+
+      <div class="modal-body" [hidden]="!showHideLogin">
+        <h3 class="modal-title">Welcome, sign up to join</h3>
+        <div class="login_social_wrap" [hidden]="showHideSignupForm">
+            <a href="#" class="login_facebook"> <img src="images/fb.png" alt=""> Continue with Facebook</a>
+            <a href="#" class="login_twt"> <img src="images/twt.png" alt=""> Continue with Google</a>
+        </div>
+        
+        <span [hidden]="showHideSignupForm">
+          Or just <a (click)="showHideSignupForm = !showHideSignupForm" class="forgt_pass">use your email</a>
+        </span>
+
+          <div class="login_social_wrap" [hidden]="!showHideSignupForm">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login_form">
+              <div class="form-group">
+                  <!-- <label for="firstName">First Name</label> -->
+                  <input type="text" formControlName="firstName" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" placeholder="First name" />
+                  <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                      <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <!-- <label for="lastName">Last Name</label> -->
+                  <input type="text" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" placeholder="Last name" />
+                  <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                      <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <!-- <label for="username">Username</label> -->
+                  <input type="text" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" />
+                  <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                      <div *ngIf="f.username.errors.required">Username is required</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <!-- <label for="email">Email</label> -->
+                  <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Email" />
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                      <div *ngIf="f.email.errors.required">Email is required</div>
+                      <div *ngIf="f.email.errors.email">Email must be valid</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <button [disabled]="loading" class="btn btn-primary btn-map">Register</button>
+                  <a class="btn btn-link" (click)="showHideSignupForm = !showHideSignupForm">Cancel</a>
+              </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- Popup for login -->
+
 <!-- <nav class="navbar navbar-expand-lg navbar-transparent  navbar-absolute fixed-top">
     <div class="container-fluid">
         Header
     </div>
-</nav> -->
+</nav> 
 
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-  <!-- Brand/logo -->
+  
   <a class="navbar-brand" href="#">Logo</a>
   
-  <!-- Links -->
+  
   <ul class="navbar-nav">
     <li class="nav-item">
       <a class="nav-link" href="#">Link 1</a>
@@ -65,17 +196,18 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                <div *ngIf="f.password.errors.required">Password is required</div>
-                <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            <label for="email">Email</label>
+            <input type="email" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                <div *ngIf="f.email.errors.required">Email is required</div>
+                <div *ngIf="f.email.errors.email">Email must be valid</div>
             </div>
         </div>
         <div class="form-group">
             <button [disabled]="loading" class="btn btn-primary">Register</button>
-            <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
+            <a class="btn btn-link">Cancel</a>
         </div>
     </form>        
   </div>
 </div>
+-->

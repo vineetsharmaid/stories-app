@@ -1,0 +1,39 @@
+/*Header style*/
+.navbar{padding: 15px 50px 10px 50px}
+ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding-left: 62px}
+.dropdown{position: static;}
+.navbar-expand-lg .navbar-nav .dropdown-menu{width: 100%; text-align: center; margin-top: -15px; border: none;}
+.navbar-brand{padding: 0; margin: 0; width: 200px}
+.nav-link {display: inline-block;padding:20px 20px 50px 20px !important;font-size: 13px;text-transform: uppercase; letter-spacing: 3px; transition: all .4s;}
+.nik_logo .nav-link{padding:0 20px !important; margin-top: -25px}
+.nav-link:hover{font-weight: 600}
+.navbar-brand img {max-width: 250px; width: auto;}
+.header_login_wrap{margin-left: 30px}
+.header_login_wrap a{color: #000; font-size: 13px; padding: 0 4px}
+.header_right_wrap {width: 200px;text-align: right;display: flex; justify-content: flex-end; align-items: center;}
+/*Header style*/
+
+
+/*Popup Style*/
+.header_popup{background: rgba(21,24,27,.96);}
+.modal-dialog {position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%) !important;width: 100%; margin: 0; max-width: 400px}
+.modal-content{background-color: transparent; color: #fff; text-align: center; border: none !important;}
+.modal-content h3.modal-title{ margin-bottom: 30px }
+.login_social_wrap a{display: inline-block; width: 100%; text-align: center; text-transform: uppercase;letter-spacing: 2px; margin-bottom: 15px; font-size: 13px; padding: 14px; color: #fff; font-weight: 700; transition: all .5s;}
+.login_facebook{background-color: #3b589a;}
+.login_facebook:hover{background-color: #4160a9;}
+.login_twt{background-color: #00aae5;}
+.login_twt:hover{background-color: #00b2ef;}
+.login_social_wrap a img{margin-right: 15px}
+.login_divider{margin-bottom: 20px; color: #a1a1a1}
+.login_form{}
+.login_form input[type="email"], .login_form input[type="text"], .login_form input[type="password"]{width: 100%; display: inline-block;height: 50px; color: #fff; margin-bottom: 20px; padding: 0 10px; background-color: transparent; border: none; border-bottom: 1px solid #fff;}
+.login_form input[type="submit"]{display: inline-block;border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 40px}
+.forgt_pass{color: #fff; font-weight: bold;font-size: 15px; text-align: center; margin-top: 80px; display: inline-block;}
+.forgt_pass:hover, .forgt_pass:focus{color: #fff;}
+.close{position: fixed;right: 30px; top: 20px; color: #fff !important; z-index: 9999; font-size: 34px; font-weight: 100}
+/*Popup Style*/
+
+.top-right-nav { position: fixed; color: #c7c0c0; right: 70px; top: 28px; }
+.top-right-nav a { font-weight: bold; font-size: 15px; text-align: center;  display: inline-block; }
+.btn-map { display: inline-block; border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 40px; }

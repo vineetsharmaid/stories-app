@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http'; 
 import { RouterModule } from '@angular/router';
+
 
 /************Social Media Login Starts****************/
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
@@ -29,6 +31,21 @@ export function provideConfig() {
   return config;
 }
 /*************Social Media Login Ends***************/
+
+
+
+
+
+/*************Default Params Starts***************/
+
+ 
+export function DefaultParams() {
+  
+  var params = {'apiBaseUrl': 'http://localhost/stories-app/api/welcome/'};
+  return params;
+}
+
+/*************Default Params Ends***************/
 
 
 import { AppRoutingModule } from './app.routing';
@@ -58,6 +75,7 @@ import { FrontendLayoutComponent } from './layouts/frontend-layout/frontend-layo
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    HttpClientModule,
     SocialLoginModule,
     ComponentsModule,
     FrontendSectionsModule,

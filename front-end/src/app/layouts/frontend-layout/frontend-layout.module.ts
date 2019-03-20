@@ -5,28 +5,33 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
 import { HomeComponent } from '../../frontend/home/home.component';
 
-import {
-  MatButtonModule,
-  MatInputModule,
-  MatRippleModule,
-  MatFormFieldModule,
-  MatTooltipModule,
-  MatSelectModule
-} from '@angular/material';
+import { UserService } from "../../frontend/services/user.service";
+
+// import {
+//   MatButtonModule,
+//   MatInputModule,
+//   MatRippleModule,
+//   MatFormFieldModule,
+//   MatTooltipModule,
+//   MatSelectModule
+// } from '@angular/material';
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(FrontendLayoutRoutes),
     FormsModule,
-    MatButtonModule,
-    MatRippleModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatTooltipModule,
+    // MatButtonModule,
+    // MatRippleModule,
+    // MatFormFieldModule,
+    // MatInputModule,
+    // MatSelectModule,
+    // MatTooltipModule,
   ],
   declarations: [
     HomeComponent,
+  ],
+  providers: [
+    UserService,
   ]
 })
 

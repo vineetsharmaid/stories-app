@@ -1,0 +1,16 @@
+/*Footer style*/
+footer.footer{background: #000; padding: 100px 0}
+.subscribe_wrap{text-align: center;}
+.subscribe_wrap h3{color: rgba(254, 254, 254, .5);}
+.subscribe_wrap form{display: flex; width: 100%; margin-top: 40px; justify-content: center;}
+.subscribe_wrap form input{height: 60px; margin: 4px; border: 1px solid rgba(254, 254, 254, .2); background: transparent; padding: 0 15px; font-size: 16px; font-weight: bold; color: #fff}
+.subscribe_wrap form input[type="text"]{width: 170px}
+.subscribe_wrap form input[type="submit"]{border-color: #f1663b; background: #f1663b; text-transform: uppercase; letter-spacing: 2px; transition: all .5s;}
+.subscribe_wrap form input[type="submit"]:hover, .subscribe_wrap form input[type="submit"]:focus{border-color: #333; background: #333;}
+.subscribe_wrap form input:focus{outline: none;}
+.footer_link_wrap{display: flex; margin-top: 70px; width: 100%}
+.footer_link_wrap h4{color: rgba(254, 254, 254, .4); text-transform: uppercase; letter-spacing: 2px; font-size: 20px; margin-bottom: 10px; font-weight: bold;}
+.footer_link_wrap ul li{display: block; list-style: none; margin: 8px 0}
+.footer_link_wrap ul li a{color: rgba(254, 254, 254, .2); font-size: 16px; transition: all .5s;}
+.footer_link_wrap ul li a:hover{color: rgba(254, 254, 254, .4);}
+/*Footer style*/
