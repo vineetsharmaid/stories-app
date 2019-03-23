@@ -164,4 +164,48 @@ class Api extends REST_Controller {
 
     }
 
+    public function login_post() {
+
+        // convert json post data to array
+        $post_data = json_decode(file_get_contents("php://input"));
+
+        $user_data = array(
+            'username'    => $post_data->username,
+            'password'    => $post_data->password,
+        );
+        
+        // get user 
+        $user = $this->common_model->get_entry('users', array('username'    => $post_data->username));
+
+        if ( count($user) > 0 ) {
+            
+            // verify $password
+            if (password_verify($post_data->password, $user[0]->password)) {
+
+                $message = [
+                    'message' => 'Logged In',
+                    'data'   => array('user_type' => $user[0]->user_type),
+                    'status' => 200
+                ];
+            } else {
+                
+                $message = [
+                    'message' => 'Wrong password',
+                    'error'   => array('Incorrect username or password.'),
+                    'status' => 201
+                ];
+            }
+        } else {
+
+            $message = [
+                'message' => 'Username not found.',
+                'error'   => array('Incorrect username or password.'),
+                'status' => 201
+            ];
+        }
+
+        // Set the response and exit
+        $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
 }
