@@ -9,7 +9,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
-      <li class="nav-item active"><a class="nav-link" href="#">Home Page</a></li>
+      <li class="nav-item active"><a class="nav-link" (click)="navigate()">Home Page</a></li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           About Us
@@ -29,6 +29,7 @@
   <!-- Header right section for Search and Login -->
   <div class="header_right_wrap">
     <a href="#" class="search_wrap"><img src="/assets/img/search.png" alt=""></a>
+
     <div class="header_login_wrap" *ngIf="!loggedIn">
       
       <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true">Join</a> | <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false">Login</a>
@@ -39,17 +40,17 @@
   </div>
   <!-- Header right section for Search and Login -->
 </nav>
-<!-- Header -->
+<!-- Header --> 
 <!-- Popup for login -->
 <div class="modal fade header_popup" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeLoginModal>
   <span aria-hidden="true">&times;</span>
   </button>
   <span class="top-right-nav" (click)="showHideLogin = !showHideLogin" [hidden]="showHideLogin">
     Not yet a member?
     <a>Sign up</a>
   </span>
-  <span class="top-right-nav" (click)="showHideLogin = !showHideLogin" [hidden]="!showHideLogin">
+  <span class="top-right-nav" (click)="showHideLogin = !showHideLogin" [hidden]="!showHideLogin" #showHideLoginBtn>
     Already a member?
     <a>Login</a>
   </span>
@@ -58,22 +59,47 @@
       <div class="modal-body" [hidden]="showHideLogin">
         <h3 class="modal-title">Welcome back</h3>
         <div class="login_social_wrap">
-          <a class="login_facebook" (click)="signInWithFB()"> <img src="/assets/img/fb.png" alt=""> Login with Facebook</a>
-          <a href="#" class="login_twt"> <img src="/assets/img/twt.png" alt=""> Login with Google</a>
+          <a class="login_facebook alink" (click)="signInWithFB()"> <img src="/assets/img/fb.png" alt=""> Login with Facebook</a>
+          <a class="login_twt alink" #googleLoginBtn> <img src="/assets/img/twt.png" alt=""> Login with Google</a>
           <p class="login_divider">OR</p>
         </div>
-        <form class="login_form">
-          <input type="email" name="" placeholder="Email">
-          <input type="password" name="" placeholder="Password">
-          <input type="submit" name="" value="LOGIN">
+        <div class="emailExists mb-2" *ngIf="accountAlreadyExists">
+          An account for the specified email address already exists. Please login.
+        </div>
+
+        <div *ngFor="let error of loginErrors" class="col-sm-12 mb-2">
+          <p class="error">{{error}}</p>
+        </div>          
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()"  class="login_form">
+          
+          <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': loginSubmitted && lf.email.errors }" placeholder="Email" />
+          <div *ngIf="loginSubmitted && lf.email.errors" class="invalid-feedback">
+            <div *ngIf="lf.email.errors.required">Email is required</div>
+            <div *ngIf="lf.email.errors.email">Email must be valid</div>
+          </div>  
+          
+          <input type="password" formControlName="password" [ngClass]="{ 'is-invalid': loginSubmitted && lf.password.errors }" placeholder="Password" />
+          <div *ngIf="loginSubmitted && lf.password.errors" class="invalid-feedback">
+            <div *ngIf="lf.password.errors.required">Password is required</div>
+          </div>
+
+          <button type="submit" class="btn-map">
+            Login
+            <span *ngIf="loginLoading">
+              <i class='fa fa-circle-o-notch fa-spin'></i>
+            </span>
+          </button>
+          
         </form>
         <a href="#" class="forgt_pass">Forgotten your password?</a>
+        <a href="#" class="forgt_pass mt-2" *ngIf="accountAlreadyExists">Sign up with another email address.</a>
       </div>
       <div class="modal-body" [hidden]="!showHideLogin">
         <h3 class="modal-title">Welcome, sign up to join</h3>
         <div class="login_social_wrap" [hidden]="showHideSignupForm">
-          <a href="#" class="login_facebook"> <img src="/assets/img/fb.png" alt=""> Continue with Facebook</a>
-          <a href="#" class="login_twt"> <img src="/assets/img/twt.png" alt=""> Continue with Google</a>
+          <a (click)="signInWithFB()" class="login_facebook alink"> <img src="/assets/img/fb.png" alt=""> Continue with Facebook</a>
+          <a #googleLoginBtn2 class="login_twt alink"> <img src="/assets/img/twt.png" alt=""> Continue with Google</a>
         </div>
         
         <span [hidden]="showHideSignupForm">
@@ -100,6 +126,12 @@
               <input type="text" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" />
               <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                 <div *ngIf="f.username.errors.required">Username is required</div>
+              </div>
+              <div *ngIf="f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.pattern">Username can only contain letters, numbers and underscores.</div>
+              </div>
+              <div *ngIf="f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.userNameExists">This username has already been taken, sorry!</div>
               </div>
             </div>
             <div class="form-group">

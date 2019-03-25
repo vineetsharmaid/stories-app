@@ -1,240 +1,355 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ErrorHandler, Injectable, Injector, NgZone, ViewChild } from '@angular/core';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from "angularx-social-login";
-import { FacebookLoginProvider, GoogleLoginProvider, LinkedInLoginProvider } from "angularx-social-login";
-import { SocialUser } from "angularx-social-login";
-
+declare const gapi: any;
+declare const FB: any;
 
 import { UserService } from "../../frontend/services/user.service";
+import { UserValidators } from '../../frontend/services/validators/user.validator';
 
 @Component({
   selector: 'frontend-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
+
+
+
 export class HeaderComponent implements OnInit {
    
-	private user: SocialUser;
+  public auth2: any;
+
+	public submitted:boolean = false;
 	private loggedIn: boolean = false;
-	private authStateOnLoad: any;
-	registerForm: FormGroup;
-	submitted = false;
+	private loginLoading: boolean = false;
+	public loginSubmitted:boolean = false;
+	private registerLoading: boolean = false;
+	private accountAlreadyExists: boolean = false;
+	
+	public registerForm: FormGroup;
+	public loginForm: FormGroup;
+	private loginErrors: Array<string>;
 
-    constructor( private authService: AuthService, 
-    	private formBuilder: FormBuilder, 
-    	private userService: UserService,
-    	private router: Router) {
-   
-    }
+	@ViewChild('closeLoginModal') closeLoginModal: ElementRef;
+	@ViewChild('showHideLoginBtn') showHideLoginBtn: ElementRef;
+	@ViewChild('googleLoginBtn') googleLoginBtn: ElementRef;
+	@ViewChild('googleLoginBtn2') googleLoginBtn2: ElementRef;
 
-    ngOnInit(){
+  constructor(
+  	private formBuilder: FormBuilder, 
+  	private userService: UserService,
+  	private router: Router,
+  	private injector: Injector,
+  	private userValidators: UserValidators ) {
+ 
+  }
 
-    	if( localStorage.getItem('isLoggedIn') == 'true' ) {
+  ngOnInit(){
 
-    		this.loggedIn = true;
-    	}
+  	if( localStorage.getItem('isLoggedIn') == 'true' ) {
 
-		  (window as any).fbAsyncInit = function() {
-		      FB.init({
-		        appId      : '2266181523701724',
-		        cookie     : true,
-		        xfbml      : true,
-		        version    : 'v3.1'
-		      });
-		      FB.AppEvents.logPageView();
-		    };
+  		this.loggedIn = true;
+  	}
 
-		    (function(d, s, id){
-		       var js, fjs = d.getElementsByTagName(s)[0];
-		       if (d.getElementById(id)) {return;}
-		       js = d.createElement(s); js.id = id;
-		       js.src = "https://connect.facebook.net/en_US/sdk.js";
-		       fjs.parentNode.insertBefore(js, fjs);
-		     }(document, 'script', 'facebook-jssdk'));
+  	this.loadFacebookSDK();
 
-    	// this.checkSocialMediaLogin();
-
-	    this.registerForm = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
-            username: ['', Validators.required],
-            email: ['', Validators.email]
-        });
-    }
-
-		signInWithFB(){
-      console.log("submit login to facebook");
-      // FB.login();
-      FB.login((response)=> {
-
-        if (response.authResponse)
-        {
-        	console.log('authResponse',response.authResponse);
-
-        	var userID = response.authResponse.userID;
-        	/* make the API call */
-					FB.api(
-					    "/"+userID+"/", 
-					    {
-					    	fields: 'name,first_name,last_name,email,picture'
-					    },
-					    (response) => {
-					      if (response && !response.error) {
-					        /* handle the result */
-					        response.photoUrl = response.picture.data.url;
-					        console.log('response', response);
-					        this.registerUser(response);
-					      }
-					    }
-					);
-
-        } else {
-         
-         	console.log('User login failed');
-        }
+    this.registerForm = this.formBuilder.group({
+          firstName: [ '', Validators.required ],
+          lastName: [ '', Validators.required ],
+          username: [ 
+	          '', // default value
+	          {
+	          	validators: Validators.compose([Validators.required, Validators.pattern("[a-zA-Z0-9_]*")]),  // sync validations
+	           	asyncValidators: this.userValidators.usernameValidator(), // async validations
+	           	updateOn: 'blur' 
+	         },
+          ],
+          email: [ '',  Validators.compose([Validators.required, Validators.email]) ]
       });
 
-    }    
+    this.loginForm = this.formBuilder.group({
+          email: [ '',  Validators.compose([Validators.required, Validators.email]) ],
+          password: [ '',  Validators.required ]
+      });
+  }
 
-   //  checkSocialMediaLogin() {
+	// convenience getter for easy access to form fields
+  get f() { return this.registerForm.controls; }
+  get lf() { return this.loginForm.controls; }
 
-   //  	this.authService.authState.subscribe((user) => {
+  /**** User registration form handling ****/
+  onSubmit() {
+      
+      this.submitted = true;
+      
+      console.log('Validation', this.registerForm);
+      console.log('Validation.invalid', this.registerForm.invalid);
 
-			// this.user = user;
-			// this.loggedIn = (user != null);
-			// console.log('this.user', this.user);
+      // stop here if form is invalid
+      if (this.registerForm.status === "VALID") {
 
-	  //     	if (this.loggedIn) { // logged in on social account
+      	var user = {  
+      		first_name: this.registerForm.get('firstName').value, 
+					last_name: this.registerForm.get('lastName').value,
+					username: this.registerForm.get('username').value,
+					email: this.registerForm.get('email').value,
+				};
 
-	  //     		if ( localStorage.getItem('isLoggedIn') !== 'true' ) {
-							
-			// 				localStorage.setItem('isLoggedIn', 'true');
+				this.registerUser(user);
+      } else {
 
-			// 				// get user details from social profile
-			// 				var socialUser = this.getUserFromSocial();
+      	console.log('Validation error.');
+        return;
+      }
 
-			// 				// send user information for registeration
-			// 				this.registerUser(socialUser);
-	  //     		} else {
+  }
 
-		 //    		// fill regiter form fields as per socail media information
-		 //      		this.setSignUpForm(); 
-	  //     		}
-	  //     	}
-	  //   });
+  /**** User login form handling ****/
+  onLoginSubmit() {
+      
+      this.loginSubmitted = true;
+      
+      // stop here if form is invalid
+      if (this.loginForm.invalid) {
 
-   //  }
+      	console.log('Validation error.');
+        return;
+      } else {
+
+      	var user = {        		
+					email: this.loginForm.get('email').value,
+					password: this.loginForm.get('password').value,
+				};
+
+				this.loginLoading = true;
+				this.loginUser(user);
+
+      }
+
+  }
+
+  registerUser(user) {
+  	console.log('user', user);
+  	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
+
+  		console.log('register response', response);
+
+  		if ( response['status'] == 200 || user.loginBy == 'facebook' || user.loginBy == 'google' ) {
+  			
+  			console.log('registered');
+  			
+  			// Close login modal
+  			this.closeLoginModal.nativeElement.click();
+				
+  			// set user login
+				this.setUserLogin();
+  			console.log('loggedIn', this.loggedIn);
+  		}
+
+  		// user already exists
+  		if ( response['status'] == 201 ) {
+  			
+  			this.accountAlreadyExists = true;
+  			this.showHideLoginBtn.nativeElement.click();
+  			// this.setUserLogin();
+  		}
+
+  	});
+  }
+
+  loginUser(user) {
+
+  	this.userService.loginUser(user).subscribe((response: Array<Object>) => {
+
+  		console.log('register response', response);
+  		this.loginLoading = false;
+
+  		if ( response['status'] == 200 ) {
+  			
+  			console.log('logged in');
+
+  			// Close login modal
+  			this.closeLoginModal.nativeElement.click();
+				
+  			// set user login
+				this.setUserLogin();
+  			console.log('loggedIn', this.loggedIn);
+
+  		}
+
+  		if ( response['status'] == 201 ) {
+  			
+  			this.loginErrors = response['error'];
+  		}
+
+  	});
+  }
+
+  setUserLogin() {
+
+		// set login
+		localStorage.setItem('isLoggedIn', 'true');
+		localStorage.setItem('userType', 'user');
+		this.loggedIn = true;
+
+		this.navigate('/user');
+  }
+
+	// common function for redirecting to different module
+  navigate(path) {
+	  
+    const routerService = this.injector.get(Router);
+    const ngZone = this.injector.get(NgZone);
+    ngZone.run(() => {
+      routerService.navigate([path]);
+    });  	
+  	
+  }
+
+	ngOnDestroy() {
+	}
 	
-		// convenience getter for easy access to form fields
-    get f() { return this.registerForm.controls; }
 
-    setSignUpForm() {
+	/*
+	*
+	*
+	* FACEBOOK LOGIN FUNCTIONS
+	*
+	*
+	**/ 
 
-    	var username = (this.user.firstName+''+this.user.lastName).toLowerCase();
+	loadFacebookSDK() {
 
-    	this.registerForm.patchValue({
-		  firstName: this.user.firstName, 
-		  lastName: this.user.lastName,
-		  username: username,
-		  email: this.user.email,
-		});
-		console.log('this.registerForm.firstName', this.registerForm.controls.firstName);
-    }
+	  (window as any).fbAsyncInit = function() {
+	      FB.init({
+	        appId      : '2266181523701724',
+	        cookie     : true,
+	        xfbml      : true,
+	        version    : 'v3.1'
+	      });
+	      FB.AppEvents.logPageView();
+	    };
 
-    onSubmit() {
-        
-        this.submitted = true;
-        
-        // stop here if form is invalid
-        if (this.registerForm.invalid) {
-
-        	console.log('Validation error.');
-            return;
-        } else {
-
-        	var user = {  
-        				firstName: this.registerForm.get('firstName').value, 
-						lastName: this.registerForm.get('lastName').value,
-						username: this.registerForm.get('username').value,
-						email: this.registerForm.get('email').value,
-						photoUrl: this.user.photoUrl
-					};
-
-        }
-
-    }
-
-    getUserFromSocial() {
-
-		var username = (this.user.firstName+''+this.user.lastName).toLowerCase();
-		var user = {
-			firstName: this.user.firstName, 
-			lastName: this.user.lastName,
-			username: username,
-			email: this.user.email
-		};
-
-		return user;
-    }
-
-    registerUser(user) {
-
-        	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
-
-        		console.log('response', response);
-        		if ( response['status'] == 200 ) {
-        			
-        			console.log('registered');
-        			localStorage.setItem('isLoggedIn', 'true');
-        			localStorage.setItem('userType', 'user');
-        			this.loggedIn = true;
-        			console.log('loggedIn', this.loggedIn);
-        			// send user to login screen
-	      			// this.router.navigateByUrl('/user/profile');
-        		}
-        	});
-    }
-
-	signInWithGoogle(): void {
-		console.log('GoogleLoginProvider.PROVIDER_ID', GoogleLoginProvider.PROVIDER_ID);
-		var check = this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-		console.log('here', check);
+	    (function(d, s, id){
+	       var js, fjs = d.getElementsByTagName(s)[0];
+	       if (d.getElementById(id)) {return;}
+	       js = d.createElement(s); js.id = id;
+	       js.src = "https://connect.facebook.net/en_US/sdk.js";
+	       fjs.parentNode.insertBefore(js, fjs);
+	     }(document, 'script', 'facebook-jssdk'));		
 	}
 
-	// signInWithFB(): void {
-	// this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
-	// }
+	signInWithFB(){
+    console.log("submit login to facebook");
+    // FB.login();
+    FB.login((response)=> {
 
-	// signInWithLinkedIn(): void {
-	// this.authService.signIn(LinkedInLoginProvider.PROVIDER_ID);
-	// }
+      if (response.authResponse)
+      {
+      	console.log('authResponse',response.authResponse);
 
+      	var userID = response.authResponse.userID;
+      	
+      	/* get user details from facebook */
+				FB.api(
+				    "/"+userID+"/", 
+				    {
+				    	fields: 'name,first_name,last_name,email,picture'
+				    },
+				    (response) => {
+				      if (response && !response.error) {
+				        
+				        /* handle the result */
+				        response.photoUrl = response.picture.data.url;
+				        response.loginBy  = 'facebook';
+				        this.registerUser(response);
+				      }
+				    }
+				);
+
+      } else {
+       
+       	console.log('Facebook User login failed');
+      }
+    });
+
+  }
+
+  public googleInit() {
+    gapi.load('auth2', () => {
+      this.auth2 = gapi.auth2.init({
+        client_id: '917497774560-48jqrohaa6t378cp39me1bii01resllu.apps.googleusercontent.com',
+        cookiepolicy: 'single_host_origin',
+        scope: 'profile email'
+      });
+      this.attachSignin(this.googleLoginBtn.nativeElement);
+      this.attachSignin(this.googleLoginBtn2.nativeElement);
+    });
+  }
+  public attachSignin(element) {
+    this.auth2.attachClickHandler(element, {},
+      (googleUser) => {
+
+        let profile = googleUser.getBasicProfile();
+        // console.log('googleUser', googleUser);
+        // console.log('profile', profile);
+        // console.log('Token || ' + googleUser.getAuthResponse().id_token);
+        // console.log('ID: ' + profile.getId());
+        // console.log('Name: ' + profile.getName());
+        // console.log('FirstName: ' + profile.getGivenName());
+        // console.log('LastName: ' + profile.getFamilyName());
+        // console.log('Image URL: ' + profile.getImageUrl());
+        // console.log('Email: ' + profile.getEmail());
+        
+        /* handle the result */
+        var user = {
+					email: 			profile.getEmail(),
+					loginBy: 		'google',
+					photoUrl: 	profile.getImageUrl(),
+					last_name: 	profile.getFamilyName(),
+        	first_name: profile.getGivenName(),
+        };
+        
+        this.registerUser(user);
+
+      }, (error) => {
+        console.log(JSON.stringify(error, undefined, 2));
+      });
+  }
+
+	ngAfterViewInit(){
+	  
+	  this.googleInit();
+	}
 
 
 	signOut(): void {
+		console.log('FB', FB);
 		
-		// this.authService.signOut();
 		FB.getLoginStatus(function(response) {
+				
 				console.log('getLoginStatus response', response)
+        
         if (response && response.status === 'connected') {
             FB.logout(function(response) {
-								console.log('logout response', response)
-								localStorage.removeItem('isLoggedIn');
-								localStorage.removeItem('userType');
-								this.loggedIn = false;
-                document.location.reload();
+
+								console.log('Facebbok logout response', response)
             });
         }
     });
 
+    this.auth2.signOut().then( () => {
+      console.log('Google user signed out.');
+    });
+		
+		localStorage.removeItem('isLoggedIn');
+		localStorage.removeItem('userType');
+		this.loggedIn = false;
+    // document.location.reload();
+
 	}
 
-	ngOnDestroy() {
-
-		// this.signOut();
-	}
 
 }

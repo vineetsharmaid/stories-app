@@ -26,7 +26,7 @@ export class AdminLoginComponent implements OnInit {
   		}
 
 	    this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
+            email: ['', Validators.required],
             password: ['', Validators.required]
         });
   }
@@ -47,7 +47,7 @@ export class AdminLoginComponent implements OnInit {
       } else {
 
       	var user = {
-					username: this.loginForm.get('username').value,
+					email: this.loginForm.get('email').value,
 					password: this.loginForm.get('password').value,
 				};
 

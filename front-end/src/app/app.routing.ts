@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { FrontendLayoutComponent } from './layouts/frontend-layout/frontend-layout.component';
+import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.component';
 
 const routes: Routes =[
   {
@@ -33,6 +34,13 @@ const routes: Routes =[
         {
       path: '',
       loadChildren: './admin-login/admin-login.module#AdminLoginModule'
+  }] }, {
+    path: 'user',
+    component: ProfileLayoutComponent,
+    children: [
+        {
+      path: '',
+      loadChildren: './layouts/profile-layout/profile-layout.module#ProfileLayoutModule'
   }] }
     // { path: 'dashboard',      component: DashboardComponent },
     // { path: 'user-profile',   component: UserProfileComponent },

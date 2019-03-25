@@ -14,6 +14,7 @@
 .box_btn{padding: 6px 18px; color: #fff; background: #f1663b; display: inline-block; font-size: 10px; font-weight: 600; margin-top: 14px}
 /*Content Blocks Style*/
 
+
 /*Section 2 Style*/
 .section_2{padding: 30px;}
 .big_img_wrap{padding: 20px; border-left: 1px solid #c5c5c5; border-right: 1px solid #c5c5c5; position: relative;}
@@ -39,10 +40,9 @@
 .right_inner_footer_top a.coubt{background: #f1663b}
 .right_inner_footer_top a.coubt2{ background: #bbb}
 .right_inner_footer_bottom li{ display: inline-block;list-style: none; margin: 0 6px; font-size: 14px }
-.right_inner_footer_bottom li.bookmark{color: #f1663b}
+.right_inner_footer_bottom li.bookmark{color: #f1663b;}
 .right_inner_footer_bottom ul li img{margin-right: 5px}
 /*Section 2 Style*/
-
 
 
 /*Section 3 Style*/
@@ -88,3 +88,16 @@
 .story_text_block{position: absolute; width: 100%; text-align: center; top: 50%; left: 0; transform: translateY(-50%); color: #fff}
 .story_outer_wrap h3{font-size: 24px; font-weight: bold;}
 /*Section 4 Style*/
+
+
+
+/*Share style*/
+.share_img_wrap{display: inline-block; position: relative;}
+.social_wrap{position: absolute; background: #000; padding: 3px; bottom: 100%; border-radius: 20px; width: 120px; left: 50%; transform: translateX(-50%); visibility: hidden; transition: all .5s; opacity: 0}
+.share_img_wrap:hover .social_wrap{visibility: visible; opacity: 1}
+.social_wrap ul{line-height: 14px}
+.social_wrap ul li{vertical-align: middle;}
+.social_wrap ul li a{display: inline-block; padding: 4px 2px}
+.social_wrap ul li img{margin: 0}
+.right_inner_footer_bottom li.fl{color: #333}
+/*Share style*/

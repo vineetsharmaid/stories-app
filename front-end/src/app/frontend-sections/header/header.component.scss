@@ -28,7 +28,7 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding
 .login_social_wrap a img{margin-right: 15px}
 .login_divider{margin-bottom: 20px; color: #a1a1a1}
 .login_form{}
-.login_form input[type="email"], .login_form input[type="text"], .login_form input[type="password"]{width: 100%; display: inline-block;height: 50px; color: #fff; margin-bottom: 20px; padding: 0 10px; background-color: transparent; border: none; border-bottom: 1px solid #fff;}
+.login_form input[type="email"], .login_form input[type="text"], .login_form input[type="password"]{width: 100%; display: inline-block;height: 50px; color: #fff; /*margin-bottom: 20px;*/ padding: 0 10px; background-color: transparent; border: none; border-bottom: 1px solid #fff;}
 .login_form input[type="submit"]{display: inline-block;border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 40px}
 .forgt_pass{color: #fff; font-weight: bold;font-size: 15px; text-align: center; margin-top: 80px; display: inline-block;}
 .forgt_pass:hover, .forgt_pass:focus{color: #fff;}
@@ -38,3 +38,7 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding
 .top-right-nav { position: fixed; color: #c7c0c0; right: 70px; top: 28px; }
 .top-right-nav a { font-weight: bold; font-size: 15px; text-align: center;  display: inline-block; }
 .btn-map { display: inline-block; border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 40px; }
+
+
+.alink { cursor: pointer; }
+.invalid-feedback { display: block; text-align: left; color: #ffffff; }

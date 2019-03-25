@@ -8,20 +8,20 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
+const API_URL  =  'http://localhost/stories-app/back-end/api/';
+
 @Injectable({
   providedIn: 'root'
 })
-
 export class UserService {
 	
-	API_URL  =  'http://localhost/stories-app/back-end/api/';
   	constructor(private http: HttpClient) { }
 
   	registerUser(User): Observable<any>{
     	
-    	// return  this.http.get(`${this.API_URL}`);
+    	// return  this.http.get(`${API_URL}`);
 
-			return this.http.post(this.API_URL+'register', User, httpOptions).pipe(
+			return this.http.post(API_URL+'register', User, httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError<any>('registerUser'))
 			);
@@ -29,9 +29,9 @@ export class UserService {
 
   	loginUser(User): Observable<any>{
     	
-    	// return  this.http.get(`${this.API_URL}`);
+    	// return  this.http.get(`${API_URL}`);
 
-			return this.http.post(this.API_URL+'login', User, httpOptions).pipe(
+			return this.http.post(API_URL+'login', User, httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError<any>('registerUser'))
 			);
