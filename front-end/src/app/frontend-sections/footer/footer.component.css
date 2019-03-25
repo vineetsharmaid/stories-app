@@ -8,9 +8,9 @@ footer.footer{background: #000; padding: 100px 0}
 .subscribe_wrap form input[type="submit"]{border-color: #f1663b; background: #f1663b; text-transform: uppercase; letter-spacing: 2px; transition: all .5s;}
 .subscribe_wrap form input[type="submit"]:hover, .subscribe_wrap form input[type="submit"]:focus{border-color: #333; background: #333;}
 .subscribe_wrap form input:focus{outline: none;}
-.footer_link_wrap{display: flex; margin-top: 70px; width: 100%}
+.footer_link_wrap{display: flex; margin-top: 70px; width: 100%; text-align: left;}
 .footer_link_wrap h4{color: rgba(254, 254, 254, .4); text-transform: uppercase; letter-spacing: 2px; font-size: 20px; margin-bottom: 10px; font-weight: bold;}
 .footer_link_wrap ul li{display: block; list-style: none; margin: 8px 0}
-.footer_link_wrap ul li a{color: rgba(254, 254, 254, .2); font-size: 16px; transition: all .5s;}
+.footer_link_wrap ul li a{color: rgba(254, 254, 254, .2); font-size: 16px; transition: all .5s; padding: 0 !important; text-transform: none;}
 .footer_link_wrap ul li a:hover{color: rgba(254, 254, 254, .4);}
 /*Footer style*/

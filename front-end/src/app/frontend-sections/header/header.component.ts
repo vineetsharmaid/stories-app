@@ -18,7 +18,7 @@ import { UserService } from "../../frontend/services/user.service";
 export class HeaderComponent implements OnInit {
    
 	private user: SocialUser;
-	private loggedIn: boolean;
+	private loggedIn: boolean = false;
 	private authStateOnLoad: any;
 	registerForm: FormGroup;
 	submitted = false;
@@ -32,7 +32,30 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit(){
 
-    	this.checkSocialMediaLogin();
+    	if( localStorage.getItem('isLoggedIn') == 'true' ) {
+
+    		this.loggedIn = true;
+    	}
+
+		  (window as any).fbAsyncInit = function() {
+		      FB.init({
+		        appId      : '2266181523701724',
+		        cookie     : true,
+		        xfbml      : true,
+		        version    : 'v3.1'
+		      });
+		      FB.AppEvents.logPageView();
+		    };
+
+		    (function(d, s, id){
+		       var js, fjs = d.getElementsByTagName(s)[0];
+		       if (d.getElementById(id)) {return;}
+		       js = d.createElement(s); js.id = id;
+		       js.src = "https://connect.facebook.net/en_US/sdk.js";
+		       fjs.parentNode.insertBefore(js, fjs);
+		     }(document, 'script', 'facebook-jssdk'));
+
+    	// this.checkSocialMediaLogin();
 
 	    this.registerForm = this.formBuilder.group({
             firstName: ['', Validators.required],
@@ -42,34 +65,68 @@ export class HeaderComponent implements OnInit {
         });
     }
 
-    checkSocialMediaLogin() {
+		signInWithFB(){
+      console.log("submit login to facebook");
+      // FB.login();
+      FB.login((response)=> {
 
-    	this.authService.authState.subscribe((user) => {
+        if (response.authResponse)
+        {
+        	console.log('authResponse',response.authResponse);
 
-			this.user = user;
-			this.loggedIn = (user != null);
-			console.log('this.user', this.user);
+        	var userID = response.authResponse.userID;
+        	/* make the API call */
+					FB.api(
+					    "/"+userID+"/", 
+					    {
+					    	fields: 'name,first_name,last_name,email,picture'
+					    },
+					    (response) => {
+					      if (response && !response.error) {
+					        /* handle the result */
+					        response.photoUrl = response.picture.data.url;
+					        console.log('response', response);
+					        this.registerUser(response);
+					      }
+					    }
+					);
 
-	      	if (this.loggedIn) { // logged in on social account
+        } else {
+         
+         	console.log('User login failed');
+        }
+      });
 
-	      		if ( localStorage.getItem('isLoggedIn') !== 'true' ) {
-					
-					localStorage.setItem('isLoggedIn', 'true');
+    }    
 
-					// get user details from social profile
-					var socialUser = this.getUserFromSocial();
+   //  checkSocialMediaLogin() {
 
-					// send user information for registeration
-					this.registerUser(socialUser);
-	      		} else {
+   //  	this.authService.authState.subscribe((user) => {
 
-		    		// fill regiter form fields as per socail media information
-		      		this.setSignUpForm(); 
-	      		}
-	      	}
-	    });
+			// this.user = user;
+			// this.loggedIn = (user != null);
+			// console.log('this.user', this.user);
 
-    }
+	  //     	if (this.loggedIn) { // logged in on social account
+
+	  //     		if ( localStorage.getItem('isLoggedIn') !== 'true' ) {
+							
+			// 				localStorage.setItem('isLoggedIn', 'true');
+
+			// 				// get user details from social profile
+			// 				var socialUser = this.getUserFromSocial();
+
+			// 				// send user information for registeration
+			// 				this.registerUser(socialUser);
+	  //     		} else {
+
+		 //    		// fill regiter form fields as per socail media information
+		 //      		this.setSignUpForm(); 
+	  //     		}
+	  //     	}
+	  //   });
+
+   //  }
 	
 		// convenience getter for easy access to form fields
     get f() { return this.registerForm.controls; }
@@ -125,7 +182,6 @@ export class HeaderComponent implements OnInit {
 
     registerUser(user) {
 
-
         	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
 
         		console.log('response', response);
@@ -133,9 +189,11 @@ export class HeaderComponent implements OnInit {
         			
         			console.log('registered');
         			localStorage.setItem('isLoggedIn', 'true');
-
+        			localStorage.setItem('userType', 'user');
+        			this.loggedIn = true;
+        			console.log('loggedIn', this.loggedIn);
         			// send user to login screen
-	      			this.router.navigateByUrl('/admin');
+	      			// this.router.navigateByUrl('/user/profile');
         		}
         	});
     }
@@ -146,9 +204,9 @@ export class HeaderComponent implements OnInit {
 		console.log('here', check);
 	}
 
-	signInWithFB(): void {
-	this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
-	}
+	// signInWithFB(): void {
+	// this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+	// }
 
 	// signInWithLinkedIn(): void {
 	// this.authService.signIn(LinkedInLoginProvider.PROVIDER_ID);
@@ -158,13 +216,25 @@ export class HeaderComponent implements OnInit {
 
 	signOut(): void {
 		
-		this.authService.signOut();
-		localStorage.setItem('isLoggedIn', 'false');
+		// this.authService.signOut();
+		FB.getLoginStatus(function(response) {
+				console.log('getLoginStatus response', response)
+        if (response && response.status === 'connected') {
+            FB.logout(function(response) {
+								console.log('logout response', response)
+								localStorage.removeItem('isLoggedIn');
+								localStorage.removeItem('userType');
+								this.loggedIn = false;
+                document.location.reload();
+            });
+        }
+    });
+
 	}
 
 	ngOnDestroy() {
 
-		this.signOut();
+		// this.signOut();
 	}
 
 }

@@ -142,26 +142,37 @@ class Api extends REST_Controller {
     public function register_post() {
 
         $post_data = json_decode(file_get_contents("php://input"));
-
-        $user_data = array(
-            'first_name'    => $post_data->firstName,
-            'last_name'     => $post_data->lastName,
-            'username'      => $post_data->username,
-            'user_email'    => $post_data->email,
-            'profile_pic'   => $post_data->photoUrl,
-            'password'      => 'test'
-        );
         
-        if ($this->common_model->insert_entry('users', $user_data)) {
+        $user_exists = $this->common_model->user_exists( 'users', array('user_email' => $post_data->email) );
+
+        if ( $user_exists ) {
             
             $message = [
-                'message' => 'Registered new user',
+                'message' => 'User already exists.',
                 'status' => 200
             ];
-            // Set the response and exit
-            $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+        } else {
+
+            $user_data = array(
+                'first_name'    => $post_data->first_name,
+                'last_name'     => $post_data->last_name,
+                'username'      => $post_data->username,
+                'user_email'    => $post_data->email,
+                'profile_pic'   => $post_data->photoUrl,
+                'password'      => 'test'
+            );
+            
+            if ($this->common_model->insert_entry('users', $user_data)) {
+                
+                $message = [
+                    'message' => 'Registered new user',
+                    'status' => 200
+                ];
+            }
         }
 
+        // Set the response and exit
+        $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
     }
 
     public function login_post() {

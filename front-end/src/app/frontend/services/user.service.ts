@@ -14,14 +14,14 @@ const httpOptions = {
 
 export class UserService {
 	
-	API_URL  =  'http://localhost/stories-app/back-end/api/login';
+	API_URL  =  'http://localhost/stories-app/back-end/api/';
   	constructor(private http: HttpClient) { }
 
   	registerUser(User): Observable<any>{
     	
     	// return  this.http.get(`${this.API_URL}`);
 
-			return this.http.post(this.API_URL, User, httpOptions).pipe(
+			return this.http.post(this.API_URL+'register', User, httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError<any>('registerUser'))
 			);
@@ -31,7 +31,7 @@ export class UserService {
     	
     	// return  this.http.get(`${this.API_URL}`);
 
-			return this.http.post(this.API_URL, User, httpOptions).pipe(
+			return this.http.post(this.API_URL+'login', User, httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError<any>('registerUser'))
 			);
