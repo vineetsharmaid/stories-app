@@ -1,0 +1,59 @@
+/*Section 2 Style*/
+.section_2{padding: 30px;}
+.big_img_wrap{padding: 20px; border-left: 1px solid #c5c5c5; border-right: 1px solid #c5c5c5; position: relative;}
+.img_attribution a{color: #a1a1a1;}
+.img_attribution{-webkit-transform: rotate(-90deg);-moz-transform: rotate(-90deg);-ms-transform: rotate(-90deg);-o-transform: rotate(-90deg);transform: rotate(-90deg);-webkit-transform-origin: 0 100%;-moz-transform-origin: 0 100%;-ms-transform-origin: 0 100%;-o-transform-origin: 0 100%;transform-origin: 0 100%;left: 20px;line-height: 20px;font-size: 10px;position: absolute; bottom: 20px;color: #a1a1a1;}
+.section_2 .col-md-9{padding-left: 60px; padding-right: 0}
+.section_2 .col-md-3{padding-left: 0px;}
+.right_line{border-right: 1px solid #c5c5c5; position: relative;height: 100%; padding: 20px}
+.right_inner{position: relative;max-width: 300px; margin: 0 auto; height: 100%; text-align: center;}
+.diamond_text{display: inline-block; color: #15181b; position: relative; text-transform: uppercase; font-size: 13px; line-height: 18px}
+.diamond_content{padding: 5px 16px;font-size: 12px;display: inline-block;color: #888;margin: auto; letter-spacing: 2px; border: 1px solid #888; border-radius: 20px}
+.right_inner h3{font-size: 40px; line-height: 52px; margin-top: 50px}
+.right_inner p{font-size: 17px; line-height: 26px;padding: 0 12px}
+.inner_divider{width: 35%; height: 2px; background: #15181b; display: inline-block;margin: 20px auto}
+.right_ancor{display: block; cursor: pointer; color: #15181b}
+.right_ancor:hover{ color: #15181b}
+.inner_link_bottom{margin-top: 20px}
+.inner_link_bottom, .inner_link_bottom a{color: #15181b; font-size: 18px;}
+.inner_link_bottom a{font-weight: 700}
+.right_inner_footer{position: absolute;bottom: 0;width: 100%;}
+.right_inner_footer_top{margin: 20px 0;}
+.right_inner_footer_top a{letter-spacing: .16em; text-transform: uppercase; font-size: 10px; font-weight: 600; color: #fff;padding:3px 10px; display: inline-block; position: relative;  line-height: 19px; margin: 0 3px; border-radius: 20px}
+.right_inner_footer_top a.coubt{background: #f1663b}
+.right_inner_footer_top a.coubt2{ background: #bbb}
+.right_inner_footer_bottom li{ display: inline-block;list-style: none; margin: 0 6px; font-size: 14px }
+.right_inner_footer_bottom li.bookmark{color: #f1663b;}
+.right_inner_footer_bottom ul li img{margin-right: 5px}
+/*Section 2 Style*/
+
+/*------------------------------User Profile PAge------------------------------*/
+.not_absolute{position: relative;}
+.user_info_wrap .row{align-items: center;}
+.stories_wrap_full .col-md-4{padding: 0px}
+.stories_wrap_full .right_line{padding: 20px 0; border: none;}
+.stories_wrap_full .right_line p{font-size: 16px; line-height: 30px}
+.stories_wrap_full .right_line .inner_divider{max-width: 300px}
+.stories_wrap_full .right_inner_footer.not_absolute{padding: 30px 60px}
+.nomargin{margin: 0}
+.nopadding{padding: 0}
+.user_profile_pic_wrap{width: 200px; height: 200px; border-radius: 200px; overflow:hidden; margin: auto; position: relative; margin-bottom: 20px}
+.user_profile_pic_wrap img{min-height: 100%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.user_intro_box{text-align: center;padding: 20px 50px}
+.user_intro_box p{font-size: 18px; line-height: 30px}
+.user_intro_box span{font-size: 20px; margin:10px; display: inline-block; text-transform: uppercase; letter-spacing: 2px}
+.user_intro_box a{color: #000}
+.page_section_divide{margin: 100px 0}
+/*------------------------------User Profile PAge------------------------------*/
+
+
+/*Share style*/
+.share_img_wrap{display: inline-block; position: relative;}
+.social_wrap{position: absolute; background: #000; padding: 3px; bottom: 100%; border-radius: 20px; width: 120px; left: 50%; transform: translateX(-50%); visibility: hidden; transition: all .5s; opacity: 0}
+.share_img_wrap:hover .social_wrap{visibility: visible; opacity: 1}
+.social_wrap ul{line-height: 14px}
+.social_wrap ul li{vertical-align: middle;}
+.social_wrap ul li a{display: inline-block; padding: 4px 2px}
+.social_wrap ul li img{margin: 0}
+.right_inner_footer_bottom li.fl{color: #333}
+/*Share style*/

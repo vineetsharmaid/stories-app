@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 
-/************Social Media Login Starts****************/
+/************Social Media Login Starts****************
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider} from "angularx-social-login";
 
@@ -21,16 +21,12 @@ let config = new AuthServiceConfig([
     id: FacebookLoginProvider.PROVIDER_ID,
     provider: new FacebookLoginProvider("2266181523701724")
   },
-  // {
-  //   id: LinkedInLoginProvider.PROVIDER_ID,
-  //   provider: new LinkedInLoginProvider("LinkedIn-client-Id", false, 'en_US')
-  // }
 ]);
  
 export function provideConfig() {
   return config;
 }
-/*************Social Media Login Ends***************/
+***********Social Media Login Ends***************/
 
 
 
@@ -70,7 +66,7 @@ import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.
     ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
-    SocialLoginModule,
+    // SocialLoginModule,
     ComponentsModule,
     FrontendSectionsModule,
     RouterModule,
@@ -87,10 +83,10 @@ import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.
     ProfileLayoutComponent,
   ],
   providers: [
-      {
-        provide: AuthServiceConfig,
-        useFactory: provideConfig
-      }
+      // {
+      //   provide: AuthServiceConfig,
+      //   useFactory: provideConfig
+      // }
       ],
   bootstrap: [AppComponent]
 })

@@ -18,6 +18,7 @@ import { UserListComponent } from '../../user-list/user-list.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
+import { UserService } from "../../services/admin/user.service";
 
 import {
   MatButtonModule,
@@ -51,7 +52,8 @@ import {
     UserListComponent,
   ],
   providers: [
-    AuthGuard
+    AuthGuard,
+    UserService
   ]
 })
 

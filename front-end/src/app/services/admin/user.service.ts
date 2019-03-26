@@ -17,11 +17,9 @@ export class UserService {
 	
   	constructor(private http: HttpClient) { }
 
-  	registerUser(User): Observable<any>{
+  	getUsers(): Observable<any>{
     	
-    	// return  this.http.get(`${API_URL}`);
-
-			return this.http.post(API_URL+'register', User, httpOptions).pipe(
+			return this.http.get(API_URL+'get_users', httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError<any>('registerUser'))
 			);

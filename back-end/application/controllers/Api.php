@@ -28,36 +28,35 @@ class Api extends REST_Controller {
 
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
-        $this->methods['users_get']['limit'] = 500; // 500 requests per hour per user/key
+        $this->methods['get_users_get']['limit'] = 500; // 500 requests per hour per user/key
         $this->methods['users_post']['limit'] = 100; // 100 requests per hour per user/key
         $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
 
         // $this->load->model()
     }
 
-    public function users_get()
+    public function get_users_get()
     {
-        // Users from a data store e.g. database
-        $users = [
-            ['id' => 1, 'name' => 'John', 'email' => 'john@example.com', 'fact' => 'Loves coding'],
-            ['id' => 2, 'name' => 'Jim', 'email' => 'jim@example.com', 'fact' => 'Developed on CodeIgniter'],
-            ['id' => 3, 'name' => 'Jane', 'email' => 'jane@example.com', 'fact' => 'Lives in the USA', ['hobbies' => ['guitar', 'cycling']]],
-        ];
-
+ 
         $id = $this->get('id');
 
         // If the id parameter doesn't exist return all the users
 
-        if ($id === NULL)
-        {
+        if ($id === NULL) {
+            
+            $users = $this->common_model->get_users('users');
+
             // Check if the users data store contains users (in case the database result returns NULL)
-            if ($users)
-            {
+            if ( !empty($users) ) {
+
                 // Set the response and exit
-                $this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-            }
-            else
-            {
+                $this->response(  
+                  array(
+                    'status' => TRUE,
+                    'data' => $users,
+                  ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            } else {
+
                 // Set the response and exit
                 $this->response([
                     'status' => FALSE,
@@ -142,37 +141,47 @@ class Api extends REST_Controller {
     public function register_post() {
 
         $post_data = json_decode(file_get_contents("php://input"));
-        
-        $user_exists = $this->common_model->user_exists( 'users', array('user_email' => $post_data->email) );
 
-        if ( $user_exists ) {
-            
-            $message = [
-                'message' => 'User already exists.',
-                'status' => 200
-            ];
+        
+        if ( trim($post_data->first_name) == "" || trim($post_data->last_name) == "" || trim($post_data->email) == "" ) {
+          
+            $message = array('message' => 'validation_error', 'status' => 204); // no content
         } else {
 
-            $user_data = array(
-                'first_name'    => $post_data->first_name,
-                'last_name'     => $post_data->last_name,
-                'username'      => $post_data->username,
-                'user_email'    => $post_data->email,
-                'profile_pic'   => $post_data->photoUrl,
-                'password'      => 'test'
-            );
-            
-            if ($this->common_model->insert_entry('users', $user_data)) {
-                
-                $message = [
-                    'message' => 'Registered new user',
-                    'status' => 200
-                ];
-            }
+          $user_exists = $this->common_model->user_exists( 'users', array('user_email' => $post_data->email) );
+
+          $password = $this->_randomPassword();
+          $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+
+          if ( $user_exists ) {
+              
+              $user = $this->common_model->get_data( 'users', array('user_email' => $post_data->email) );
+              $message = array('message' => 'email_exists', 'data'   => array('user_type' => $user[0]->user_type), 'status' => 201);
+          } else {
+
+              $user_data = array(
+                  'first_name'    => $post_data->first_name,
+                  'last_name'     => $post_data->last_name,
+                  'username'      => $post_data->username,
+                  'user_type'     => 'user',
+                  'status'        => 1,
+                  'user_email'    => $post_data->email,
+                  'profile_pic'   => isset($post_data->photoUrl) ? $post_data->photoUrl : '',
+                  'password'      => $password_hashed
+              );
+              
+              // Insert user in database
+              if ($this->common_model->insert_entry('users', $user_data)) {
+                  
+                $message = array('message' => 'Registered new user', 'status' => 200);
+              }
+          }
+
         }
 
         // Set the response and exit
         $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+             
     }
 
     public function login_post() {
@@ -180,18 +189,103 @@ class Api extends REST_Controller {
         // convert json post data to array
         $post_data = json_decode(file_get_contents("php://input"));
 
-        $user_data = array(
-            'username'    => $post_data->username,
-            'password'    => $post_data->password,
-        );
+        // login using email
+        if ( strpos($post_data->email, '@') ) {
+
+            $user_data = array(
+                'email'     => $post_data->email,
+                'password'  => $post_data->password,
+            );
+            
+            $message = $this->_login_by_email($user_data);
+        } else {
+        // login using username
+
+            $user_data = array(
+                'username'    => $post_data->email,
+                'password'    => $post_data->password,
+            );
+            
+            $message = $this->_login_by_username($user_data);
+        }
+
+        // Set the response and exit
+        $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
+    public function check_username_get()
+    {
+      
+      $username   = $this->input->get('username');
+      $user_count = 0;
+
+      if ( $username !== NULL ) {
+        
+        $user_count = $this->common_model->user_exists( 'users', array('username' => $username) );
+        
+        $message = [
+            'message' => $user_count,
+            'status' => 200
+        ];
+      } else {
+        
+        $message = [
+            'message' => $user_count,
+            'status' => 200
+        ];        
+      }
+      // Set the response and exit
+      $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
+    public function forgot_password_post()
+    {
+    
+      // convert json post data to array
+      $post_data  = json_decode(file_get_contents("php://input"));      
+      $email      = trim($post_data->email) == "" ? NULL : trim($post_data->email);
+      
+      if ( $email !== NULL ) {
+        
+        $user = $this->common_model->get_data( 'users', array('user_email' => $email) );
+        
+        if ( !empty($user) ) {
+          
+          // $this->send_forgot_password_email($email);
+          $message = array('message' => 'Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder.', 'status' => 200);
+              
+        } else {
+
+          $message = [
+              'message' => "Can't find that email, sorry.",
+              'error' => array("Can't find that email, sorry."),
+              'status' => 201
+          ];          
+        }
+      } else {
+        
+        $message = [
+            'message' => 'Email is required.',
+            'error' => array('Email is required.'),
+            'status' => 201,
+        ];        
+      }
+      // Set the response and exit
+      $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
+    function _login_by_username($user_data)
+    {
         
         // get user 
-        $user = $this->common_model->get_entry('users', array('username'    => $post_data->username));
+        $user = $this->common_model->get_data( 'users', array('username' => $user_data['username']) );
 
         if ( count($user) > 0 ) {
-            
+          
+          if ( $user[0]->status == 1 ) {
+
             // verify $password
-            if (password_verify($post_data->password, $user[0]->password)) {
+            if (password_verify($user_data['password'], $user[0]->password)) {
 
                 $message = [
                     'message' => 'Logged In',
@@ -206,6 +300,16 @@ class Api extends REST_Controller {
                     'status' => 201
                 ];
             }
+
+          } else {
+
+            $message = [
+                'message' => 'Account is not active.',
+                'error'   => array('Account is not active.'),
+                'status' => 201
+            ];            
+          }
+
         } else {
 
             $message = [
@@ -215,8 +319,66 @@ class Api extends REST_Controller {
             ];
         }
 
-        // Set the response and exit
-        $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+        return $message;
+    }
+
+    function _login_by_email($user_data)
+    {
+        
+        // get user 
+        $user = $this->common_model->get_data( 'users', array('user_email' => $user_data['email']) );
+
+        if ( count($user) > 0 ) {
+            
+            if ( $user[0]->status == 1 ) {
+              
+              // verify $password
+              if (password_verify($user_data['password'], $user[0]->password)) {
+
+                  $message = [
+                      'message' => 'Logged In',
+                      'data'   => array('user_type' => $user[0]->user_type),
+                      'status' => 200
+                  ];
+              } else {
+                  
+                  $message = [
+                      'message' => 'Wrong password',
+                      'error'   => array('Incorrect email or password.'),
+                      'status' => 201
+                  ];
+              }
+
+            }  else {
+
+              $message = [
+                  'message' => 'Account is not active.',
+                  'error'   => array('Account is not active.'),
+                  'status' => 201
+              ];
+            }
+            
+        } else { // user does not exists
+
+            $message = [
+                'message' => 'Email not found.',
+                'error'   => array('Incorrect email or password.'),
+                'status' => 201
+            ];
+        }
+
+        return $message;
+    }
+
+    function _randomPassword() {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
     }
 
 }

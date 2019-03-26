@@ -21,16 +21,22 @@ export class HeaderComponent implements OnInit {
    
   public auth2: any;
 
-	public submitted:boolean = false;
+	public  submitted:boolean = false;
 	private loggedIn: boolean = false;
 	private loginLoading: boolean = false;
-	public loginSubmitted:boolean = false;
+	public  loginSubmitted:boolean = false;
 	private registerLoading: boolean = false;
+  private forgotPassLoading: boolean = false;
+  public  passwordEmailSent: boolean = false;
+  public  forgotPassSubmitted:boolean = false;
 	private accountAlreadyExists: boolean = false;
 	
-	public registerForm: FormGroup;
-	public loginForm: FormGroup;
+	public  loginForm: FormGroup;
+  public  registerForm: FormGroup;
+  public  forgotPassForm: FormGroup;
 	private loginErrors: Array<string>;
+  private forgotPassErrors: Array<string>;
+  public  passwordEmailSuccess: string;
 
 	@ViewChild('closeLoginModal') closeLoginModal: ElementRef;
 	@ViewChild('showHideLoginBtn') showHideLoginBtn: ElementRef;
@@ -55,6 +61,15 @@ export class HeaderComponent implements OnInit {
 
   	this.loadFacebookSDK();
 
+    this.loginForm = this.formBuilder.group({
+          email: [ '',  Validators.compose([Validators.required, Validators.email]) ],
+          password: [ '',  Validators.required ]
+      });
+
+    this.forgotPassForm = this.formBuilder.group({
+          email: [ '',  Validators.compose([Validators.required, Validators.email]) ]
+      });
+
     this.registerForm = this.formBuilder.group({
           firstName: [ '', Validators.required ],
           lastName: [ '', Validators.required ],
@@ -68,16 +83,12 @@ export class HeaderComponent implements OnInit {
           ],
           email: [ '',  Validators.compose([Validators.required, Validators.email]) ]
       });
-
-    this.loginForm = this.formBuilder.group({
-          email: [ '',  Validators.compose([Validators.required, Validators.email]) ],
-          password: [ '',  Validators.required ]
-      });
   }
 
 	// convenience getter for easy access to form fields
-  get f() { return this.registerForm.controls; }
   get lf() { return this.loginForm.controls; }
+  get f() { return this.registerForm.controls; }
+  get fp() { return this.forgotPassForm.controls; }
 
   /**** User registration form handling ****/
   onSubmit() {
@@ -114,17 +125,39 @@ export class HeaderComponent implements OnInit {
       // stop here if form is invalid
       if (this.loginForm.invalid) {
 
-      	console.log('Validation error.');
+      	console.log('LoginSubmit Validation error.');
         return;
       } else {
 
-      	var user = {        		
-					email: this.loginForm.get('email').value,
-					password: this.loginForm.get('password').value,
-				};
-
+        var user = {            
+          email: this.loginForm.get('email').value,
+          password: this.loginForm.get('password').value,
+        };
+ 
 				this.loginLoading = true;
 				this.loginUser(user);
+      }
+
+  }
+  
+  /**** Forgot password form handling ****/
+  onForgotPassSubmit() {
+      
+      this.forgotPassSubmitted = true;
+      
+      // stop here if form is invalid
+      if (this.forgotPassForm.invalid) {
+
+        console.log('ForgotPassSubmit Validation error.');
+        return;
+      } else {
+
+        var user = {
+          email: this.forgotPassForm.get('email').value,
+        };
+
+        this.forgotPassLoading = true;
+        this.forgotPassword(user);
 
       }
 
@@ -185,6 +218,34 @@ export class HeaderComponent implements OnInit {
   		}
 
   	});
+  }
+
+  forgotPassword(user) {
+
+    this.userService.forgotPassword(user).subscribe((response: Array<Object>) => {
+
+      console.log('forgotPassword response', response);
+      this.forgotPassLoading = false;
+
+      if ( response['status'] == 200 ) {
+        
+        console.log('email sent');
+        
+        this.forgotPassForm.reset();
+        this.forgotPassForm.reset();
+
+        this.passwordEmailSent = true;
+        this.passwordEmailSuccess = "Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder.";
+
+        this.forgotPassSubmitted = false;
+      }
+
+      if ( response['status'] == 201 ) {
+        
+        this.forgotPassErrors = response['error'];
+      }
+
+    });
   }
 
   setUserLogin() {
@@ -348,6 +409,7 @@ export class HeaderComponent implements OnInit {
 		localStorage.removeItem('userType');
 		this.loggedIn = false;
     // document.location.reload();
+    this.router.navigate(["/"]);
 
 	}
 

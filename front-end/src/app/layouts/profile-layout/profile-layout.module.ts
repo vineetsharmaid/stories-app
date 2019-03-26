@@ -7,6 +7,9 @@ import { ProfileLayoutRoutes } from './profile-layout.routing';
 
 import { ProfileComponent } from '../../frontend/user/profile/profile.component';
 import { UserService } from "../../frontend/services/user.service";
+import { 
+  UserAuthGuardService as AuthGuard 
+} from '../../auth/user-auth-guard.service';
 
 @NgModule({
   imports: [
@@ -19,6 +22,7 @@ import { UserService } from "../../frontend/services/user.service";
   ],
   providers: [
     UserService,
+    AuthGuard
   ]
 })
 
