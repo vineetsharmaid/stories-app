@@ -6,7 +6,7 @@ import { AdminLoginRoutes } from './admin-login.routing';
 
 import { 
   AuthGuardService as AuthGuard 
-} from '../auth/auth-guard.service';
+} from '../../auth/auth-guard.service';
 
 import {
   MatButtonModule,

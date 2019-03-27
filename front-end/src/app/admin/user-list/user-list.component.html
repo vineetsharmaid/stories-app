@@ -17,7 +17,7 @@
                   <th>Status </th>
                   <th>Action </th>
                 </thead>
-                <tbody>
+                <tbody *ngIf="users?.length > 0;">
                   <tr *ngFor="let user of users">
                     <td>
                       <img *ngIf="user.profile_pic; else defaultImage" class="profile_pic" src="{{user.profile_pic}}">
@@ -44,6 +44,16 @@
                     </td>
                   </tr>
                 </tbody>
+              
+                <tbody *ngIf="users?.length == 0">
+                  <tr>
+                    <td colspan="5">
+                      No user found.
+                    </td>
+                  </tr>
+                </tbody>
+                
+
               </table>
             </div>
           </div>

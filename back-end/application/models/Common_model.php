@@ -38,4 +38,14 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
         
     }
+
+    public function get_categories()
+    {
+
+        $this->db->select('categories.*, parent_categories.name as parent_name');
+        $this->db->from('categories');
+        $this->db->join('categories as parent_categories', 'parent_categories.cat_id = categories.parent', 'left');
+        return $this->db->get()->result();
+        
+    }
 }

@@ -65,44 +65,46 @@ class Api extends REST_Controller {
             }
         }
 
-        // Find and return a single record for a particular user.
+    }
 
-        $id = (int) $id;
+    public function get_categories_get()
+    {
+ 
+        $id = $this->get('id');
 
-        // Validate the id.
-        if ($id <= 0)
-        {
-            // Invalid id, set the response and exit.
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400) being the HTTP response code
+        // If the id parameter doesn't exist return all the categories
+        if ($id === NULL) {
+            
+          $categories = $this->common_model->get_categories();
+
+        } else {
+
+          // Find and return a single record.
+          $id = (int) $id;
+
+          $categories = $this->common_model->get_categories( 'categories', array('cat_id' => $id) );
         }
 
-        // Get the user from the array, using the id as key for retrieval.
-        // Usually a model is to be used for this.
 
-        $user = NULL;
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($categories) ) {
 
-        if (!empty($users))
-        {
-            foreach ($users as $key => $value)
-            {
-                if (isset($value['id']) && $value['id'] === $id)
-                {
-                    $user = $value;
-                }
-            }
-        }
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $categories,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
 
-        if (!empty($user))
-        {
-            $this->set_response($user, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-        }
-        else
-        {
-            $this->set_response([
+            // Set the response and exit
+            $this->response([
                 'status' => FALSE,
-                'message' => 'User could not be found'
+                'message' => 'No categories were found'
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
+
+
     }
 
     public function users_post()
@@ -211,6 +213,63 @@ class Api extends REST_Controller {
 
         // Set the response and exit
         $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
+
+    public function add_category_post() {
+
+        // convert json post data to array
+        $post_data = json_decode(file_get_contents("php://input"));
+
+        if ( $post_data->parent != "" && !is_numeric($post_data->parent) ) {
+          
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'validation_error',
+              'error' => array('Selected parent category not found.'),
+          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
+
+        }
+
+        if ( trim($post_data->name) == "" || trim($post_data->description) == "" ) {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'validation_error',
+              'error' => array('Please fill all the required fields.'),
+          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
+
+
+        } else {
+
+          $category = array(
+            'name' => trim($post_data->name),
+            'description' => trim($post_data->description),
+            'parent' => $post_data->parent == '' ? 0 : (int) $post_data->parent,
+          );
+          
+          if( $this->common_model->insert_entry('categories', $category) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'category_created',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to add category.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+          }
+
+        }
+
     }
 
     public function check_username_get()

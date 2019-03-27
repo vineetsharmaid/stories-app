@@ -54,7 +54,7 @@ import {
   AgmCoreModule
 } from '@agm/core';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
-import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { FrontendLayoutComponent } from './layouts/frontend-layout/frontend-layout.component';
 import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.component';
 

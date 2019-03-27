@@ -1,9 +1,9 @@
 /*Content Blocks Style*/
 .content_block_wrap{padding: 30px;}
 .content_box{padding: 20px;height: 250px; background-color: #15181b; position: relative;}
-.cb1{background: url(/assets/img/cb1_back.jpg) no-repeat; background-size: cover; background-position: center;}
-.cb2{background: url(/assets/img/cb2.jpg) no-repeat; background-size: cover; background-position: center;}
-.cb3{background: url(/assets/img/cb3.jpg) no-repeat; background-size: cover; background-position: center;}
+.cb1{background: url('/assets/img/cb1_back.jpg') no-repeat; background-size: cover; background-position: center;}
+.cb2{background: url('/assets/img/cb2.jpg') no-repeat; background-size: cover; background-position: center;}
+.cb3{background: url('/assets/img/cb3.jpg') no-repeat; background-size: cover; background-position: center;}
 .content_block_wrap a{color: #fff}
 .content_block_wrap a:hover .content_box h3{color: #f1663b}
 .content_box p{font-size: 16px; line-height: 24px}

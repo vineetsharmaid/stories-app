@@ -25,6 +25,6 @@ class Welcome extends CI_Controller {
 
 	public function check()
 	{
-		echo "here";
+		echo CI_VERSION;
 	}
 }

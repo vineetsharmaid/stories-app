@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserService } from "../services/admin/user.service";
+import { UserService } from "../../services/admin/user.service";
 
 @Component({
   selector: 'app-user-list',
@@ -28,12 +28,10 @@ export class UserListComponent implements OnInit {
 	        console.log('list users');
 	        this.users = response['data'];
 	      }
+	    }, error => {
 
-	      if ( response['status'] == false ) {
-	        
-	        // something went wrong
-	      }
-
+	    	this.users = [];
+	    	console.log('getUsers error', error);	    	
 	    });
   	}
 

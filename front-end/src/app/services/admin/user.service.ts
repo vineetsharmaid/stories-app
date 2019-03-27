@@ -19,10 +19,12 @@ export class UserService {
 
   	getUsers(): Observable<any>{
     	
-			return this.http.get(API_URL+'get_users', httpOptions).pipe(
-				tap((newUser: Object) => console.log('newUser', newUser)),
-				catchError(this.handleError<any>('registerUser'))
-			);
+			// return this.http.get(API_URL+'get_users', httpOptions).pipe(
+			// 	tap((newUser: Object) => console.log('newUser', newUser)),
+			// 	catchError(this.handleError<any>('registerUser'))
+			// );
+
+			return this.http.get(API_URL+'get_users', httpOptions);
 		}
 
   	loginUser(User): Observable<any>{

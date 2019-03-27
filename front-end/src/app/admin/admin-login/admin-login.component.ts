@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { UserService } from "../frontend/services/user.service";
+import { UserService } from "../../frontend/services/user.service";
 
 @Component({
   selector: 'app-admin-login',
@@ -13,6 +13,7 @@ export class AdminLoginComponent implements OnInit {
 
 	loginForm: FormGroup;
 	submitted: boolean = false;
+  hideErrors: boolean = false;
 	loginErrors: Array<string>;
   constructor(private formBuilder: FormBuilder,
     	private router: Router,
@@ -57,12 +58,20 @@ export class AdminLoginComponent implements OnInit {
       		console.log('response', response);
       		if ( response['status'] == 200 ) {
       			
-      			localStorage.setItem('isLoggedIn', 'true');
-      			localStorage.setItem('userType', response['data'].user_type);
+            if ( response['data']['user_type'] == 'admin' ) {
+                
+              localStorage.setItem('isLoggedIn', 'true');
+              localStorage.setItem('userType', response['data'].user_type);
+              this.router.navigateByUrl('/admin/dashboard');
+            } else {
+              
+              this.hideErrors = false;
+              this.loginErrors = ['Incorrect email or password.'];
+            }
 
-      			this.router.navigateByUrl('/admin/dashboard');
       		} else {
 
+            this.hideErrors = false;
       			this.loginErrors = response['error'];
       		}
       	});
