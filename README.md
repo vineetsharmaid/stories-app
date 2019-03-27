@@ -1,5 +1,13 @@
 # Web Application - Stories Of Asia
 
-Deployment
+# Technology Used
+1. Angular (7.0.2)
+2. Codeigniter (3.1.10)
+3. MySQL
+4. Bootstrap 4, Angular Material
 
-Allow URL in google setting to enable google login.
+# Deployment
+
+## After Deployment
+1. Allow URL in google setting to enable google login.
+
