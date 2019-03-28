@@ -18,23 +18,50 @@ export class CategoryService {
   	constructor(private http: HttpClient) { }
 
   	getCategories(): Observable<any>{
+	
+		// return this.http.get(API_URL+'get_categories', httpOptions).pipe(
+		// 	tap((categories: Object) => console.log('categories', categories)),
+		// 	catchError(this.handleError<any>('getCategories'))
+		// );
+
+		return this.http.get(API_URL+'get_categories', httpOptions);
+
+	}
+
+  	getParentCategories(catId): Observable<any>{
     	
-			// return this.http.get(API_URL+'get_categories', httpOptions).pipe(
-			// 	tap((categories: Object) => console.log('categories', categories)),
-			// 	catchError(this.handleError<any>('getCategories'))
-			// );
+		return this.http.get(API_URL+'get_parent_categories/'+catId, httpOptions);
+	}
 
-			return this.http.get(API_URL+'get_categories', httpOptions);
+	/** POST: get category by cat id to the database */
+	getCategory (catId): Observable<any> {
+	  
+	  return this.http.get(API_URL+'get_categories/'+catId, httpOptions);
+	}
 
-		}
-
-	/** POST: add a new hero to the database */
+	/** POST: add a new category to the database */
 	addCategory (category): Observable<any> {
 	  return this.http.post(API_URL+'add_category', category, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
 	}
+
+	/** POST: add a new category to the database */
+	editCategory (category): Observable<any> {
+	  return this.http.post(API_URL+'edit_category', category, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+	}
+
+
+
+
+
+
+
+
 
 	/**
 	 * Handle Http operation that failed.

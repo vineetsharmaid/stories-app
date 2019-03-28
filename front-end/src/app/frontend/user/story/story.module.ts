@@ -3,14 +3,12 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { CategoriesRoutes } from './categories.routing';
-import { CategoryListComponent } from './category-list/category-list.component';
-import { CategoryAddComponent } from './category-add/category-add.component';
-import { CategoryEditComponent } from './category-edit/category-edit.component';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
-import { 
-  AuthGuardService as AuthGuard 
-} from '../../auth/auth-guard.service';
+import { StoryRoutes } from './story.routing';
+
+import { StoryListComponent } from './story-list/story-list.component';
+import { StoryNewComponent } from './story-new/story-new.component';
 
 import {
   MatButtonModule,
@@ -26,7 +24,7 @@ import {
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(CategoriesRoutes),
+    RouterModule.forChild(StoryRoutes),
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -36,16 +34,16 @@ import {
     MatSelectModule,
     MatAutocompleteModule,
     MatTooltipModule, 
-    MatRadioModule   
+    MatRadioModule,
+    FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   declarations: [
-    CategoryListComponent,
-    CategoryAddComponent,
-    CategoryEditComponent,
+    StoryListComponent,
+    StoryNewComponent,
   ],
   providers: [
-    AuthGuard
+    
   ]
 })
 
-export class CategoriesModule {}
+export class StoryModule {}

@@ -6,6 +6,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileLayoutRoutes } from './profile-layout.routing';
 
 import { ProfileComponent } from '../../frontend/user/profile/profile.component';
+import { StoryComponent } from '../../frontend/user/story/story.component';
+
+
 import { UserService } from "../../frontend/services/user.service";
 import { 
   UserAuthGuardService as AuthGuard 
@@ -16,9 +19,11 @@ import {
     CommonModule,
     RouterModule.forChild(ProfileLayoutRoutes),
     FormsModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     ProfileComponent,
+    StoryComponent,
   ],
   providers: [
     UserService,

@@ -1,58 +1,73 @@
 <div class="main-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header card-header-danger">
-            <h4 class="card-title">Add Category</h4>
-            <!-- <p class="card-category"> List of users.</p> -->
-            <button class="btn btn-sm btn-success pull-right" [routerLink]="['../']">
-            List
-            </button>
-          </div>
-          <div class="card-body">
-            <form [formGroup]="addCategoryForm" (ngSubmit)="addCategory()">
-              <div class="row">
-                <div class="col-md-3"></div>
-                <div class=" col-md-6">
-                  
-                  <div class="form-group">
-                    <mat-form-field class="example-full-width">
-                      <input matInput formControlName="name" type="text" placeholder="Name">
-                      <div *ngIf="formSubmitted && fields.name.errors" class="invalid-feedback">
-                        <div *ngIf="fields.name.errors.required">Name is required</div>
-                      </div>
-                    </mat-form-field>
-                  </div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header card-header-danger">
+						<h4 class="card-title">Add Category</h4>
+						<!-- <p class="card-category"> List of users.</p> -->
+						<button class="btn btn-sm btn-success pull-right" [routerLink]="['../']">
+						List
+						</button>
+					</div>
+					<div class="card-body">
+						<form [formGroup]="addCategoryForm" (ngSubmit)="addCategory()">
+							<div class="row">
+								<div class="col-md-3"></div>
+								<div class=" col-md-6">
+									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input matInput formControlName="name" type="text" placeholder="Name">
+										<div *ngIf="formSubmitted && fields.name.errors" class="invalid-feedback">
+											<div *ngIf="fields.name.errors.required">Name is required</div>
+										</div>
+										</mat-form-field>
+									</div>
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<textarea matInput formControlName="description" placeholder="Description for the category."></textarea>
+										<div *ngIf="formSubmitted && fields.description.errors" class="invalid-feedback">
+											<div *ngIf="fields.description.errors.required">Description is required</div>
+										</div>
+										</mat-form-field>
+									</div>
+									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input type="text" placeholder="Parent Category (Start typing to search)" aria-label="Number" matInput formControlName="parent" [matAutocomplete]="auto">
+										<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+										<mat-option *ngFor="let category of filteredCategories | async" [value]="category">
+										{{category.name}}
+										</mat-option>
+										</mat-autocomplete>
+										</mat-form-field>
+									</div>
 
-                  <div class="form-group">
-                    <mat-form-field class="example-full-width">
-                    <textarea matInput formControlName="description" placeholder="Description for the category."></textarea>
-                    <div *ngIf="formSubmitted && fields.description.errors" class="invalid-feedback">
-                      <div *ngIf="fields.description.errors.required">Description is required</div>
-                    </div>                    
-                    </mat-form-field>
-                  </div>
-                  
-                  <div class="form-group">
-                    <mat-form-field class="example-full-width">
-                    <input type="text" placeholder="Parent Category (Start typing to search)" aria-label="Number" matInput formControlName="parent" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                      <mat-option *ngFor="let category of filteredCategories | async" [value]="category">
-                        {{category.name}}
-                      </mat-option>
-                    </mat-autocomplete>
-                    </mat-form-field>
-                  </div>
-                  <button mat-raised-button type="submit" class="btn btn-danger pull-right">Add</button>
-                </div>
-                <div class="col-md-3"></div>
-                <div class="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+									<div class="form-group">
+										<label class="d-block mb-1">Status</label>
+										<mat-radio-group formControlName="status">
+											<mat-radio-button class="example-margin mr-2" color="primary" value="1">
+												Published
+											</mat-radio-button>
+											
+											<mat-radio-button class="example-margin ml-2" color="primary" value="0">
+												Unpublished
+											</mat-radio-button>
+										</mat-radio-group>
+										<div *ngIf="formSubmitted && fields.status.errors" class="invalid-feedback">
+											<div *ngIf="fields.status.errors.required">Status is required</div>
+										</div>
+									</div>
+									<button mat-raised-button type="submit" class="btn btn-danger pull-right">Add</button>
+								</div>
+								<div class="col-md-3"></div>
+								<div class="clearfix"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

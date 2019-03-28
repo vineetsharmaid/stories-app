@@ -27,6 +27,7 @@ export class CategoryAddComponent implements OnInit {
   		this.addCategoryForm = this.formBuilder.group({
   			'name': ['', Validators.required],
   			'description': ['', Validators.required],
+  			'status': ['0', Validators.required],
   			'parent': [''],
   		})
   		
@@ -54,6 +55,7 @@ export class CategoryAddComponent implements OnInit {
 			var category = {
 					name: this.addCategoryForm.get('name').value,
 					description: this.addCategoryForm.get('description').value,
+					status: this.addCategoryForm.get('status').value,
 					parent: parent_id,
 				};
 
