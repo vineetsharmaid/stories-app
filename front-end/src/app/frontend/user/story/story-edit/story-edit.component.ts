@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, RoutesRecognized } from '@angular/router';
-
+import { Router, NavigationEnd, RoutesRecognized, ActivatedRoute } from '@angular/router';
 import { trigger, transition, animate, style } from '@angular/animations'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/pairwise';
 
 import { StoryService } from '../../../services/story.service';
 
@@ -11,9 +12,9 @@ class ImageSnippet {
 }
 
 @Component({
-  selector: 'app-story-new',
-  templateUrl: './story-new.component.html',
-  styleUrls: ['./story-new.component.css'],
+  selector: 'app-story-edit',
+  templateUrl: './story-edit.component.html',
+  styleUrls: ['./story-edit.component.css'],
   animations: [
 	  trigger('slideInOut', [
 	    transition(':enter', [
@@ -27,18 +28,19 @@ class ImageSnippet {
 	  ])
   ]
 })
-export class StoryNewComponent implements OnInit {
+export class StoryEditComponent implements OnInit {
 
-	public showNewForm: boolean = true;
-	public showPreview: boolean = false;
+	public showNewForm: boolean;
+	public showPreview: boolean;
 	public previewSubmitted: boolean = false;
 	public storyTitle;
-	public addStoryForm: FormGroup;
+	public editStoryForm: FormGroup;
 	public previewForm: FormGroup;
 	public selectedFile: ImageSnippet;
 	public filePath: string;
-	public previousUrl: string;
+  public previousUrl: string;
 	public storyId: number;
+  public story: Object;
 
 
 	public editorTitleOptions: Object = {
@@ -82,28 +84,14 @@ export class StoryNewComponent implements OnInit {
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
 
-  constructor(private formBuilder: FormBuilder, private storyService: StoryService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private storyService: StoryService, 
+    private router: Router, private activatedRoute: ActivatedRoute) {   
 
-
-    this.router.events
-      .filter(e => e instanceof RoutesRecognized)
-      .pairwise()
-      .subscribe((event: any[]) => {
-        console.log(event[0].urlAfterRedirects);
-
-        // check if previous url was edit
-        this.previousUrl = event[0].urlAfterRedirects.split('/');
-        if( this.previousUrl[3] == 'edit' ) {
-
-        	this.router.navigate(['/user']);
-        }
-    }); 
   }
  
   ngOnInit() {
 
-
-  	this.addStoryForm = this.formBuilder.group({
+  	this.editStoryForm = this.formBuilder.group({
 
   		title: ['', Validators.required],
   		description: [' ', Validators.required],
@@ -115,26 +103,63 @@ export class StoryNewComponent implements OnInit {
   		previewSubtitle: ['', Validators.required],
   		// previewImage: ['', Validators.required],
   	});
+    
+    this.getStory();
+  }
+
+  getStory() {
+
+
+    this.storyId = +this.activatedRoute.snapshot.paramMap.get('storyId');
+
+    this.storyService.getStory(this.storyId).subscribe(
+      (response) => {
+
+        console.log('response', response);
+        this.story = response['data'][0];
+        console.log('this.story', this.story);
+
+        this.editStoryForm.patchValue({  
+
+          title: this.story['title'],
+          description: this.story['description'],
+        });
+
+
+        if ( this.story['preview_title'] == "" && this.story['preview_subtitle'] == "" ) {
+            
+            this.showPreview = true;          
+            this.showNewForm = false;
+        } else {
+            
+            this.showPreview = true;          
+            this.showNewForm = false;           
+        }
+
+      }, (error) => {
+
+        console.log('error', error);
+      });
   }
 
 	// convenience getter for easy access to form fields
-  get as() { return this.addStoryForm.controls; }    
+  get as() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
   saveDraft() {
 
     var draftStory = {
-			title: this.addStoryForm.get('title').value,
-			description: this.addStoryForm.get('description').value,
+			title: this.editStoryForm.get('title').value,
+			description: this.editStoryForm.get('description').value,
 			username: localStorage.getItem('username')
 		};
 
-		let description = this.addStoryForm.get('description').value;
+		let description = this.editStoryForm.get('description').value;
 		let subTitle 		= description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
 
 		this.previewForm.patchValue({	
 
-			previewTitle: this.addStoryForm.get('title').value,
+			previewTitle: this.editStoryForm.get('title').value,
 			previewSubtitle: subTitle,
 		});
 
@@ -142,7 +167,7 @@ export class StoryNewComponent implements OnInit {
 		console.log('subTitle', subTitle);
 
     // stop here if form is invalid
-    if (this.addStoryForm.invalid) {
+    if (this.editStoryForm.invalid) {
 
     	console.log('Validation error.');
       return;
@@ -155,8 +180,7 @@ export class StoryNewComponent implements OnInit {
     		
     		this.storyId = response['data']['story'];
 
-    		this.router.navigate(["/user/story/edit/", this.storyId]);
-    		// this.toggleView();
+    		this.toggleView();
     	}, (error) => {
 
     		console.log(error);

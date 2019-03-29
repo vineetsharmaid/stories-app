@@ -3,7 +3,7 @@
     	<div class="col-sm-2"></div>
     	<div class="col-sm-8" *ngIf="showNewForm" [@slideInOut]>
     			
-    		<form [formGroup]="addStoryForm" (ngSubmit)="saveDraft()">
+    		<form [formGroup]="editStoryForm" (ngSubmit)="saveDraft()">
 	    		<div class="form-group">
 	    			<!-- <label>Title</label> -->
 	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">

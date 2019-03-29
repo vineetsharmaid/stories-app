@@ -177,7 +177,7 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin();
+				this.setUserLogin(response['data']['username']);
   			console.log('loggedIn', this.loggedIn);
   		}
 
@@ -186,7 +186,7 @@ export class HeaderComponent implements OnInit {
   			
   			this.accountAlreadyExists = true;
   			this.showHideLoginBtn.nativeElement.click();
-  			// this.setUserLogin();
+  			// this.setUserLogin(username);
   		}
 
   	});
@@ -207,7 +207,7 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin();
+				this.setUserLogin(response['data']['username']);
   			console.log('loggedIn', this.loggedIn);
 
   		}
@@ -248,11 +248,12 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  setUserLogin() {
+  setUserLogin(username) {
 
 		// set login
 		localStorage.setItem('isLoggedIn', 'true');
 		localStorage.setItem('userType', 'user');
+    localStorage.setItem('username', username);
 		this.loggedIn = true;
 
 		this.navigate('/user');
