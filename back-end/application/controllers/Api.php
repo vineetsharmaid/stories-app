@@ -67,46 +67,6 @@ class Api extends REST_Controller {
 
     }
 
-    public function get_categories_get()
-    {
- 
-        $id = $this->get('id');
-
-        // If the id parameter doesn't exist return all the categories
-        if ($id === NULL) {
-            
-          $categories = $this->common_model->get_categories();
-
-        } else {
-
-          // Find and return a single record.
-          $id = (int) $id;
-
-          $categories = $this->common_model->get_categories( 'categories', array('cat_id' => $id) );
-        }
-
-
-        // Check if the categories data store contains categories (in case the database result returns NULL)
-        if ( !empty($categories) ) {
-
-            // Set the response and exit
-            $this->response(  
-              array(
-                'status' => TRUE,
-                'data' => $categories,
-              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-        } else {
-
-            // Set the response and exit
-            $this->response([
-                'status' => FALSE,
-                'message' => 'No categories were found'
-            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
-        }
-
-
-    }
-
     public function users_post()
     {
         // $this->some_model->update_user( ... );
@@ -143,14 +103,13 @@ class Api extends REST_Controller {
     public function register_post() {
 
         $post_data = json_decode(file_get_contents("php://input"));
-
         
         if ( trim($post_data->first_name) == "" || trim($post_data->last_name) == "" || trim($post_data->email) == "" ) {
           
             $message = array('message' => 'validation_error', 'status' => 204); // no content
         } else {
 
-          $user_exists = $this->common_model->user_exists( 'users', array('user_email' => $post_data->email) );
+          $user_exists = $this->common_model->data_exists( 'users', array('user_email' => $post_data->email) );
 
           $password = $this->_randomPassword();
           $password_hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -158,13 +117,26 @@ class Api extends REST_Controller {
           if ( $user_exists ) {
               
               $user = $this->common_model->get_data( 'users', array('user_email' => $post_data->email) );
-              $message = array('message' => 'email_exists', 'data'   => array('user_type' => $user[0]->user_type), 'status' => 201);
+              $message = array(
+                'message' => 'email_exists', 
+                'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ), 
+                'status'  => 201
+              );
           } else {
+
+              if ( isset($post_data->username) ) {
+                
+                $username = strtolower($post_data->username);
+              } else {
+
+                $username = $this->_generate_username($post_data->first_name.''.$post_data->last_name);
+              }
+
 
               $user_data = array(
                   'first_name'    => $post_data->first_name,
                   'last_name'     => $post_data->last_name,
-                  'username'      => $post_data->username,
+                  'username'      => $username,
                   'user_type'     => 'user',
                   'status'        => 1,
                   'user_email'    => $post_data->email,
@@ -175,7 +147,7 @@ class Api extends REST_Controller {
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
                   
-                $message = array('message' => 'Registered new user', 'status' => 200);
+                $message = array('message' => 'Registered new user', 'data' => array( 'username' => $username ),'status' => 200);
               }
           }
 
@@ -215,63 +187,6 @@ class Api extends REST_Controller {
         $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
     }
 
-
-    public function add_category_post() {
-
-        // convert json post data to array
-        $post_data = json_decode(file_get_contents("php://input"));
-
-        if ( $post_data->parent != "" && !is_numeric($post_data->parent) ) {
-          
-
-          // Set the response and exit
-          $this->response([
-              'status' => FALSE,
-              'message' => 'validation_error',
-              'error' => array('Selected parent category not found.'),
-          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
-
-        }
-
-        if ( trim($post_data->name) == "" || trim($post_data->description) == "" ) {
-
-          // Set the response and exit
-          $this->response([
-              'status' => FALSE,
-              'message' => 'validation_error',
-              'error' => array('Please fill all the required fields.'),
-          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
-
-
-        } else {
-
-          $category = array(
-            'name' => trim($post_data->name),
-            'description' => trim($post_data->description),
-            'parent' => $post_data->parent == '' ? 0 : (int) $post_data->parent,
-          );
-          
-          if( $this->common_model->insert_entry('categories', $category) ) {
-
-            // Set the response and exit
-            $this->response([
-                'status' => TRUE,
-                'message' => 'category_created',
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-          } else {
-
-            // Set the response and exit
-            $this->response([
-                'status' => FALSE,
-                'message' => 'database_error',
-                'error' => array('Something went wrong, unable to add category.'),
-            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
-          }
-
-        }
-
-    }
-
     public function check_username_get()
     {
       
@@ -280,7 +195,7 @@ class Api extends REST_Controller {
 
       if ( $username !== NULL ) {
         
-        $user_count = $this->common_model->user_exists( 'users', array('username' => $username) );
+        $user_count = $this->common_model->data_exists( 'users', array('username' => $username) );
         
         $message = [
             'message' => $user_count,
@@ -333,6 +248,27 @@ class Api extends REST_Controller {
       $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
     }
 
+    function _generate_username($username)
+    {
+
+      $user_count = $this->common_model->data_exists('users', array('username' => $username));
+
+      if ($user_count > 0) {
+
+        while ($user_count > 0) {
+          
+          $username   = $username.'_'.rand(0, 100);
+          $user_count = $this->common_model->data_exists('users', array('username' => $username));
+        }
+        
+        
+      } else {
+
+      }
+
+      return strtolower($username);
+    }
+
     function _login_by_username($user_data)
     {
         
@@ -348,7 +284,7 @@ class Api extends REST_Controller {
 
                 $message = [
                     'message' => 'Logged In',
-                    'data'   => array('user_type' => $user[0]->user_type),
+                    'data'   => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ),
                     'status' => 200
                 ];
             } else {
@@ -396,7 +332,7 @@ class Api extends REST_Controller {
 
                   $message = [
                       'message' => 'Logged In',
-                      'data'   => array('user_type' => $user[0]->user_type),
+                      'data'   => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ),
                       'status' => 200
                   ];
               } else {
@@ -438,6 +374,446 @@ class Api extends REST_Controller {
             $pass[] = $alphabet[$n];
         }
         return implode($pass); //turn the array into a string
+    }
+
+    function save_story_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+
+      $story = array(
+        'title' => trim( strip_tags($post_data->title) ),
+        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'author_id' => $user[0]->user_id,
+        'status' => 0
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->insert_entry('stories', $story) ) {
+
+            $story_id = $this->db->insert_id();
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('story' => $story_id),
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    function update_story_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+
+      $story = array(
+        'title' => trim( strip_tags($post_data->title) ),
+        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'author_id' => $user[0]->user_id,
+        'status' => 0
+      );
+      
+      $where = array('story_id' => $post_data->story_id);
+
+      if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('story' => $post_data),
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    function submit_story_for_review_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+      
+      $story = array(
+        'preview_title' => trim( strip_tags($post_data->previewTitle) ),
+        'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
+        'author_id' => $user[0]->user_id,
+        'status' => 0,
+        'review' => 2, // submitted for review
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->update_entry('stories', $story, array('story_id' => $post_data->story)) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function image_upload_post() { 
+      
+      $config['upload_path']          = './assets/uploads/';
+      $config['allowed_types']        = 'gif|jpg|png';
+      $config['max_size']             = 2048;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
+
+      $this->load->library('upload', $config);
+
+      if ( ! $this->upload->do_upload('image'))
+      {
+          $error = array('error' => $this->upload->display_errors());
+
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'not_uploaded',
+              'error'   => $error,
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+          $upload_data['raw_name'].$upload_data['file_ext'];
+          
+          $story = array(
+            'preview_image' => $upload_data['raw_name'].$upload_data['file_ext'],
+          );
+          
+          $where = array('story_id' => $this->input->post('story_id'));
+
+          if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => 'image_uploaded_updated',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'not_updated_db_error',
+                'error'   => 'Something went wrong, unable to update preview image.',
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }          
+      }
+
+    }
+
+
+    public function story_description_image_upload_post() { 
+
+      $config['upload_path']          = './assets/uploads/';
+      $config['allowed_types']        = 'gif|jpg|png';
+      $config['max_size']             = 2048;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
+
+      $this->load->library('upload', $config);
+
+      if ( ! $this->upload->do_upload('description_image'))
+      {
+          $error = array('error' => $this->upload->display_errors());
+
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'not_uploaded',
+              'error'   => $error,
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+            // Set the response and exit
+          $this->response(  
+            array(
+              'link'  => base_url().'assets/uploads/'.$upload_data['raw_name'].$upload_data['file_ext'],
+            ), REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code
+          
+      }
+
+    }
+    
+    public function get_story_get()
+    {
+
+        $story_id = $this->uri->segment(3);
+
+        $story = $this->common_model->get_data( 'stories', array('story_id' => $story_id) );
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($story) ) {
+
+            $story[0]->description = html_entity_decode($story[0]->description);
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No stories were found',
+                'error' => array('No stories were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
+
+    /*
+    *
+    *
+    *
+    *
+    *
+    * ADMIN API
+    *
+    *
+    *
+    *
+    *
+    **/ 
+
+
+    public function add_category_post() {
+
+        // convert json post data to array
+        $post_data = json_decode(file_get_contents("php://input"));
+
+        if ( $post_data->parent != "" && !is_numeric($post_data->parent) ) {
+          
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'validation_error',
+              'error' => array('Selected parent category not found.'),
+          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
+
+        }
+
+        if ( trim($post_data->name) == "" || trim($post_data->description) == "" ) {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'validation_error',
+              'error' => array('Please fill all the required fields.'),
+          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
+
+
+        } else {
+
+          $category = array(
+            'name' => trim($post_data->name),
+            'description' => trim($post_data->description),
+            'status' => (int) $post_data->status,
+            'parent' => $post_data->parent == '' ? 0 : (int) $post_data->parent,
+          );
+          
+          if( $this->common_model->insert_entry('categories', $category) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'category_created',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to add category.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+          }
+
+        }
+
+    }
+
+    public function edit_category_post() {
+
+        // convert json post data to array
+        $post_data = json_decode(file_get_contents("php://input"));
+
+        $data_error = array();
+
+        if ( $post_data->parent != "" && !is_numeric($post_data->parent) ) {
+            
+          array_push($data_error, 'Selected parent category not found.');
+        }
+
+        if ( trim($post_data->cat_id) == "" ) {
+
+          array_push($data_error, 'Category ID not provided.');
+        }
+
+        if ( trim($post_data->name) == "" || trim($post_data->description) == "" ) {
+
+          array_push($data_error, 'Please fill all the required fields.');
+        }
+
+        if ( !empty($data_error) ) {
+          
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'validation_error',
+              'error' => $data_error,
+          ], REST_Controller::HTTP_BAD_REQUEST); // NOT_FOUND (404) being the HTTP response code
+
+        } else {
+
+          $category = array(
+            'name' => trim($post_data->name),
+            'description' => trim($post_data->description),
+            'status' => (int) $post_data->status,
+            'parent' => $post_data->parent == '' ? 0 : (int) $post_data->parent,
+          );
+
+          $where = array( 'cat_id' => $post_data->cat_id );
+          
+          if( $this->common_model->update_entry('categories', $category, $where) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'category_updated',
+                'data' => $where,
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to update category.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+          }
+
+        }
+
+    }
+
+
+    public function get_categories_get()
+    {
+ 
+        $cat_id = $this->uri->segment(3);
+
+        // If the id parameter doesn't exist return all the categories
+        if ($cat_id === NULL) {
+
+          $categories = $this->common_model->get_categories();
+        } else {
+          
+          // Find and return a single record.
+          $cat_id = (int) $cat_id;
+
+          $categories = $this->common_model->get_category($cat_id);
+        }
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($categories) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $categories,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No categories were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
+
+    public function get_parent_categories_get($cat_id)
+    { 
+        $categories = $this->common_model->get_parent_categories($cat_id);
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($categories) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $categories,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No categories were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
     }
 
 }

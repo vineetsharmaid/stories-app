@@ -3,23 +3,33 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from  '@angular/common/htt
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
+
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const API_URL  =  'http://localhost/stories-app/back-end/api/';
+const API_URL  =  environment.baseUrl+'/api/';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StoryService {
-	
+
   	constructor(private http: HttpClient) { }
 
   	saveDraft(story): Observable<any>{
     	
 			return this.http.post(API_URL+'save_story', story, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	updateDraft(story): Observable<any>{
+    	
+			return this.http.post(API_URL+'update_story', story, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -34,6 +44,14 @@ export class StoryService {
 	    );
 		}
 
+  	saveReview(story): Observable<any>{
+    	
+			return this.http.post(API_URL+'save_review_data', story, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
 
   	getStory(storyId): Observable<any>{
     	
@@ -42,6 +60,33 @@ export class StoryService {
 	      catchError(this.handleError)
 	    );
 		}
+
+		public uploadImage(image: File, story_id): Observable<Response> {
+	    // const formData = new FormData();
+
+	    // formData.append('image', image);
+
+	    // return this.http.post(API_URL+'image_upload', formData);
+
+			// return this.http.post(API_URL+'image_upload', image, httpOptions)
+	  //   .pipe(
+	  //     catchError(this.handleError)
+	  //   );	    
+
+      console.log('image', image);
+
+ 			const formData = new FormData();
+      formData.append('story_id', story_id);
+      formData.append('image', image);
+
+      const headers = new HttpHeaders().set('Content-Type', []);
+
+      // responseType 'text' is necessary for IE
+      return this.http.post(API_URL+'image_upload', formData, {
+          headers,
+          responseType: 'text'
+      });	    
+	  }
 
 
 

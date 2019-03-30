@@ -3,7 +3,7 @@
     	<div class="col-sm-2"></div>
     	<div class="col-sm-8" *ngIf="showNewForm" [@slideInOut]>
     			
-    		<form [formGroup]="editStoryForm" (ngSubmit)="saveDraft()">
+    		<form [formGroup]="editStoryForm" (ngSubmit)="updateDraft()">
 	    		<div class="form-group">
 	    			<!-- <label>Title</label> -->
 	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">
@@ -15,6 +15,10 @@
 	    		</div>
 
 	    		<!-- <hr> -->
+
+	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
+	        		<textarea [froalaEditor]="options" placeholder="Tell you story!!"></textarea>
+	    		</div>
 
 	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
 	        		<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell you story!!" formControlName="description"></textarea>

@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, RoutesRecognized, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
 import { trigger, transition, animate, style } from '@angular/animations'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable }         from 'rxjs';
+import { map }                from 'rxjs/operators';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/pairwise';
 
 import { StoryService } from '../../../services/story.service';
+
+import { environment } from '../../../../../environments/environment';
+const API_URL  =  environment.baseUrl+'/api/';
 
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
@@ -33,6 +38,7 @@ export class StoryEditComponent implements OnInit {
 	public showNewForm: boolean;
 	public showPreview: boolean;
 	public previewSubmitted: boolean = false;
+  public previewIsTouched: boolean = false;
 	public storyTitle;
 	public editStoryForm: FormGroup;
 	public previewForm: FormGroup;
@@ -41,6 +47,56 @@ export class StoryEditComponent implements OnInit {
   public previousUrl: string;
 	public storyId: number;
   public story: Object;
+
+  isNewStory: Observable<string>;
+
+  public options: Object = {
+    charCounterCount: true,
+    // Set the image upload parameter.
+    imageUploadParam: 'description_image',
+
+    // Set the image upload URL.
+    imageUploadURL: API_URL+'story_description_image_upload',
+
+    // Additional upload params.
+    imageUploadParams: {id: 'my_editor'},
+
+    // Set request type.
+    imageUploadMethod: 'POST',
+
+    // Set max image size to 5MB.
+    imageMaxSize: 5 * 1024 * 1024,
+
+    // Allow to upload PNG and JPG.
+    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+    events:  {
+      'froalaEditor.initialized':  function () {
+        console.log('initialized');
+      },
+      'froalaEditor.image.beforeUpload':  function  (e,  editor,  images) {
+        //Your code 
+        // if  (images.length) {
+        //   // Create a File Reader.
+        //   const  reader  =  new  FileReader();
+        //   // Set the reader to insert images when they are loaded.
+        //   reader.onload  =  (ev)  =>  {
+        //     const  result  =  ev.target['result'];
+        //     editor.image.insert(result,  null,  null,  editor.image.get());
+        //     console.log(ev,  editor.image,  ev.target['result'])
+        //   };
+        //   // Read image as base64.
+        //   reader.readAsDataURL(images[0]);
+        // }
+        // Stop default upload chain.
+        // return  false;
+      }, 
+      'froalaEditor.image.error':  function  (e,  editor, error, images) {
+        
+        console.log('error', error);
+      },
+
+    };
+  }  
 
 
 	public editorTitleOptions: Object = {
@@ -80,6 +136,51 @@ export class StoryEditComponent implements OnInit {
   	heightMin: 400,
     heightMax: 600,
   	charCounterCount: false,
+
+    // Set the image upload parameter.
+    imageUploadParam: 'description_image',
+
+    // Set the image upload URL.
+    imageUploadURL: API_URL+'story_description_image_upload',
+
+    // Additional upload params.
+    imageUploadParams: {id: 'my_editor'},
+
+    // Set request type.
+    imageUploadMethod: 'POST',
+
+    // Set max image size to 5MB.
+    imageMaxSize: 5 * 1024 * 1024,
+
+    // Allow to upload PNG and JPG.
+    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+    events:  {
+      'froalaEditor.initialized':  function () {
+        console.log('initialized');
+      },
+      'froalaEditor.image.beforeUpload':  function  (e,  editor,  images) {
+        //Your code 
+        // if  (images.length) {
+        //   // Create a File Reader.
+        //   const  reader  =  new  FileReader();
+        //   // Set the reader to insert images when they are loaded.
+        //   reader.onload  =  (ev)  =>  {
+        //     const  result  =  ev.target['result'];
+        //     editor.image.insert(result,  null,  null,  editor.image.get());
+        //     console.log(ev,  editor.image,  ev.target['result'])
+        //   };
+        //   // Read image as base64.
+        //   reader.readAsDataURL(images[0]);
+        // }
+        // Stop default upload chain.
+        // return  false;
+      }, 
+      'froalaEditor.image.error':  function  (e,  editor, error, images) {
+        
+        console.log('error', error);
+      },
+
+    };
     // quickInsertTags: [], //to disable quick button
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
@@ -103,22 +204,26 @@ export class StoryEditComponent implements OnInit {
   		previewSubtitle: ['', Validators.required],
   		// previewImage: ['', Validators.required],
   	});
+
+    const routeParams = this.activatedRoute.snapshot.params;
+    this.isNewStory = routeParams['new'] == "true" ? true : false;
     
     this.getStory();
   }
 
   getStory() {
 
-
     this.storyId = +this.activatedRoute.snapshot.paramMap.get('storyId');
 
     this.storyService.getStory(this.storyId).subscribe(
       (response) => {
 
-        console.log('response', response);
         this.story = response['data'][0];
         console.log('this.story', this.story);
 
+        this.filePath = "http://localhost/stories-app/back-end/assets/uploads/big_img5.jpg";
+
+        /****SET FORM FIELDS VALUE****/ 
         this.editStoryForm.patchValue({  
 
           title: this.story['title'],
@@ -126,14 +231,35 @@ export class StoryEditComponent implements OnInit {
         });
 
 
-        if ( this.story['preview_title'] == "" && this.story['preview_subtitle'] == "" ) {
-            
-            this.showPreview = true;          
-            this.showNewForm = false;
+        /********SHOW PREVIEW FORM FIRST WHEN PREVIEW INFORMATION IS EMPTY*******/
+        if (this.isNewStory) {
+          
+          this.showPreview = true;          
+          this.showNewForm = false;
+
+          let description  = this.story['description'];
+          let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+
+          /****SET FORM FIELDS VALUE****/ 
+          // if ( this.story['preview_title'] == "" && this.story['preview_subtitle'] == "" ) { }
+           
+            this.previewForm.patchValue({  
+
+              previewTitle: this.story['preview_title'] == "" ? this.story['title'] : this.story['preview_title'],
+              previewSubtitle: this.story['preview_subtitle'] == "" ? subTitle : this.story['preview_subtitle'],
+            });
+          
         } else {
             
-            this.showPreview = true;          
-            this.showNewForm = false;           
+          this.showNewForm = true;
+          this.showPreview = false;
+
+          /****SET FORM FIELDS VALUE****/ 
+          this.previewForm.patchValue({  
+
+            previewTitle: this.story['preview_title'],
+            previewSubtitle: this.story['preview_subtitle'],
+          });            
         }
 
       }, (error) => {
@@ -146,25 +272,25 @@ export class StoryEditComponent implements OnInit {
   get as() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
-  saveDraft() {
+  updateDraft() {
 
     var draftStory = {
 			title: this.editStoryForm.get('title').value,
 			description: this.editStoryForm.get('description').value,
-			username: localStorage.getItem('username')
+			username: localStorage.getItem('username'),
+      story_id: this.story['story_id'],
 		};
 
-		let description = this.editStoryForm.get('description').value;
-		let subTitle 		= description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+		// let description = this.editStoryForm.get('description').value;
+		// let subTitle 		= description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
 
-		this.previewForm.patchValue({	
+		// this.previewForm.patchValue({	
 
-			previewTitle: this.editStoryForm.get('title').value,
-			previewSubtitle: subTitle,
-		});
+		// 	previewTitle: this.editStoryForm.get('title').value,
+		// 	previewSubtitle: subTitle.replace(/&nbsp;/g, ''),
+		// });
 
 		console.log('draftStory', draftStory);
-		console.log('subTitle', subTitle);
 
     // stop here if form is invalid
     if (this.editStoryForm.invalid) {
@@ -173,7 +299,7 @@ export class StoryEditComponent implements OnInit {
       return;
     } else {
 
-    	this.storyService.saveDraft(draftStory).subscribe((response) => {
+    	this.storyService.updateDraft(draftStory).subscribe((response) => {
 
 				console.log('Data saved to draft');
     		console.log(response);
@@ -196,7 +322,7 @@ export class StoryEditComponent implements OnInit {
     var draftStory = {
 			previewTitle: this.previewForm.get('previewTitle').value,
 			previewSubtitle: this.previewForm.get('previewSubtitle').value,
-			story: this.storyId,
+			story: this.story['story_id'],
 			username: localStorage.getItem('username')
 		};
 
@@ -220,6 +346,26 @@ export class StoryEditComponent implements OnInit {
 		}
   }
 
+
+  // savePreviewKeyup(field: string, event: any) {
+
+  //   console.log('field', field);
+  //   console.log('event.target.value', event.target.value);
+
+  //   let story = {[field]: event.target.value};
+  //   console.log('story', story);
+  //   this.storyService.saveReview(story).subscribe((response) => {
+
+  //     console.log('review data saved');
+  //     console.log(response);
+      
+  //   }, (error) => {
+
+  //     console.log(error);
+  //   });
+
+  // }
+
   toggleView() {
 
   	this.showNewForm = this.showNewForm == false ? true : false;
@@ -237,13 +383,15 @@ export class StoryEditComponent implements OnInit {
       this.filePath = this.selectedFile.src;
       console.log('this.selectedFile', this.selectedFile);
 
-      // this.imageService.uploadImage(this.selectedFile.file).subscribe(
-      //   (res) => {
+      this.storyService.uploadImage(this.selectedFile.file, this.story['story_id']).subscribe(
+        (res) => {
+          
+          console.log('res', res);
+        },
+        (err) => {
         
-      //   },
-      //   (err) => {
-        
-      //   })
+          console.log('err', err);
+        })
     });
 
     reader.readAsDataURL(file);

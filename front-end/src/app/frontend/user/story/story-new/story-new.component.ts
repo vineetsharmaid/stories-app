@@ -102,7 +102,6 @@ export class StoryNewComponent implements OnInit {
  
   ngOnInit() {
 
-
   	this.addStoryForm = this.formBuilder.group({
 
   		title: ['', Validators.required],
@@ -155,7 +154,7 @@ export class StoryNewComponent implements OnInit {
     		
     		this.storyId = response['data']['story'];
 
-    		this.router.navigate(["/user/story/edit/", this.storyId]);
+    		this.router.navigate(["/user/story/edit/"+this.storyId, {'new': 'true'}]);
     		// this.toggleView();
     	}, (error) => {
 
