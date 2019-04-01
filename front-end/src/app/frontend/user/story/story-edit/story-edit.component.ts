@@ -11,6 +11,7 @@ import { StoryService } from '../../../services/story.service';
 
 import { environment } from '../../../../../environments/environment';
 const API_URL  =  environment.baseUrl+'/api/';
+const APP_URL  =  environment.baseUrl;
 
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
@@ -47,84 +48,16 @@ export class StoryEditComponent implements OnInit {
   public previousUrl: string;
 	public storyId: number;
   public story: Object;
+  public storyErrors: Array<string>;
 
-  isNewStory: Observable<string>;
-
-  public options: Object = {
-    charCounterCount: true,
-    // Set the image upload parameter.
-    imageUploadParam: 'description_image',
-
-    // Set the image upload URL.
-    imageUploadURL: API_URL+'story_description_image_upload',
-
-    // Additional upload params.
-    imageUploadParams: {id: 'my_editor'},
-
-    // Set request type.
-    imageUploadMethod: 'POST',
-
-    // Set max image size to 5MB.
-    imageMaxSize: 5 * 1024 * 1024,
-
-    // Allow to upload PNG and JPG.
-    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-    events:  {
-      'froalaEditor.initialized':  function () {
-        console.log('initialized');
-      },
-      'froalaEditor.image.beforeUpload':  function  (e,  editor,  images) {
-        //Your code 
-        // if  (images.length) {
-        //   // Create a File Reader.
-        //   const  reader  =  new  FileReader();
-        //   // Set the reader to insert images when they are loaded.
-        //   reader.onload  =  (ev)  =>  {
-        //     const  result  =  ev.target['result'];
-        //     editor.image.insert(result,  null,  null,  editor.image.get());
-        //     console.log(ev,  editor.image,  ev.target['result'])
-        //   };
-        //   // Read image as base64.
-        //   reader.readAsDataURL(images[0]);
-        // }
-        // Stop default upload chain.
-        // return  false;
-      }, 
-      'froalaEditor.image.error':  function  (e,  editor, error, images) {
-        
-        console.log('error', error);
-      },
-
-    };
-  }  
-
-
-	public editorTitleOptions: Object = {
-  	toolbarInline: true,  
-  	placeholderText: null,
-    // quickInsertButtons: ['image', 'table', 'ol', 'ul'],
-  	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'align', 'quote', 'undo', 'redo', 'selectAll', 'clearFormatting', 'fontSize'
-  	],
-  	toolbarButtonsSM: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'align', 'quote', 'undo', 'redo', 'selectAll', 'clearFormatting', 'fontSize'
-  	],
-  	fontSize: ['18', '20', '24'],
-  	fontSizeSelection: true,
-  	fontSizeDefaultSelection: '24',
-  	heightMin: 100,
-    heightMax: 100,
-  	charCounterCount: false,
-    quickInsertTags: [], //to disable quick button
-		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
-	}
+  isNewStory: boolean;
 
 	public editorStoryOptions: Object = {
   	toolbarInline: true,  
   	placeholderText: null,
     quickInsertButtons: ['image', 'table', 'ol', 'ul'],
   	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'fontSize', 
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
@@ -133,8 +66,9 @@ export class StoryEditComponent implements OnInit {
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
+    fontSize: ['14', '18', '20', '24'],
+    fontSizeSelection: true,
   	heightMin: 400,
-    heightMax: 600,
   	charCounterCount: false,
 
     // Set the image upload parameter.
@@ -180,7 +114,7 @@ export class StoryEditComponent implements OnInit {
         console.log('error', error);
       },
 
-    };
+    }
     // quickInsertTags: [], //to disable quick button
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
@@ -219,9 +153,11 @@ export class StoryEditComponent implements OnInit {
       (response) => {
 
         this.story = response['data'][0];
-        console.log('this.story', this.story);
-
-        this.filePath = "http://localhost/stories-app/back-end/assets/uploads/big_img5.jpg";
+        
+        if ( this.story['preview_image'] != "" ) {
+          
+          this.filePath = APP_URL+'/assets/uploads/'+this.story['preview_image'];
+        }
 
         /****SET FORM FIELDS VALUE****/ 
         this.editStoryForm.patchValue({  
@@ -263,7 +199,10 @@ export class StoryEditComponent implements OnInit {
         }
 
       }, (error) => {
-
+        if ( error['errorData']['error'].length > 0 ) {
+          
+          this.storyErrors = error['errorData']['error'];
+        }
         console.log('error', error);
       });
   }

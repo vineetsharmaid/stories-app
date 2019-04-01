@@ -1,5 +1,37 @@
-<div class="container-fluid user_info_wrap">
-    <div class="row">
-        Story-list
-    </div>
+<div class="container user_info_wrap">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>Your Stories</h2>
+		</div>
+		<div class="col-sm-12 mb-5">			
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a [routerLink]="['/user/story/list/published']" class="nav-link" [ngClass]="{'active': viewType == 'drafts'}" data-toggle="tab" href="#drafts">
+						Drafts 
+						<span class="stories-count draft">{{draftStories?.length}}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a [routerLink]="['/user/story/list/drafts']" class="nav-link" [ngClass]="{'active': viewType == 'published'}" data-toggle="tab" href="#published">
+						Published
+						<span class="stories-count draft">{{publishedStories?.length}}</span>
+					</a>
+				</li>
+			</ul>
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div id="drafts" class="container tab-pane"  [ngClass]="{'active': viewType == 'drafts'}"><br>
+					<div class="stories" *ngFor="let story of draftStories">
+						<h3>{{story.preview_title}}</h3>
+						<p>{{story.preview_subtitle}}</p>
+					</div>
+				</div>
+				<div id="published" class="container tab-pane" [ngClass]="{'active': viewType == 'published'}"><br>
+					<h3>Published</h3>
+					<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

@@ -177,8 +177,9 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin(response['data']['username']);
+				this.setUserLogin(response['data']['username'], response['token']);
   			console.log('loggedIn', this.loggedIn);
+        console.log('token', response['token']);
   		}
 
   		// user already exists
@@ -186,7 +187,6 @@ export class HeaderComponent implements OnInit {
   			
   			this.accountAlreadyExists = true;
   			this.showHideLoginBtn.nativeElement.click();
-  			// this.setUserLogin(username);
   		}
 
   	});
@@ -207,7 +207,7 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin(response['data']['username']);
+				this.setUserLogin(response['data']['username'], response['token']);
   			console.log('loggedIn', this.loggedIn);
 
   		}
@@ -248,12 +248,17 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  setUserLogin(username) {
+  setUserLogin(username, jwtToken) {
+
+    console.log('setUserLogin jwtToken', jwtToken);
 
 		// set login
 		localStorage.setItem('isLoggedIn', 'true');
 		localStorage.setItem('userType', 'user');
     localStorage.setItem('username', username);
+    localStorage.setItem('jwtToken', jwtToken);
+
+    console.log('on login jwtToken', localStorage.getItem('jwtToken'))
 		this.loggedIn = true;
 
 		this.navigate('/user');
@@ -405,9 +410,15 @@ export class HeaderComponent implements OnInit {
     this.auth2.signOut().then( () => {
       console.log('Google user signed out.');
     });
+
+    console.log('Before signed out jwtToken', localStorage.getItem('jwtToken'));
 		
 		localStorage.removeItem('isLoggedIn');
 		localStorage.removeItem('userType');
+    localStorage.removeItem('jwtToken');
+
+    console.log('Signed out jwtToken', localStorage.getItem('jwtToken'));
+
 		this.loggedIn = false;
     // document.location.reload();
     this.router.navigate(["/"]);

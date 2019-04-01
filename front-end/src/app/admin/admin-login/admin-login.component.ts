@@ -62,6 +62,7 @@ export class AdminLoginComponent implements OnInit {
                 
               localStorage.setItem('isLoggedIn', 'true');
               localStorage.setItem('userType', response['data'].user_type);
+              localStorage.setItem('jwtToken', response['token']);
               this.router.navigateByUrl('/admin/dashboard');
             } else {
               

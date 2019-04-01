@@ -44,6 +44,7 @@ export class SidebarComponent implements OnInit {
 
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userType');
+    localStorage.removeItem('jwtToken');
     this.router.navigateByUrl('/admin/login');
   }
 }

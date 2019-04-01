@@ -7,12 +7,14 @@
         <div class="col-md-4 nopadding">
             <div class="user_intro_box">
                 
-                <a href="" [routerLink]="['./story/new']">Add Story</a>
+                <a href="" [routerLink]="['./story/new']" class="mr-2 mb-2">Add Story</a>
+                <a href="" [routerLink]="['./story/list']">Stories</a>
 
                 <div class="user_profile_pic_wrap">
-                    <img src="/assets/img/user/user.jpg" alt="">
+                    <img *ngIf="userInfo.profile_pic?.length > 0" [src]="userInfo.profile_pic" alt="">
+                    <img *ngIf="userInfo.profile_pic?.length == 0" src="/assets/img/user/user.jpg" alt="">
                 </div>
-                <h3>Jody  MacDonald</h3>
+                <h3>{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
                 <span><strong>6</strong> Stories</span>
                 <span><strong>11</strong> PLACES</span>
                 <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young</p>

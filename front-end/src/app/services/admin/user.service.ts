@@ -9,6 +9,7 @@ const httpOptions = {
 };
 
 const API_URL  =  'http://localhost/stories-app/back-end/api/';
+const ADMIN_API_URL  =  'http://localhost/stories-app/back-end/api/admin/';
 
 @Injectable({
   providedIn: 'root'

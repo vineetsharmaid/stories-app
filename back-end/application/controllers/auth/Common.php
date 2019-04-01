@@ -25,7 +25,7 @@ require APPPATH . 'libraries/Format.php';
  * @license         MIT
  * @link            https://github.com/chriskacerguis/codeigniter-restserver
  */
-class Api extends REST_Controller {
+class Common extends REST_Controller {
 
     function __construct()
     {
@@ -40,37 +40,37 @@ class Api extends REST_Controller {
 
         // $this->load->model()
 
-        // if ( is_null($this->input->get_request_header('Authorization')) ) {
+        if ( is_null($this->input->get_request_header('Authorization')) ) {
 
-        //     // Set the response and exit
-        //     $this->response([
-        //         'status' => FALSE,
-        //         'message' => 'auth_error',
-        //         'error' => array('Invalid token provided.'),
-        //     ], 401);
-        // } else {
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'auth_error',
+                'error' => array('Invalid token provided.'),
+            ], 401);
+        } else {
 
 
-        //   $authorization = $this->input->get_request_header('Authorization');
+          $authorization = $this->input->get_request_header('Authorization');
           
-        //   $token    = $this->getBearerToken($authorization);
-        //   $jwt_key  = $this->config->item('thekey');
+          $token    = $this->getBearerToken($authorization);
+          $jwt_key  = $this->config->item('thekey');
 
-        //   try {
+          try {
              
-        //      $this->token_data = JWT::decode($token, $jwt_key, array('HS256'));
+             $this->token_data = JWT::decode($token, $jwt_key, array('HS256'));
 
-        //   } catch (Exception $e) {
+          } catch (Exception $e) {
 
-        //     // Set the response and exit
-        //     $this->response([
-        //         'status' => FALSE,
-        //         'message' => 'auth_error',
-        //         'error' => array($e->getMessage()),
-        //     ], 401);
-        //   }
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'auth_error',
+                'error' => array($e->getMessage()),
+            ], 401);
+          }
 
-        // }       
+        }       
     }
 
     public function get_users_get()
@@ -431,11 +431,180 @@ class Api extends REST_Controller {
 
       $date = new DateTime();
 
-      $token['id'] = $user[0]->user_id;  //From here
+      // $token['id'] = $user[0]->user_id;  //From here
       $token['username'] = $user[0]->username;
       $token['iat'] = $date->getTimestamp();
-      $token['exp'] = $date->getTimestamp() + 60*60*5; //To here is to generate token
+      $token['exp'] = $date->getTimestamp() + 60*60*1; //To here is to generate token
       return JWT::encode($token,$jwt_key ); //This is the output token
+    }
+
+    function save_story_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+
+      $story = array(
+        'title' => trim( strip_tags($post_data->title) ),
+        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'author_id' => $user[0]->user_id,
+        'status' => 0
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->insert_entry('stories', $story) ) {
+
+            $story_id = $this->db->insert_id();
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('story' => $story_id),
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    function update_story_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+
+      $story = array(
+        'title' => trim( strip_tags($post_data->title) ),
+        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'author_id' => $user[0]->user_id,
+        'status' => 0
+      );
+      
+      $where = array('story_id' => $post_data->story_id);
+
+      if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('story' => $post_data),
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    function submit_story_for_review_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+      
+      $story = array(
+        'preview_title' => trim( strip_tags($post_data->previewTitle) ),
+        'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
+        'author_id' => $user[0]->user_id,
+        'status' => 0,
+        'review' => 2, // submitted for review
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->update_entry('stories', $story, array('story_id' => $post_data->story)) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function image_upload_post() { 
+      
+      $config['upload_path']          = './assets/uploads/';
+      $config['allowed_types']        = 'gif|jpg|png';
+      $config['max_size']             = 2048;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
+
+      $this->load->library('upload', $config);
+
+      if ( ! $this->upload->do_upload('image'))
+      {
+          $error = array('error' => $this->upload->display_errors());
+
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'not_uploaded',
+              'error'   => $error,
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+          $upload_data['raw_name'].$upload_data['file_ext'];
+          
+          $story = array(
+            'preview_image' => $upload_data['raw_name'].$upload_data['file_ext'],
+          );
+          
+          $where = array('story_id' => $this->input->post('story_id'));
+
+          if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => 'image_uploaded_updated',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'not_updated_db_error',
+                'error'   => 'Something went wrong, unable to update preview image.',
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }          
+      }
+
     }
 
 
@@ -476,7 +645,35 @@ class Api extends REST_Controller {
       }
 
     }
-    
+
+    public function get_story_get()
+    {
+        $story_id = $this->uri->segment(3);
+
+
+        $story = $this->common_model->get_data( 'stories', array('story_id' => $story_id) );
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($story) ) {
+
+            $story[0]->description = html_entity_decode($story[0]->description);
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No stories were found',
+                'error' => array('No stories were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
 
     /**
      * get access token from header

@@ -51,5 +51,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'api';
 $route['404_override'] = '';
-$route['api/forgot-password'] = 'api/forgot_password_post';
 $route['translate_uri_dashes'] = FALSE;

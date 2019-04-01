@@ -1,89 +1,74 @@
 <div class="container-fluid user_info_wrap">
-    <div class="row" style="min-height: 80vh;">
-    	<div class="col-sm-2"></div>
-    	<div class="col-sm-8" *ngIf="showNewForm" [@slideInOut]>
-    			
-    		<form [formGroup]="editStoryForm" (ngSubmit)="updateDraft()">
-	    		<div class="form-group">
-	    			<!-- <label>Title</label> -->
-	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">
-		        		<!-- <textarea [froalaEditor]="editorTitleOptions" class="form-control" formControlName="title">
-		        			<p style="font-size: 24px;">  </p>
-		        		</textarea> -->
-		        		<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
-	    			</div>
-	    		</div>
-
-	    		<!-- <hr> -->
-
-	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
-	        		<textarea [froalaEditor]="options" placeholder="Tell you story!!"></textarea>
-	    		</div>
-
-	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
-	        		<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell you story!!" formControlName="description"></textarea>
-	    		</div>
-
-	    		<div class="form-group">
-	    			<button class="btn btn-sm btn-danger">Continue</button>
-	    		</div>
-    		</form>
-
-    	</div>
-    	<div class="col-sm-8" *ngIf="showPreview" [@slideInOut]>
-    		<p>Story Preview</p>
-    		<form [formGroup]="previewForm" (ngSubmit)="savePreview()">
-	    		<div class="col-sm-4">
-		    		<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
-			    		<label class="image-upload-container btn btn-bwm">
-						  <span>Select Image</span>
-						  <input #imageInput
-						         type="file"
-						         accept="image/*"
-						         (change)="processFile(imageInput)" class="d-none">
+	<div class="row" style="min-height: 80vh;">
+		<div class="col-sm-12" *ngIf="storyErrors?.length > 0">
+			<div *ngFor="let error of storyErrors">
+				<p class="story-errors">{{error}}</p>
+			</div>
+		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-8" *ngIf="showNewForm" [@slideInOut]>
+			
+			<form [formGroup]="editStoryForm" (ngSubmit)="updateDraft()">
+				<div class="form-group">
+					<div style="border-left: 1px solid #efefef; padding-left: 10px;">
+						<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
+					</div>
+				</div>
+				<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
+					<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell you story!!" formControlName="description"></textarea>
+				</div>
+				<div class="form-group">
+					<button class="btn btn-sm btn-danger">Continue</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-md-8" *ngIf="showPreview" [@slideInOut]>
+			<p>Story Preview</p>
+			<form [formGroup]="previewForm" (ngSubmit)="savePreview()">
+				<div class="col-md-4">
+					<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
+						<label class="image-upload-container btn btn-bwm">
+							<span>Select Image</span>
+							<input #imageInput
+							type="file"
+							accept="image/*"
+							(change)="processFile(imageInput)" class="d-none">
 						</label>
 						<div *ngIf="filePath?.length > 0" class="featured-image">
 							<img [src]="filePath" style="width: 100%; height: 300px;">
 						</div>
 					</div>
-
-		    		<div class="form-group">
-		    			<input type="text" class="form-field preview-title-field" formControlName="previewTitle" placeholder="Write a preview title" [ngClass]="{'has-errors': previewSubmitted && pf.previewTitle.errors}">
-		    		</div>
-
-		    		<div class="form-group">
-		    			<textarea class="form-field" formControlName="previewSubtitle" placeholder="Write a preview subtitle...">
-		    			</textarea>
-		    		</div>
-	    		</div>
-
-	    		<button class="btn btn-sm btn-success">Submit for review</button>
-    		</form>
-	    	
-	    	<button class="btn btn-sm btn-danger" (click)="toggleView()">Back</button>
-
-    	</div>
-    	<div class="col-sm-2"></div>
-
-
-
-    </div>
-    	
-<!--     <div class="row">
-    	<div class="col-sm-2"></div>
-		<div class="featured-wrap col-sm-3 p-0 m-2">
-    		<label class="image-upload-container btn btn-bwm">
-			  <span>Select Image</span>
-			  <input #imageInput
-			         type="file"
-			         accept="image/*"
-			         (change)="processFile(imageInput)" class="d-none">
-			</label>
-			<div *ngIf="filePath?.length > 0" class="featured-image">
-				<img [src]="filePath" style="width: 100%; height: 300px;">
-				Here
-			</div>
+					<div class="form-group">
+						<input type="text" class="form-field preview-title-field" formControlName="previewTitle" placeholder="Write a preview title" [ngClass]="{'has-errors': previewSubmitted && pf.previewTitle.errors}">
+					</div>
+					<div class="form-group">
+						<textarea class="form-field" formControlName="previewSubtitle" placeholder="Write a preview subtitle...">
+						</textarea>
+					</div>
+				</div>
+				<button class="btn btn-sm btn-success">Submit for review</button>
+			</form>
+			
+			<button class="btn btn-sm btn-danger" (click)="toggleView()">Back</button>
 		</div>
-    	<div class="col-sm-2"></div>
-    </div> -->
+		<div class="col-md-2"></div>
+	</div>
+	
+	<!--     <div class="row">
+			<div class="col-md-2"></div>
+				<div class="featured-wrap col-md-3 p-0 m-2">
+					<label class="image-upload-container btn btn-bwm">
+							<span>Select Image</span>
+							<input #imageInput
+							type="file"
+							accept="image/*"
+							(change)="processFile(imageInput)" class="d-none">
+						</label>
+						<div *ngIf="filePath?.length > 0" class="featured-image">
+								<img [src]="filePath" style="width: 100%; height: 300px;">
+								Here
+						</div>
+				</div>
+			<div class="col-md-2"></div>
+	</div> -->
 </div>

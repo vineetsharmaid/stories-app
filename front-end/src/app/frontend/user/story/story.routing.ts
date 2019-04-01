@@ -7,9 +7,13 @@ import { StoryEditComponent } from './story-edit/story-edit.component';
 export const StoryRoutes: Routes = [
     { 
         path: '',
-        component: StoryListComponent,
+        redirectTo: 'list',
+        pathMatch: 'full',
     }, { 
         path: 'list',
+        component: StoryListComponent,
+    }, { 
+        path: 'list/:viewType',
         component: StoryListComponent,
     }, { 
         path: 'new',

@@ -3,12 +3,16 @@ import { HttpClient, HttpHeaders, HttpErrorResponse} from  '@angular/common/http
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
+
+const API_URL  =  environment.baseUrl+'/api/';
+const ADMIN_API_URL  =  environment.baseUrl+'/auth/admin/';
+const JWT_Token  =  localStorage.getItem('jwtToken');
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + JWT_Token })
 };
 
-const API_URL  =  'http://localhost/stories-app/back-end/api/';
 
 @Injectable({
   providedIn: 'root'
@@ -19,29 +23,29 @@ export class CategoryService {
 
   	getCategories(): Observable<any>{
 	
-		// return this.http.get(API_URL+'get_categories', httpOptions).pipe(
+		// return this.http.get(ADMIN_API_URL+'get_categories', httpOptions).pipe(
 		// 	tap((categories: Object) => console.log('categories', categories)),
 		// 	catchError(this.handleError<any>('getCategories'))
 		// );
 
-		return this.http.get(API_URL+'get_categories', httpOptions);
+		return this.http.get(ADMIN_API_URL+'get_categories', httpOptions);
 
 	}
 
   	getParentCategories(catId): Observable<any>{
     	
-		return this.http.get(API_URL+'get_parent_categories/'+catId, httpOptions);
+		return this.http.get(ADMIN_API_URL+'get_parent_categories/'+catId, httpOptions);
 	}
 
 	/** POST: get category by cat id to the database */
 	getCategory (catId): Observable<any> {
 	  
-	  return this.http.get(API_URL+'get_categories/'+catId, httpOptions);
+	  return this.http.get(ADMIN_API_URL+'get_categories/'+catId, httpOptions);
 	}
 
 	/** POST: add a new category to the database */
 	addCategory (category): Observable<any> {
-	  return this.http.post(API_URL+'add_category', category, httpOptions)
+	  return this.http.post(ADMIN_API_URL+'add_category', category, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -49,7 +53,7 @@ export class CategoryService {
 
 	/** POST: add a new category to the database */
 	editCategory (category): Observable<any> {
-	  return this.http.post(API_URL+'edit_category', category, httpOptions)
+	  return this.http.post(ADMIN_API_URL+'edit_category', category, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
