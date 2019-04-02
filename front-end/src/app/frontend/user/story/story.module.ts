@@ -21,7 +21,9 @@ import {
   MatTooltipModule,
   MatSelectModule,
   MatAutocompleteModule,
-  MatRadioModule
+  MatRadioModule,
+  MatIconModule,
+  MatChipsModule,
 } from '@angular/material';
 
 @NgModule({
@@ -38,6 +40,8 @@ import {
     MatAutocompleteModule,
     MatTooltipModule, 
     MatRadioModule,
+    MatIconModule,
+    MatChipsModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   declarations: [

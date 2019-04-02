@@ -81,12 +81,15 @@ class Users extends REST_Controller {
       $post_data = json_decode(file_get_contents("php://input"));
 
       $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
+      $title  = trim( strip_tags($post_data->title) );
+      $slug   = strtolower( str_replace(' ', '-', $title) );
 
       $story = array(
-        'title' => trim( strip_tags($post_data->title) ),
-        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'title'  => trim( strip_tags($post_data->title) ),
+        'slug'   => $slug,
+        'status' => 0,
         'author_id' => $user[0]->user_id,
-        'status' => 0
+        'description' => htmlEntities($post_data->description, ENT_QUOTES),
       );
       
       // html_entity_decode($encodedHTML)
@@ -120,8 +123,12 @@ class Users extends REST_Controller {
 
       $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
 
+      $title  = trim( strip_tags($post_data->title) );
+      $slug   = strtolower( str_replace(' ', '-', $title) );
+
       $story = array(
         'title' => trim( strip_tags($post_data->title) ),
+        'slug'   => $slug,
         'description' => htmlEntities($post_data->description, ENT_QUOTES),
         'author_id' => $user[0]->user_id,
         'status' => 0
@@ -343,6 +350,32 @@ class Users extends REST_Controller {
         }
       
     }
+
+    public function get_tags_get()
+    {
+        $tags = $this->common_model->get_data('tags');
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($tags) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $tags,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No tags were found',
+                'error' => array('No tags were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }    
 
 
 

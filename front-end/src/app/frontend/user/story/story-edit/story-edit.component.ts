@@ -1,9 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
-import { trigger, transition, animate, style } from '@angular/animations'
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { trigger, transition, animate, style } from '@angular/animations'
+import { Router, NavigationEnd, Params, ActivatedRoute } from '@angular/router';
+
+import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
+import {FormControl} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+
+
+
 import { Observable }         from 'rxjs';
-import { map }                from 'rxjs/operators';
+import { map, startWith }     from 'rxjs/operators';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/pairwise';
 
@@ -49,8 +56,24 @@ export class StoryEditComponent implements OnInit {
 	public storyId: number;
   public story: Object;
   public storyErrors: Array<string>;
-
   isNewStory: boolean;
+
+
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredTags: Observable<string[]>;
+  tags: any = [];
+  allTags: any = [];
+
+  visible    = true;
+  removable  = true;
+  addOnBlur  = true;
+  selectable = true;
+  fruitCtrl = new FormControl();
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;  
+
+
 
 	public editorStoryOptions: Object = {
   	toolbarInline: true,  
@@ -121,7 +144,6 @@ export class StoryEditComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private storyService: StoryService, 
     private router: Router, private activatedRoute: ActivatedRoute) {   
-
   }
  
   ngOnInit() {
@@ -134,15 +156,23 @@ export class StoryEditComponent implements OnInit {
 
   	this.previewForm = this.formBuilder.group({
 
-  		previewTitle: ['', Validators.required],
-  		previewSubtitle: ['', Validators.required],
+  		previewTitle: [''],
+  		previewSubtitle: [''],
+      previewTags: [''],
   		// previewImage: ['', Validators.required],
   	});
 
     const routeParams = this.activatedRoute.snapshot.params;
     this.isNewStory = routeParams['new'] == "true" ? true : false;
-    
+
     this.getStory();
+    this.getTags();
+    
+    this.filteredTags = this.previewForm.controls['previewTags'].valueChanges.pipe(
+        startWith(''),        
+        map((tag: string | null) => tag ? this._filterTags(tag) : this.allTags.slice())
+    );
+    
   }
 
   getStory() {
@@ -176,6 +206,8 @@ export class StoryEditComponent implements OnInit {
           let description  = this.story['description'];
           let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
 
+          subTitle = description.length > 140 ? subTitle+'...' : subTitle;
+
           /****SET FORM FIELDS VALUE****/ 
           // if ( this.story['preview_title'] == "" && this.story['preview_subtitle'] == "" ) { }
            
@@ -205,6 +237,20 @@ export class StoryEditComponent implements OnInit {
         }
         console.log('error', error);
       });
+  }
+
+  getTags() {
+
+
+    this.storyService.getTags().subscribe((response) => {
+      
+      this.allTags = response['data'];
+
+    }, (error) => {
+
+      this.allTags = [];
+      console.log('error', error);
+    });
   }
 
 	// convenience getter for easy access to form fields
@@ -258,11 +304,33 @@ export class StoryEditComponent implements OnInit {
 
   	this.previewSubmitted = true;
 
+    if ( this.previewForm.get('previewTitle').value == "" ) {
+      
+        this.previewForm.patchValue({  
+
+          previewTitle: this.story['title'],
+        });      
+    }
+
+    if ( this.previewForm.get('previewSubtitle').value == "" ) {
+          
+        let description = this.editStoryForm.get('description').value;
+        let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+        
+        this.previewForm.patchValue({  
+
+          previewSubtitle: subTitle,
+        });
+    }
+    
+    console.log('this.tags', this.tags);
+
     var draftStory = {
 			previewTitle: this.previewForm.get('previewTitle').value,
 			previewSubtitle: this.previewForm.get('previewSubtitle').value,
 			story: this.story['story_id'],
-			username: localStorage.getItem('username')
+			username: localStorage.getItem('username'),
+      tags: this.tags
 		};
 
     // stop here if form is invalid
@@ -274,7 +342,6 @@ export class StoryEditComponent implements OnInit {
 
     	this.storyService.submitForReview(draftStory).subscribe((response) => {
 
-				console.log('Data saved to draft');
     		console.log(response);
     		this.toggleView();
     	}, (error) => {
@@ -336,4 +403,50 @@ export class StoryEditComponent implements OnInit {
     reader.readAsDataURL(file);
   }  
 
+
+
+  add(event: MatChipInputEvent): void {
+    
+    // Add tag only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {    
+
+      const input = event.input;
+      const value = event.value;
+      // Add our fruit
+      if ((value || '').trim()) {
+        this.tags.push({
+          tag_id:"",
+          name:value.trim()
+        });
+      }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+      
+      this.previewForm.controls['previewTags'].setValue(null);
+    }
+
+  }
+
+  remove(fruit, indx): void {
+    this.tags.splice(indx, 1);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    
+    this.tags.push(event.option.value);
+    this.tagInput.nativeElement.value = '';
+    this.previewForm.controls['previewTags'].setValue(null);
+  }
+
+  private _filterTags(value: string): string[] {
+    
+    const filterValue = value.toString().toLowerCase();
+   
+    return this.allTags.filter( tag => tag.name.toLowerCase().includes(filterValue) );
+  }
+  
 }

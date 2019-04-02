@@ -74,4 +74,13 @@ class Common_model extends CI_Model {
         $this->db->where($where);
         return $this->db->get()->result();
     }
+
+    public function get_searched_tags($filter_value)
+    {
+
+        $this->db->select('*');
+        $this->db->from('tags');
+        $this->db->like('name', $filter_value, 'after');     // Produces: WHERE `name` LIKE 'filter_value%' ESCAPE '!'
+        return $this->db->get()->result();
+    }
 }

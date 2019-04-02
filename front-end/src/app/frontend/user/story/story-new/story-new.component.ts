@@ -6,6 +6,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { StoryService } from '../../../services/story.service';
 
+import { environment } from '../../../../../environments/environment';
+const API_URL  =  environment.baseUrl+'/api/';
+const APP_URL  =  environment.baseUrl;
+
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
 }
@@ -31,7 +35,8 @@ export class StoryNewComponent implements OnInit {
 
 	public showNewForm: boolean = true;
 	public showPreview: boolean = false;
-	public previewSubmitted: boolean = false;
+	public addStorySubmitted: boolean = false;
+  public previewSubmitted: boolean = false;
 	public storyTitle;
 	public addStoryForm: FormGroup;
 	public previewForm: FormGroup;
@@ -39,27 +44,6 @@ export class StoryNewComponent implements OnInit {
 	public filePath: string;
 	public previousUrl: string;
 	public storyId: number;
-
-
-	public editorTitleOptions: Object = {
-  	toolbarInline: true,  
-  	placeholderText: null,
-    // quickInsertButtons: ['image', 'table', 'ol', 'ul'],
-  	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'align', 'quote', 'undo', 'redo', 'selectAll', 'clearFormatting', 'fontSize'
-  	],
-  	toolbarButtonsSM: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'align', 'quote', 'undo', 'redo', 'selectAll', 'clearFormatting', 'fontSize'
-  	],
-  	fontSize: ['18', '20', '24'],
-  	fontSizeSelection: true,
-  	fontSizeDefaultSelection: '24',
-  	heightMin: 100,
-    heightMax: 100,
-  	charCounterCount: false,
-    quickInsertTags: [], //to disable quick button
-		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
-	}
 
 	public editorStoryOptions: Object = {
   	toolbarInline: true,  
@@ -78,6 +62,51 @@ export class StoryNewComponent implements OnInit {
   	heightMin: 400,
     heightMax: 600,
   	charCounterCount: false,
+
+    // Set the image upload parameter.
+    imageUploadParam: 'description_image',
+
+    // Set the image upload URL.
+    imageUploadURL: API_URL+'story_description_image_upload',
+
+    // Additional upload params.
+    imageUploadParams: {id: 'my_editor'},
+
+    // Set request type.
+    imageUploadMethod: 'POST',
+
+    // Set max image size to 5MB.
+    imageMaxSize: 5 * 1024 * 1024,
+
+    // Allow to upload PNG and JPG.
+    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+    events:  {
+      'froalaEditor.initialized':  function () {
+        console.log('initialized');
+      },
+      'froalaEditor.image.beforeUpload':  function  (e,  editor,  images) {
+        //Your code 
+        // if  (images.length) {
+        //   // Create a File Reader.
+        //   const  reader  =  new  FileReader();
+        //   // Set the reader to insert images when they are loaded.
+        //   reader.onload  =  (ev)  =>  {
+        //     const  result  =  ev.target['result'];
+        //     editor.image.insert(result,  null,  null,  editor.image.get());
+        //     console.log(ev,  editor.image,  ev.target['result'])
+        //   };
+        //   // Read image as base64.
+        //   reader.readAsDataURL(images[0]);
+        // }
+        // Stop default upload chain.
+        // return  false;
+      }, 
+      'froalaEditor.image.error':  function  (e,  editor, error, images) {
+        
+        console.log('error', error);
+      },
+
+    }    
     // quickInsertTags: [], //to disable quick button
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
@@ -122,6 +151,8 @@ export class StoryNewComponent implements OnInit {
 
   saveDraft() {
 
+    this.addStorySubmitted = true;
+
     var draftStory = {
 			title: this.addStoryForm.get('title').value,
 			description: this.addStoryForm.get('description').value,
@@ -137,8 +168,7 @@ export class StoryNewComponent implements OnInit {
 			previewSubtitle: subTitle,
 		});
 
-		console.log('draftStory', draftStory);
-		console.log('subTitle', subTitle);
+		console.log('draftStory', draftStory);		
 
     // stop here if form is invalid
     if (this.addStoryForm.invalid) {

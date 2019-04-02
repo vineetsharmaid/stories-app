@@ -82,6 +82,18 @@ export class StoryService {
 	    );
 		}
 
+  	getTags(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_tags/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getDraftStories(): Observable<any>{
 
 			let httpOptions = {
