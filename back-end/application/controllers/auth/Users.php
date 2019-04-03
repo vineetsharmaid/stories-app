@@ -287,7 +287,8 @@ class Users extends REST_Controller {
         $story_id = $this->uri->segment(4);
 
 
-        $story = $this->common_model->get_data( 'stories', array('story_id' => $story_id) );
+        // $story = $this->common_model->get_data( 'stories', array('story_id' => $story_id) );
+        $story = $this->common_model->get_story($story_id);
 
         // Check if the categories data store contains categories (in case the database result returns NULL)
         if ( !empty($story) ) {
@@ -320,6 +321,91 @@ class Users extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
       
+    }
+
+
+    public function add_tag_to_story_post()
+    {
+
+      $tag_data = array( 'story_id' => $this->input->post('story_id'), 'tag_id' => $this->input->post('tag_id') );
+
+      if( $this->common_model->data_exists( 'story_tags',  $tag_data) == 0 ) {
+
+        if( $this->common_model->insert_entry( 'story_tags', $tag_data ) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array( 'status' => TRUE, 'message' => 'tag added to story', ), 
+              REST_Controller::HTTP_OK
+            ); // OK (200) being the HTTP response code
+        }
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Tag already added to story',
+                'error' => array('Tag already added to story'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function add_new_tag_to_story_post()
+    {
+
+      $tag_data = array( 'status' => 1, 'name' => $this->input->post('tag_name'), 'created_by' => $this->token_data->id );
+
+      if( $this->common_model->insert_entry( 'tags', $tag_data ) ) {
+
+        $tag_id = $this->db->insert_id();
+        $story_tag_data = array( 'story_id' => $this->input->post('story_id'), 'tag_id' => $tag_id );
+
+        if( $this->common_model->insert_entry( 'story_tags', $story_tag_data ) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array( 'status' => TRUE, 'message' => 'tag added to story', ), 
+              REST_Controller::HTTP_OK
+            ); // OK (200) being the HTTP response code
+        }
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to save tag',
+                'error' => array('Unable to save tag'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function remove_tag_from_story_post()
+    {
+
+      $tag_data = array( 'story_id' => $this->input->post('story_id'), 'tag_id' => $this->input->post('tag_id') );
+
+      if( $this->common_model->data_exists( 'story_tags',  $tag_data) > 0 ) {
+
+        if( $this->common_model->delete_entry( 'story_tags', $tag_data ) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array( 'status' => TRUE, 'message' => 'tag removed from story', ), 
+              REST_Controller::HTTP_OK
+            ); // OK (200) being the HTTP response code
+        }
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Tag do not exists in this story',
+                'error' => array('Tag do not exists in this story'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
     }
 
 

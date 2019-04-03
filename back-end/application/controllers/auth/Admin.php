@@ -38,7 +38,7 @@ class Admin extends REST_Controller {
         $this->methods['users_post']['limit'] = 100; // 100 requests per hour per user/key
         $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
 
-        // $this->load->model()
+        $this->load->model('admin_model');
 
         if ( is_null($this->input->get_request_header('Authorization')) ) {
 
@@ -295,6 +295,89 @@ class Admin extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
 
+
+    }
+
+
+    public function get_stories_by_review_status_get($review_status)
+    { 
+     
+        $stories = $this->admin_model->get_stories( array('review' => $review_status) );
+
+        // Check if the stories data store contains stories (in case the database result returns NULL)
+        if ( !empty($stories) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $stories,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No stories were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
+    public function get_story_get($story_id)
+    { 
+     
+        $story = $this->admin_model->get_story( array('story_id' => $story_id) );
+
+        // Check if the story data store contains story (in case the database result returns NULL)
+        if ( !empty($story) ) {
+
+            $story[0]->description = html_entity_decode($story[0]->description);
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $story[0],
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'No story were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
+
+    public function update_story_status_post()
+    { 
+      
+        $data = array('review' => $this->input->post('review'));
+        $where = array('story_id' => $this->input->post('story_id'));
+
+        
+
+        // Check if the story data store contains story (in case the database result returns NULL)
+        if ( $this->common_model->update_entry( 'stories', $data, $where ) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => 'status updated',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update status'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
 
     }
 

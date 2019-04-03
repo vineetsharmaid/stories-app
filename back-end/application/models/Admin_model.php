@@ -1,38 +1,8 @@
 <?php 
 
-class Common_model extends CI_Model {
+class Admin_model extends CI_Model {
 
-    public function insert_entry($table, $data) {
-        
-        return $this->db->insert($table, $data);
-    }
-
-    public function update_entry($table, $data, $where) {
-        
-        return $this->db->update($table, $data, $where);
-    }
-
-    public function delete_entry($table, $where) {
-        
-        return $this->db->delete($table, $where);
-    }
-
-    public function get_data($table, $where="") {
-    	
-        if ( $where == "" ) {
-            
-            return $this->db->get($table)->result();
-        } else {
-
-            return $this->db->get_where($table, $where)->result();
-        }
-    }
-
-    public function data_exists($table, $where)
-    {
-    		return $this->db->get_where( $table, $where )->num_rows();
-    }
-
+ 
     public function get_users()
     {
 
@@ -80,33 +50,24 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_searched_tags($filter_value)
-    {
-
-        $this->db->select('*');
-        $this->db->from('tags');
-        $this->db->like('name', $filter_value, 'after');     // Produces: WHERE `name` LIKE 'filter_value%' ESCAPE '!'
-        return $this->db->get()->result();
-    }
-    
-    public function get_story($story_id)
-    {
+    public function get_stories($where='') {
         
-        $this->db->select('stories.*, GROUP_CONCAT(story_tags.tag_id SEPARATOR ",") AS tag_ids');
+
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.author_id, users.first_name, users.last_name, users.username');
         $this->db->from('stories');
-        $this->db->join('story_tags', 'story_tags.story_id = stories.story_id');
-        $this->db->where( array('stories.story_id' => $story_id) );
+        $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->where( $where );
+        $this->db->group_by( 'stories.story_id' );
         return $this->db->get()->result();
     }
 
-    public function get_story_tags($story_id)
-    {
+    public function get_story($where='') {
         
-        $this->db->select('stories.story_id, story_tags.tag_id');
+
+        $this->db->select('stories.*, users.first_name, users.last_name, users.username');
         $this->db->from('stories');
-        $this->db->join('story_tags', 'story_tags.story_id = stories.story_id');
-        $this->db->where( array('stories.story_id' => $story_id) );
+        $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->where( $where );
         return $this->db->get()->result();
     }
-
 }
