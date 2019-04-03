@@ -1,0 +1,21 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">				
+					<div class="card-body" style="min-height: 200px;" *ngIf="story">
+						<button class="btn btn-sm btn-success pull-right" (click)="back()">Back</button>
+						<button class="btn btn-sm btn-danger pull-right" *ngIf="reviewStatus == 1" (click)="changeStatus(0)">Unpublish</button>
+						<button class="btn btn-sm btn-success pull-right" *ngIf="reviewStatus == 0 || reviewStatus == 2" (click)="changeStatus(1)">Publish</button>
+						<div class="clearfix"></div>
+						<hr>
+
+						<h3>{{story.title}}</h3>
+
+						<div [innerHTML]="story.description"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

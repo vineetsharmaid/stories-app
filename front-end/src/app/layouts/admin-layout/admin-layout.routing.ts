@@ -10,6 +10,7 @@ import { MapsComponent } from '../../admin/maps/maps.component';
 import { NotificationsComponent } from '../../admin/notifications/notifications.component';
 import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
+import { StoriesComponent } from '../../admin/stories/stories.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
@@ -38,6 +39,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/categories/categories.module#CategoriesModule'
+            }
+        ] 
+    },{
+        path: 'stories',
+        component: StoriesComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/stories/stories.module#StoriesModule'
             }
         ] 
     },

@@ -69,6 +69,47 @@ export class StoryService {
 	    );
 		}
 
+  	addTagToStory(tag_id, story_id): Observable<any>{
+    	
+ 			const formData = new FormData();
+      formData.append('tag_id', tag_id);
+      formData.append('story_id', story_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(API_URL+'add_tag_to_story', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	addNewTagToStory(tag_name, story_id): Observable<any>{
+    	
+ 			const formData = new FormData();
+      formData.append('tag_name', tag_name);
+      formData.append('story_id', story_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(API_URL+'add_new_tag_to_story', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	removeTagFromStory(tag_id, story_id): Observable<any>{
+    	
+ 			const formData = new FormData();
+      formData.append('tag_id', tag_id);
+      formData.append('story_id', story_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(API_URL+'remove_tag_from_story', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
 
   	getStory(storyId): Observable<any>{
 
