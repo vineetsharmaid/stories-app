@@ -59,6 +59,15 @@ class Admin extends REST_Controller {
           try {
              
              $this->token_data = JWT::decode($token, $jwt_key, array('HS256'));
+             if ( $this->token_data->user_type != 'admin' ) {
+                    
+                // Set the response and exit
+                $this->response([
+                    'status' => FALSE,
+                    'message' => 'auth_error',
+                    'error' => array($e->getMessage()),
+                ], 401);               
+             }
 
           } catch (Exception $e) {
 
@@ -301,7 +310,7 @@ class Admin extends REST_Controller {
 
     public function get_stories_by_review_status_get($review_status)
     { 
-     
+
         $stories = $this->admin_model->get_stories( array('review' => $review_status) );
 
         // Check if the stories data store contains stories (in case the database result returns NULL)
@@ -356,7 +365,7 @@ class Admin extends REST_Controller {
     public function update_story_status_post()
     { 
       
-        $data = array('review' => $this->input->post('review'));
+        $data = array('review' => $this->input->post('review'), 'status' => $this->input->post('review'));
         $where = array('story_id' => $this->input->post('story_id'));
 
         

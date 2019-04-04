@@ -464,6 +464,42 @@ class Users extends REST_Controller {
     }    
 
 
+    public function like_story_post()
+    {
+        
+        $data = array('story_id' => $this->input->post('story_id'), 'user_id' => $this->token_data->id);
+
+        if ($this->common_model->data_exists('story_user_likes', $data) == 0) {
+          if ( $this->common_model->insert_entry('story_user_likes', $data) ) {
+
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data'   => 'Liked the story',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already liked by this user',
+                'error' => array('Already liked by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
 
     /**
      * get access token from header

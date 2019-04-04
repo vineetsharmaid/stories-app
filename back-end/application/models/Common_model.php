@@ -99,13 +99,50 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_stories($where='') {
+        
+
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.preview_image, stories.slug, stories.created, stories.story_id, stories.author_id, users.first_name, users.last_name, users.username');
+        $this->db->from('stories');
+        $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->where( $where );
+        $this->db->group_by( 'stories.story_id' );
+        return $this->db->get()->result();
+    }
+
+    public function get_story_data($where='', $user_id='') {
+        
+        if ( $user_id == '' ) {
+          
+          $this->db->select('stories.*, users.first_name, users.last_name, users.username');
+          $this->db->from('stories');
+          $this->db->join('users', 'users.user_id = stories.author_id');
+          $this->db->where( $where );
+          $this->db->group_by( 'stories.story_id' );
+          return $this->db->get()->result();
+        } else {
+
+          $this->db->select('stories.*, users.first_name, users.last_name, users.username, story_user_likes.user_id as liked_by');
+          $this->db->from('stories');
+            
+          $this->db->join('users', 'users.user_id = stories.author_id');
+          $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id AND story_user_likes.user_id = '.$user_id.'', 'left');
+
+          $this->db->where( $where );
+          $this->db->group_by( 'stories.story_id' );
+          return $this->db->get()->result();
+        }
+    }
+
+
     public function get_story_tags($story_id)
     {
         
-        $this->db->select('stories.story_id, story_tags.tag_id');
+        $this->db->select('stories.story_id, story_tags.tag_id, tags.name, tags.status');
         $this->db->from('stories');
         $this->db->join('story_tags', 'story_tags.story_id = stories.story_id');
-        $this->db->where( array('stories.story_id' => $story_id) );
+        $this->db->join('tags', 'tags.tag_id = story_tags.tag_id');
+        $this->db->where( array('stories.story_id' => $story_id, 'tags.status' => 1) );
         return $this->db->get()->result();
     }
 
