@@ -247,7 +247,7 @@ export class StoryEditComponent implements OnInit {
             
       let allTags = response['data'];
 
-      let storyTags = this.story['tag_ids'].split(", ");
+      let storyTags = this.story['tag_ids'] ? this.story['tag_ids'].split(", ") : [];
       
       this.allTags = allTags.filter((tag) => {
       

@@ -9,9 +9,9 @@ const API_URL  =  environment.baseUrl+'/api/';
 const ADMIN_API_URL  =  environment.baseUrl+'/auth/admin/';
 const JWT_Token  =  localStorage.getItem('jwtToken');
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + JWT_Token })
-};
+// const httpOptions = {
+//   headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + JWT_Token })
+// };
 
 
 @Injectable({
@@ -22,23 +22,39 @@ export class StoriesService {
   	constructor(private http: HttpClient) { }
 
   	getStories(status): Observable<any>{
-	
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+		
 		return this.http.get(ADMIN_API_URL+'get_stories_by_review_status/'+status, httpOptions);
 	}
 
   	getParentCategories(catId): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
     	
 		return this.http.get(ADMIN_API_URL+'get_parent_categories/'+catId, httpOptions);
 	}
 
 	/** POST: get category by cat id to the database */
 	getCategory (catId): Observable<any> {
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
 	  
 	  return this.http.get(ADMIN_API_URL+'get_categories/'+catId, httpOptions);
 	
 	}
 	/** POST: get story by story id to the database */
 	getStory (storyId): Observable<any> {
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
 	  
 	  return this.http.get(ADMIN_API_URL+'get_story/'+storyId, httpOptions);
 	}
@@ -60,6 +76,11 @@ export class StoriesService {
 
 	/** POST: add a new category to the database */
 	addCategory (category): Observable<any> {
+
+	let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
+
 	  return this.http.post(ADMIN_API_URL+'add_category', category, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
@@ -68,6 +89,11 @@ export class StoriesService {
 
 	/** POST: add a new category to the database */
 	editCategory (category): Observable<any> {
+
+	let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};   		
+		
 	  return this.http.post(ADMIN_API_URL+'edit_category', category, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)

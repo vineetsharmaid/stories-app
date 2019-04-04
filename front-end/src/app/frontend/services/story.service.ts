@@ -5,7 +5,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 
-const API_URL  =  environment.baseUrl+'/auth/users/';
+const API_URL  =  environment.baseUrl+'/api/';
+const USER_API_URL  =  environment.baseUrl+'/auth/users/';
 // const JWT_Token  =  localStorage.getItem('jwtToken');
 
 // const httpOptions = {
@@ -26,7 +27,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};    	
 
-			return this.http.post(API_URL+'save_story', story, httpOptions)
+			return this.http.post(USER_API_URL+'save_story', story, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -38,7 +39,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};    	
     	
-			return this.http.post(API_URL+'update_story', story, httpOptions)
+			return this.http.post(USER_API_URL+'update_story', story, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -51,7 +52,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};    	
     	
-			return this.http.post(API_URL+'submit_story_for_review', story, httpOptions)
+			return this.http.post(USER_API_URL+'submit_story_for_review', story, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -63,7 +64,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};    	
     	
-			return this.http.post(API_URL+'save_review_data', story, httpOptions)
+			return this.http.post(USER_API_URL+'save_review_data', story, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -77,7 +78,7 @@ export class StoryService {
 			
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
-			return this.http.post(API_URL+'add_tag_to_story', formData, {headers})
+			return this.http.post(USER_API_URL+'add_tag_to_story', formData, {headers})
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -91,7 +92,7 @@ export class StoryService {
 			
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
-			return this.http.post(API_URL+'add_new_tag_to_story', formData, {headers})
+			return this.http.post(USER_API_URL+'add_new_tag_to_story', formData, {headers})
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -105,7 +106,7 @@ export class StoryService {
 			
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
-			return this.http.post(API_URL+'remove_tag_from_story', formData, {headers})
+			return this.http.post(USER_API_URL+'remove_tag_from_story', formData, {headers})
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -117,7 +118,19 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 
-			return this.http.get(API_URL+'get_story/'+storyId, httpOptions)
+			return this.http.get(USER_API_URL+'get_story/'+storyId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getStories(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_stories/', httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -129,7 +142,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 
-			return this.http.get(API_URL+'get_tags/', httpOptions)
+			return this.http.get(USER_API_URL+'get_tags/', httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -141,7 +154,7 @@ export class StoryService {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 
-			return this.http.get(API_URL+'get_user_draft_stories/', httpOptions)
+			return this.http.get(USER_API_URL+'get_user_draft_stories/', httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -156,7 +169,7 @@ export class StoryService {
 
       const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
       
-      return this.http.post(API_URL+'image_upload', formData, {
+      return this.http.post(USER_API_URL+'image_upload', formData, {
           headers,
           responseType: 'text'
       });	    

@@ -50,6 +50,8 @@ import { FrontendSectionsModule } from './frontend-sections/frontend-sections.mo
 
 import { AppComponent } from './app.component';
 
+import { ShareButtonModule } from '@ngx-share/button';
+
 import {
   AgmCoreModule
 } from '@agm/core';
@@ -57,6 +59,9 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
 import { FrontendLayoutComponent } from './layouts/frontend-layout/frontend-layout.component';
 import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.component';
+import { FacebookSharingComponent } from './facebook-sharing.component';
+import { TweeterSharingComponent } from './tweeter-sharing.component';
+import { LinkedInSharingComponent } from './linkedin-sharing.component';
 
 @NgModule({
   imports: [
@@ -71,6 +76,7 @@ import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.
     FrontendSectionsModule,
     RouterModule,
     AppRoutingModule,
+    ShareButtonModule,
     AgmCoreModule.forRoot({
       apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
     })
@@ -81,6 +87,9 @@ import { ProfileLayoutComponent } from './layouts/profile-layout/profile-layout.
     AdminLoginComponent,
     FrontendLayoutComponent,
     ProfileLayoutComponent,
+    FacebookSharingComponent,
+    TweeterSharingComponent,
+    LinkedInSharingComponent,
   ],
   providers: [
       // {

@@ -9,7 +9,7 @@ const httpOptions = {
 };
 
 const API_URL  =  'http://localhost/stories-app/back-end/api/';
-const ADMIN_API_URL  =  'http://localhost/stories-app/back-end/api/admin/';
+const ADMIN_API_URL  =  'http://localhost/stories-app/back-end/auth/admin/';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,12 @@ export class UserService {
   	constructor(private http: HttpClient) { }
 
   	getUsers(): Observable<any>{
-    	
-			// return this.http.get(API_URL+'get_users', httpOptions).pipe(
-			// 	tap((newUser: Object) => console.log('newUser', newUser)),
-			// 	catchError(this.handleError<any>('registerUser'))
-			// );
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
 
-			return this.http.get(API_URL+'get_users', httpOptions);
+			return this.http.get(ADMIN_API_URL+'get_users', httpOptions);
 		}
 
   	loginUser(User): Observable<any>{

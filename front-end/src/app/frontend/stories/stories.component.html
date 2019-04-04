@@ -1,1 +1,128 @@
-<div>Stories</div>
+<!-- Single story page title -->
+<div class="single_story_page_title">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>New Destination Ahead</h1>
+            </div>
+        </div>
+    </div>
+    <div class="story_post_date">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Current Page Name</a></li>
+        </ul>
+    </div>
+</div>
+<!-- Single story page title -->
+
+
+<!-- Section 2 -->
+<div class="container-fluid section_2">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="big_img_wrap">
+                <div class="img_attribution">© <a href="#">Alegra Ally</a></div>
+                <a href="#"><img src="/assets/img/story.jpg" alt=""></a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="right_line">
+                    <div class="right_inner">
+                        <a href="#" class="right_ancor">
+                            <span class="diamond_text">
+                                <span class="diamond_content">Featured Story</span>
+                            </span>
+                            <h3>Women at the End of the Land</h3>
+                            <div class="inner_divider"></div>
+                            <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
+                        </a>
+
+                        <div class="inner_link_bottom">
+                            <a href="#">Alegra Ally</a> &amp; <a href="#">Kim Frank</a>
+                        </div>
+
+                        <div class="right_inner_footer">
+                            <div class="right_inner_footer_top">
+                                <a href="#" class="coubt">Russia</a>
+                                <a href="#" class="coubt2">Indigenous</a>
+                            </div>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li><img src="/assets/img/like.png" alt=""> 149</li>
+                                    <li class="bookmark"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
+                                        <div class="social_wrap">
+                                            <ul>
+                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
+                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
+                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                                            </ul>
+                                        </div>
+                                    </div> 14 min rea
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section 2 -->
+
+
+<!-- Section 4 (Stories) -->
+<div class="container-fluid feature_story_title_wrap stories_title">
+    <div class="row1">
+        <div class="col-md-12">
+            <h2>Stories</h2>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid main_story_wrap stories_wrap_main_stories_page">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row" *ngIf="stories?.length > 0">
+
+                <div class="col-md-4" *ngFor="let story of stories">
+                        <div class="story_outer_wrap">
+                    		<a [routerLink]="['/story/', story.slug]">
+	                            <div class="main_story_img_wrap">
+	                                <img [src]="story.preview_image" alt="">
+	                                <div class="overlay_dark"></div>
+	                                <div class="story_text_block">
+	                                    <div class="story_tag_wrap">
+	                                        <span class="dark_tag">Russia</span>
+	                                        <!-- <span class="light_tag">Russia</span> -->
+	                                    </div>
+	                                    <h3>{{story.preview_title}}</h3>
+	                                    <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p>
+	                                </div>
+	                            </div>
+                    		</a>
+                            <div class="right_inner_footer_bottom">
+                                <ul>
+                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
+                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
+                                        <div class="social_wrap">
+                                            <ul>
+                                                <li><a (click)="share()"><img src="/assets/img/facebook.png" alt=""></a></li>
+                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
+                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                                            </ul>
+                                        </div>
+                                    </div> 14 min rea
+                                    </li>
+                                </ul>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Section 4 (Stories) -->
+

@@ -1,49 +1,34 @@
 
 <!-- Single story page title -->
-<div class="single_story_page_title">
+<div class="single_story_page_title" *ngIf="displayStory == true">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="story_tag_wrap">
                     <a href="#" class="dark_tag">Russia</a>
-                    <a href="#" class="light_tag">Indigenous</a>
+                    
+                    <a *ngFor="let tag of storyData.tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                    
                 </div>
-                <h1>New Destination Ahead</h1>
+                <h1>{{storyData.title}}</h1>
                 <div class="right_inner_footer_bottom top20">
                     <ul>
-                        <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                        <li><a (click)="like()"><img src="/assets/img/like_white.png" alt=""> FASCINATING</a></li>
                         <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-    <div class="story_post_date">March 20, 2019</div>
+    <div class="story_post_date">{{storyData.created | date: 'mediumDate'}} </div>
 </div>
 <!-- Single story page title -->
 
 <!-- Single story page section 2 -->
-<div class="container-fluid single_page_tagline_wrap">
+<div class="container-fluid single_page_tagline_wrap" *ngIf="displayStory == true">
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
-                <h4><span class="graf-dropCap">L</span>orem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-10 offset-1 single_page_content">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <img src="/assets/img/single1.jpg" alt="">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <img src="/assets/img/single2.jpg" alt="">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-            </div>
+            <div [innerHtml]="storyData.description"></div>
         </div>
     </div>
 </div>

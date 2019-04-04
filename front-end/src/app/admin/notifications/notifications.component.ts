@@ -19,6 +19,7 @@ export class NotificationsComponent implements OnInit {
 
       },{
           type: type[color],
+          delay:1000,
           timer: 4000,
           placement: {
               from: from,
