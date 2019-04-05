@@ -1,6 +1,8 @@
-
 <!-- Single story page title -->
-<div class="single_story_page_title" *ngIf="displayStory == true">
+<div *ngIf="displayStoryError == true">
+    We couldn’t find this page.
+</div>
+<div class="single_story_page_title" *ngIf="displayStory == true" [ngStyle]="{ 'background-image': 'url(' + storyData.preview_image + ')'}">
     <div class="container">
         <div class="row">
             <div class="col-md-12">

@@ -3,7 +3,7 @@
     	<div class="col-sm-2"></div>
     	<div class="col-sm-8" *ngIf="showNewForm" [@slideInOut]>
     			
-    		<form [formGroup]="addStoryForm" (ngSubmit)="saveDraft()">
+    		<form [formGroup]="addStoryForm" (ngSubmit)="submitDraft()">
 	    		<div class="form-group">
 	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">		        		
 		        		<input type="text" formControlName="title" class="title-field" placeholder="Story Title">

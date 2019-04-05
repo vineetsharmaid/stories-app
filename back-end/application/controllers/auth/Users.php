@@ -124,11 +124,11 @@ class Users extends REST_Controller {
       $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
 
       $title  = trim( strip_tags($post_data->title) );
-      $slug   = strtolower( str_replace(' ', '-', $title) );
+      // $slug   = strtolower( str_replace(' ', '-', $title) );
 
       $story = array(
         'title' => trim( strip_tags($post_data->title) ),
-        'slug'   => $slug,
+        // 'slug'   => $slug,
         'description' => htmlEntities($post_data->description, ENT_QUOTES),
         'author_id' => $user[0]->user_id,
         'status' => 0
@@ -196,7 +196,7 @@ class Users extends REST_Controller {
     public function image_upload_post() { 
       
       $config['upload_path']          = './assets/uploads/';
-      $config['allowed_types']        = 'gif|jpg|png';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048;
       // $config['max_width']            = 1024;
       // $config['max_height']           = 768;
@@ -354,7 +354,7 @@ class Users extends REST_Controller {
     public function add_new_tag_to_story_post()
     {
 
-      $tag_data = array( 'status' => 1, 'name' => $this->input->post('tag_name'), 'created_by' => $this->token_data->id );
+      $tag_data = array( 'status' => 1, 'name' => ucfirst($this->input->post('tag_name')), 'created_by' => $this->token_data->id );
 
       if( $this->common_model->insert_entry( 'tags', $tag_data ) ) {
 
@@ -413,6 +413,34 @@ class Users extends REST_Controller {
     {
         
         $story = $this->common_model->get_data( 'stories', array('author_id' => $this->token_data->id, 'status' => 0) );
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($story) ) {
+
+            $story[0]->description = html_entity_decode($story[0]->description);
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No stories were found',
+                'error' => array('No stories were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+    public function get_user_published_stories_get()
+    {
+        
+        $story = $this->common_model->get_data( 'stories', array('author_id' => $this->token_data->id, 'status' => 1) );
 
         // Check if the categories data store contains categories (in case the database result returns NULL)
         if ( !empty($story) ) {

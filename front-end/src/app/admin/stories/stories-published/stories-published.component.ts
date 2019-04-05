@@ -5,7 +5,7 @@ import { StoriesService } from "../../../services/admin/stories.service";
 @Component({
   selector: 'app-stories-published',
   templateUrl: './stories-published.component.html',
-  styleUrls: ['./stories-published.component.css']
+  styleUrls: ['./stories-published.component.scss']
 })
 export class StoriesPublishedComponent implements OnInit {
 
@@ -29,6 +29,28 @@ export class StoriesPublishedComponent implements OnInit {
 
 	    	this.stories = [];
 	    	console.log('getstories error', error);
+	    });
+  	}
+
+  	updateFeatured(storyId, index) {
+
+  		
+
+  		// this.stories.forEach((story, storyIndex) => {
+
+  		// 	if(this.stories[index]['story_id'] == ) {
+
+  		// 	}
+  		// });
+	   	
+	    this.storiesService.updateFeatured(storyId).subscribe((response: Array<Object>) => {
+
+	      	console.log('updateFeatured response', response);
+  			this.stories[index]['featured'] = this.stories[index]['featured'] == 1 ? 0 : 1;
+	      
+	    }, error => {
+
+	    	console.log('updateFeatured error', error);
 	    });
   	}
 

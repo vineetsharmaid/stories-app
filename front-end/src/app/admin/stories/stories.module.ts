@@ -20,7 +20,8 @@ import {
   MatTooltipModule,
   MatSelectModule,
   MatAutocompleteModule,
-  MatRadioModule
+  MatRadioModule,
+  MatCheckboxModule
 } from '@angular/material';
 
 @NgModule({
@@ -36,7 +37,8 @@ import {
     MatSelectModule,
     MatAutocompleteModule,
     MatTooltipModule, 
-    MatRadioModule   
+    MatRadioModule,   
+    MatCheckboxModule,   
   ],
   declarations: [
     StoriesPendingComponent,

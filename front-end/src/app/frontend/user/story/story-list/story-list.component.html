@@ -3,17 +3,17 @@
 		<div class="col-sm-12">
 			<h2>Your Stories</h2>
 		</div>
-		<div class="col-sm-12 mb-5">			
+		<div class="col-sm-12 mb-5">
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item">
-					<a [routerLink]="['/user/story/list/published']" class="nav-link" [ngClass]="{'active': viewType == 'drafts'}" data-toggle="tab" href="#drafts">
-						Drafts 
+					<a [routerLink]="['/user/story/list/drafts']" class="nav-link" [ngClass]="{'active': viewType == 'drafts'}" data-toggle="tab" href="#drafts">
+						Drafts
 						<span class="stories-count draft">{{draftStories?.length}}</span>
 					</a>
 				</li>
 				<li class="nav-item">
-					<a [routerLink]="['/user/story/list/drafts']" class="nav-link" [ngClass]="{'active': viewType == 'published'}" data-toggle="tab" href="#published">
+					<a [routerLink]="['/user/story/list/published']" class="nav-link" [ngClass]="{'active': viewType == 'published'}" data-toggle="tab" href="#published">
 						Published
 						<span class="stories-count draft">{{publishedStories?.length}}</span>
 					</a>
@@ -21,15 +21,49 @@
 			</ul>
 			<!-- Tab panes -->
 			<div class="tab-content">
-				<div id="drafts" class="container tab-pane"  [ngClass]="{'active': viewType == 'drafts'}"><br>
-					<div class="stories" *ngFor="let story of draftStories">
-						<h3>{{story.preview_title}}</h3>
-						<p>{{story.preview_subtitle}}</p>
+				<div id="drafts" class="container tab-pane fade" role="tabpanel" [ngClass]="{'active show': viewType == 'drafts'}"><br>
+					<div class="row">
+						<div class="col-md-4 mb-5" *ngFor="let story of draftStories">
+							<mat-card class="stories-card">
+							<mat-card-header>
+							<!-- <div mat-card-avatar class="example-header-image"></div> -->
+							<mat-card-title>{{story.preview_title}}</mat-card-title>
+							<mat-card-subtitle>{{story.created | date: 'mediumDate'}}</mat-card-subtitle>
+							</mat-card-header>
+							<!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+							<mat-card-content>
+							<p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
+							</mat-card-content>
+							<mat-card-actions>
+							<button mat-button [routerLink]="['/user/story/edit/', story.story_id]">EDIT</button>
+							<button mat-button>DELETE</button>
+							</mat-card-actions>
+							</mat-card>
+						</div>
 					</div>
 				</div>
-				<div id="published" class="container tab-pane" [ngClass]="{'active': viewType == 'published'}"><br>
-					<h3>Published</h3>
-					<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+				
+				<div id="published" class="container tab-pane fade" role="tabpanel" [ngClass]="{'active show': viewType == 'published'}"><br>
+					<div class="row">
+						<div class="col-md-4 mb-5" *ngFor="let story of publishedStories">
+							<mat-card class="stories-card">
+							<mat-card-header>
+							<!-- <div mat-card-avatar class="example-header-image"></div> -->
+							<mat-card-title>{{story.preview_title}}</mat-card-title>
+							<mat-card-subtitle>{{story.created | date: 'mediumDate'}}</mat-card-subtitle>
+							</mat-card-header>
+							<!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+							<mat-card-content>
+							<p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
+							</mat-card-content>
+							
+							<mat-card-actions>
+							<button mat-button [routerLink]="['/user/story/edit/', story.story_id]">EDIT</button>
+							<button mat-button>DELETE</button>
+							</mat-card-actions>
+							</mat-card>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

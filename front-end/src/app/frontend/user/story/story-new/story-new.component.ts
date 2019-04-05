@@ -41,6 +41,7 @@ export class StoryNewComponent implements OnInit {
 	public addStoryForm: FormGroup;
 	public previewForm: FormGroup;
 	public selectedFile: ImageSnippet;
+  public subAddForm: any;
 	public filePath: string;
 	public previousUrl: string;
 	public storyId: number;
@@ -50,17 +51,16 @@ export class StoryNewComponent implements OnInit {
   	placeholderText: null,
     quickInsertButtons: ['image', 'table', 'ol', 'ul'],
   	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
   	toolbarButtonsSM: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
   	heightMin: 400,
-    heightMax: 600,
   	charCounterCount: false,
 
     // Set the image upload parameter.
@@ -143,6 +143,24 @@ export class StoryNewComponent implements OnInit {
   		previewSubtitle: ['', Validators.required],
   		// previewImage: ['', Validators.required],
   	});
+
+    // subscribe to changes on add story form
+    this.onChanges();
+  }
+
+
+  /*****SAVE PREVIEW FORM FIELDS ON CHANGE******/ 
+  onChanges(): void {  
+    
+    // this.subAddForm = this.addStoryForm.get('title').valueChanges.subscribe(val => {
+        
+    //     typeof this.storyId == 'undefined' ? this.saveDraft() : this.updateDraft();
+    // });
+
+    // this.subAddForm = this.addStoryForm.get('description').valueChanges.subscribe(val => {
+        
+    //     typeof this.storyId == 'undefined' ? this.saveDraft() : this.updateDraft();
+    // });
   }
 
 	// convenience getter for easy access to form fields
@@ -150,8 +168,6 @@ export class StoryNewComponent implements OnInit {
   get pf() { return this.previewForm.controls; }    
 
   saveDraft() {
-
-    this.addStorySubmitted = true;
 
     var draftStory = {
 			title: this.addStoryForm.get('title').value,
@@ -168,8 +184,6 @@ export class StoryNewComponent implements OnInit {
 			previewSubtitle: subTitle,
 		});
 
-		console.log('draftStory', draftStory);		
-
     // stop here if form is invalid
     if (this.addStoryForm.invalid) {
 
@@ -180,18 +194,103 @@ export class StoryNewComponent implements OnInit {
     	this.storyService.saveDraft(draftStory).subscribe((response) => {
 
 				console.log('Data saved to draft');
-    		console.log(response);
     		
     		this.storyId = response['data']['story'];
 
-    		this.router.navigate(["/user/story/edit/"+this.storyId, {'new': 'true'}]);
-    		// this.toggleView();
     	}, (error) => {
 
     		console.log(error);
     	});
 
 		}
+  }
+
+  updateDraft() {
+
+    let description = this.addStoryForm.get('description').value;
+    let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+
+    this.previewForm.patchValue({  
+
+      previewTitle: this.addStoryForm.get('title').value,
+      previewSubtitle: subTitle,
+    });
+
+    var draftStory = {
+      story_id: this.storyId,
+      title: this.addStoryForm.get('title').value,
+      description: this.addStoryForm.get('description').value,
+      previewTitle: this.previewForm.get('previewTitle').value,
+      previewSubtitle: this.previewForm.get('previewSubtitle').value,
+      username: localStorage.getItem('username'),
+    };
+
+    // stop here if form is invalid
+    if (this.addStoryForm.invalid) {
+
+      console.log('Validation error.');
+      return;
+    } else {
+
+      this.storyService.updateDraft(draftStory).subscribe((response) => {
+
+        console.log('Data updated in draft');        
+        this.storyId = response['data']['story']['story_id'];
+
+      }, (error) => {
+
+        console.log(error);
+      });
+
+    }
+  }
+
+
+  submitDraft() {
+
+    this.addStorySubmitted = true;
+
+    let description = this.addStoryForm.get('description').value;
+    let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+
+    this.previewForm.patchValue({  
+
+      previewTitle: this.addStoryForm.get('title').value,
+      previewSubtitle: subTitle,
+    });
+
+    var draftStory = {
+      title: this.addStoryForm.get('title').value,
+      description: this.addStoryForm.get('description').value,
+      previewTitle: this.previewForm.get('previewTitle').value,
+      previewSubtitle: this.previewForm.get('previewSubtitle').value,
+      story: this.storyId,
+      username: localStorage.getItem('username')
+    };
+
+    console.log('draftStory', draftStory);    
+
+    // stop here if form is invalid
+    if (this.addStoryForm.invalid) {
+
+      console.log('Validation error.');
+      return;
+    } else {
+
+      this.storyService.saveDraft(draftStory).subscribe((response) => {
+
+        console.log('Data saved to draft');
+        
+        this.storyId = response['data']['story'];
+
+        this.router.navigate(["/user/story/edit/"+this.storyId, {'new': 'true'}]);
+        // this.toggleView();
+      }, (error) => {
+
+        console.log(error);
+      });
+
+    }
   }
 
   savePreview() {
@@ -253,5 +352,12 @@ export class StoryNewComponent implements OnInit {
 
     reader.readAsDataURL(file);
   }  
+
+
+  ngOnDestroy() {
+
+    // this.subAddForm.unsubscribe();
+  }
+
 
 }

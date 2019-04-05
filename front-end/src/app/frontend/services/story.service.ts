@@ -160,6 +160,18 @@ export class StoryService {
 	    );
 		}
 
+  	getPublishedStories(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_published_stories/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
 		public uploadImage(image: File, story_id): Observable<string> {
 	    
 

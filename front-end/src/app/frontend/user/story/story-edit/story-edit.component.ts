@@ -51,7 +51,9 @@ export class StoryEditComponent implements OnInit {
 	public editStoryForm: FormGroup;
 	public previewForm: FormGroup;
 	public selectedFile: ImageSnippet;
-	public filePath: string;
+	public subPreviewForm: any;
+  public subGetStory: any;
+  public filePath: string;
   public previousUrl: string;
 	public storyId: number;
   public story: Object;
@@ -80,17 +82,15 @@ export class StoryEditComponent implements OnInit {
   	placeholderText: null,
     quickInsertButtons: ['image', 'table', 'ol', 'ul'],
   	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'fontSize', 
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
   	toolbarButtonsSM: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
 	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
-    fontSize: ['14', '18', '20', '24'],
-    fontSizeSelection: true,
   	heightMin: 400,
   	charCounterCount: false,
 
@@ -166,7 +166,7 @@ export class StoryEditComponent implements OnInit {
     this.isNewStory = routeParams['new'] == "true" ? true : false;
 
     this.getStory();
-    
+
     this.filteredTags = this.previewForm.controls['previewTags'].valueChanges.pipe(
         startWith(''),        
         map((tag: string | null) => tag ? this._filterTags(tag) : [])
@@ -178,12 +178,15 @@ export class StoryEditComponent implements OnInit {
 
     this.storyId = +this.activatedRoute.snapshot.paramMap.get('storyId');
 
-    this.storyService.getStory(this.storyId).subscribe(
+    this.subGetStory = this.storyService.getStory(this.storyId).subscribe(
       (response) => {
 
         this.story = response['data'][0];
 
         this.getTags();
+
+        // subscribe to changes on preview form
+        this.onChanges();
         
         if ( this.story['preview_image'] != "" ) {
           
@@ -280,8 +283,8 @@ export class StoryEditComponent implements OnInit {
 			title: this.editStoryForm.get('title').value,
 			description: this.editStoryForm.get('description').value,
       previewTitle: this.previewForm.get('previewTitle').value,
-			username: localStorage.getItem('username'),
       previewSubtitle: this.previewForm.get('previewSubtitle').value,
+			username: localStorage.getItem('username'),
 		};
 
 		console.log('draftStory', draftStory);
@@ -307,6 +310,21 @@ export class StoryEditComponent implements OnInit {
     	});
 
 		}
+  }
+
+
+  /*****SAVE PREVIEW FORM FIELDS ON CHANGE******/ 
+  onChanges(): void {  
+    
+    this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
+      
+        this.savePreview();        
+    });
+
+    this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
+      
+        this.savePreview();
+    });
   }
 
   savePreview() {
@@ -348,14 +366,60 @@ export class StoryEditComponent implements OnInit {
 
     	this.storyService.submitForReview(draftStory).subscribe((response) => {
 
-    		console.log(response);
-    		this.toggleView();
+        console.log('Preview data saved to draft');
     	}, (error) => {
 
     		console.log(error);
     	});
-			console.log('Preview data saved to draft');
 		}
+  }
+
+  submitPreview() {
+
+    this.previewSubmitted = true;
+
+    if ( this.previewForm.get('previewTitle').value == "" ) {
+      
+        this.previewForm.patchValue({  
+
+          previewTitle: this.story['title'],
+        });      
+    }
+
+    if ( this.previewForm.get('previewSubtitle').value == "" ) {
+          
+        let description = this.editStoryForm.get('description').value;
+        let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+        
+        this.previewForm.patchValue({  
+
+          previewSubtitle: subTitle,
+        });
+    }
+    
+    var draftStory = {
+      previewTitle: this.previewForm.get('previewTitle').value,
+      previewSubtitle: this.previewForm.get('previewSubtitle').value,
+      story: this.story['story_id'],
+      username: localStorage.getItem('username'),      
+    };
+
+    // stop here if form is invalid
+    if (this.previewForm.invalid) {
+
+      console.log('Validation error.');
+      return;
+    } else {
+
+      this.storyService.submitForReview(draftStory).subscribe((response) => {
+
+        this.toggleView();
+      }, (error) => {
+
+        console.log(error);
+      });
+      console.log('Preview data saved to draft');
+    }
   }
 
   toggleView() {
@@ -472,6 +536,12 @@ export class StoryEditComponent implements OnInit {
     const filterValue = value.toString().toLowerCase();
     
     return this.allTags.filter( tag => tag.name.toLowerCase().startsWith(filterValue) );
+  }
+
+  ngOnDestroy() {
+
+    this.subGetStory.unsubscribe();
+    this.subPreviewForm.unsubscribe();
   }
     
   

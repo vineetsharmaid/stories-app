@@ -16,13 +16,14 @@
               <table class="table">
                 <thead class=" text-primary">
                   <th width="20%">Preview Title </th>
-                  <th width="30%">Sub Title </th>
+                  <th width="25%">Sub Title </th>
                   <th width="20%">Author </th>
-                  <th width="10%">Last Updated </th>
+                  <th width="15%">Last Updated </th>
+                  <th width="10%">Featured </th>
                   <th width="10%">Action </th>
                 </thead>
                 <tbody *ngIf="stories?.length > 0">
-                  <tr *ngFor="let story of stories">
+                  <tr *ngFor="let story of stories; let i = index">
                     <td>
                       <a href="#" class="user_name"> {{story.preview_title | titlecase}} </a>
                     </td>
@@ -39,7 +40,13 @@
                     </td>
                     <td>{{story.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-info" routerLink="/admin/stories/view/{{story.story_id}}">
+                      <mat-checkbox [checked]= "story.featured == 1" (click)="updateFeatured(story.story_id, i)">
+                        <p *ngIf="story.featured == 1"> Yes </p>
+                        <p *ngIf="story.featured == 0"> No </p>
+                      </mat-checkbox>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-success" routerLink="/admin/stories/view/{{story.story_id}}">
                         View
                       </button>
                     </td>

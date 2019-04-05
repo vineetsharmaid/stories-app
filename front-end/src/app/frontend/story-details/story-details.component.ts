@@ -14,6 +14,7 @@ export class StoryDetailsComponent implements OnInit {
 
 	public storyData: object;
 	public displayStory: boolean = false;
+	public displayStoryError: boolean = false;
 
   	constructor(private activatedRoute: ActivatedRoute, private storiesService : StoriesService) { }
  
@@ -38,7 +39,7 @@ export class StoryDetailsComponent implements OnInit {
 	    }, error => {
 
 	    	this.storyData = {};
-	    	this.displayStory = true;
+	    	this.displayStoryError = true;
 	    	console.log('getstories error', error);
 	    });
   }

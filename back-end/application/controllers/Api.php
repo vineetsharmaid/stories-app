@@ -364,7 +364,7 @@ class Api extends REST_Controller {
     public function story_description_image_upload_post() { 
 
       $config['upload_path']          = './assets/uploads/';
-      $config['allowed_types']        = 'gif|jpg|png';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048;
       // $config['max_width']            = 1024;
       // $config['max_height']           = 768;
@@ -435,29 +435,32 @@ class Api extends REST_Controller {
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($story) ) {
 
-          // if user is logged in
-          if (isset($this->token_data)) { 
-
-            $liked_where = array('story_id' => $story[0]->story_id, 'user_id' => $this->token_data->id);
+          if ( $story[0]->status ==  STORY_STATUS_PUBLISHED || $story[0]->author_id ==  $this->token_data->id ) {
             
-            // check if user liked this story
-            $story[0]->liked = $this->common_model->data_exists('story_user_likes',  $liked_where) ? true : false;
+            // if user is logged in
+            if (isset($this->token_data)) { 
 
-          } else {
+              $liked_where = array('story_id' => $story[0]->story_id, 'user_id' => $this->token_data->id);
+              
+              // check if user liked this story
+              $story[0]->liked = $this->common_model->data_exists('story_user_likes',  $liked_where) ? true : false;
 
-            $story[0]->liked = false;
+            } else {
+
+              $story[0]->liked = false;
+            }
+
+            $story[0]->tags = $this->common_model->get_story_tags($story[0]->story_id);
+            
+            $story[0]->description = html_entity_decode($story[0]->description);
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story[0],
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
           }
-
-          $story[0]->tags = $this->common_model->get_story_tags($story[0]->story_id);
-          
-          $story[0]->description = html_entity_decode($story[0]->description);
-
-          // Set the response and exit
-          $this->response(  
-            array(
-              'status' => TRUE,
-              'data' => $story[0],
-            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
       } else {
 
           // Set the response and exit

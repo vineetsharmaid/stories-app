@@ -31,9 +31,10 @@
 
 		<div class="col-md-12" *ngIf="showPreview" [@slideInOut]>
 			<p>Story Preview</p>
+			<a href="#" [routerLink]="['/story/', story.slug]" target="_blank">Preview</a>
 
 		 	
-			<form [formGroup]="previewForm" (ngSubmit)="savePreview()">
+			<form [formGroup]="previewForm" (ngSubmit)="submitPreview()">
 				<div class="col-md-4">
 					<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
 						<label class="image-upload-container btn btn-bwm">

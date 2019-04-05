@@ -59,6 +59,16 @@ export class StoriesService {
 	  return this.http.get(ADMIN_API_URL+'get_story/'+storyId, httpOptions);
 	}
 
+	/** POST: get story by story id to the database */
+	updateFeatured(storyId): Observable<any> {
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+	  
+	  return this.http.get(ADMIN_API_URL+'update_featured/'+storyId, httpOptions);
+	}
+
 	/** POST: update status of story */
 	changeStatus (status, story_id): Observable<any> {
 

@@ -24,6 +24,7 @@ import {
   MatRadioModule,
   MatIconModule,
   MatChipsModule,
+  MatCardModule,
 } from '@angular/material';
 
 @NgModule({
@@ -42,6 +43,7 @@ import {
     MatRadioModule,
     MatIconModule,
     MatChipsModule,
+    MatCardModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   declarations: [
