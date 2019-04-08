@@ -14,6 +14,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/admin/user-list', title: 'User List',  icon:'content_paste', class: '' },
     { path: '/admin/stories', title: 'Stories',  icon:'content_paste', class: '' },
     { path: '/admin/category', title: 'Categories',  icon:'notifications', class: '' },
+    { path: '/admin/comments', title: 'Comments',  icon:'library_books', class: '' },
     { path: '/admin/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     { path: '/admin/typography', title: 'Typography',  icon:'library_books', class: '' },
     { path: '/admin/icons', title: 'Icons',  icon:'bubble_chart', class: '' },

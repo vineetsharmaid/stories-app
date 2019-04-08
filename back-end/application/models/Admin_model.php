@@ -61,6 +61,18 @@ class Admin_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_comments($where='') {
+        
+
+        $this->db->select('comments.*, users.first_name, users.last_name, users.username, stories.preview_title');
+        $this->db->from('comments');
+        $this->db->join('users', 'users.user_id = comments.user_id');
+        $this->db->join('stories', 'stories.story_id = comments.story_id');
+        $this->db->where( $where );
+        $this->db->group_by( 'comments.comment_id' );
+        return $this->db->get()->result();
+    }
+
     public function get_story($where='') {
         
 

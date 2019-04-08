@@ -359,6 +359,80 @@ class Admin extends REST_Controller {
         }
     }
 
+    public function get_comments_get($status)
+    { 
+     
+        $comments = $this->admin_model->get_comments( array('approved' => $status) );
+
+        // Check if the story data store contains story (in case the database result returns NULL)
+        if ( !empty($comments) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $comments,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'No comments were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
+    public function update_comment_status_post()
+    { 
+        $this->common_model->update_entry( 
+            'comments', 
+            array('approved' => $this->input->post('status')), // set data
+            array('comment_id' => $this->input->post('comment_id')) // where
+          );
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update comment status'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Comment status updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+
+    public function delete_comment_post()
+    { 
+        $this->common_model->delete_entry(  'comments', array('comment_id' => $this->input->post('comment_id')) );
+
+        if ($this->db->affected_rows())
+        {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Comment deleted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+          // generate an error... or use the log_message() function to log your error
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'Unable to delete comment'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
     public function update_featured_get($story_id)
     { 
 

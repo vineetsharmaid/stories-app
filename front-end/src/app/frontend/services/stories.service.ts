@@ -45,6 +45,17 @@ export class StoriesService {
 	    );
 		}
 
+
+		/** GET: get comments by story id to the database */
+		getStoryComments (storyId): Observable<any> {
+				
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};    	
+		  
+		  return this.http.get(API_URL+'get_story_comments/'+storyId, httpOptions);
+		}		
+
   	likeStory(story_id): Observable<any>{
 
 			let httpOptions = {
@@ -55,6 +66,23 @@ export class StoriesService {
       formData.append('story_id', story_id);
 
 			return this.http.post(USER_API_URL+'like_story/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	addStoryComment(comment): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('comment', comment.content);
+      formData.append('story_id', comment.story_id);
+      formData.append('parent', comment.parent);
+
+			return this.http.post(USER_API_URL+'add_story_comment/', formData, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

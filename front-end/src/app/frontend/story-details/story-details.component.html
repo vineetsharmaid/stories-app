@@ -25,7 +25,6 @@
     <div class="story_post_date">{{storyData.created | date: 'mediumDate'}} </div>
 </div>
 <!-- Single story page title -->
-
 <!-- Single story page section 2 -->
 <div class="container-fluid single_page_tagline_wrap" *ngIf="displayStory == true">
     <div class="container">
@@ -34,5 +33,78 @@
         </div>
     </div>
 </div>
-<!-- Single story page section 2 -->
 
+
+<!-- Comments section -->
+<div class="container-fluid single_page_comments comment-wrapper" *ngIf="displayStory == true">
+    <div class="container">
+        <div class="row" *ngIf="comments?.length > 0; else noComments;">
+            <ul class="media-list col-md-8">
+                <ng-template #commentsList let-comments>
+                <li class="media" *ngFor="let comment of comments; let indx = index">
+                    <a href="#" class="pull-left pr-3">                        
+                      <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+
+                      <ng-template #defaultImage>
+                        <!-- <img class="rounded-circle" src="/assets/img/default-user-image.jpg"> -->
+                        <div class="user-imageholder">
+                         <span class="name-letter">
+                            {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
+                        </span>
+                        </div>
+                      </ng-template>
+
+                    </a>
+                    <div class="media-body">
+                        <span class="text-muted pull-right">
+                            <small class="text-muted">{{comment.created | timeAgo}}</small>
+                        </span>
+                        <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                        
+                        <p> {{comment.content}} </p>
+                        
+                        <p *ngIf="comment.approved == 0">
+                            <small class="text-muted">(Pending Approval)</small>
+                        </p>
+
+                        <ul *ngIf="comment.children?.length > 0">
+                            <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
+                        </ul>
+                        
+                        <a class="alink" *ngIf="comment.parent == 0" (click)="comment.addReply = 'true'">Reply</a>
+
+                        <form [formGroup]="commentsForm" (ngSubmit)="addComment(comment.comment_id, indx)" *ngIf="comment.parent == 0 && comment.addReply == 'true'">
+                            <input type="hidden" formControlName="parent" value="comment.comment_id">
+                            <div class="form-group">
+                                <textarea class="form-control" formControlName="comment"></textarea>
+                            </div>
+                            <button class="btn btn-sm btn-success">Add</button>
+                            <button class="btn btn-sm btn-danger" (click)="comment.addReply = 'false'">Cancel</button>
+                        </form>
+                    </div>
+                </li>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comments }"></ng-container>
+            </ul>
+        </div>
+
+        <ng-template #noComments>
+            No comments yet!!
+        </ng-template>
+
+        <div class="row" *ngIf="isLoggedIn == 'true'; else showLogin">
+            <div class="col-md-8">
+            <form [formGroup]="commentsForm" (ngSubmit)="addComment()">
+                <input type="hidden" formControlName="parent">
+                <div class="form-group">
+                    <textarea class="form-control" formControlName="comment"></textarea>
+                </div>
+                <button class="btn btn-sm btn-success">Add</button>
+            </form>
+            </div>
+        </div>
+        <ng-template #showLogin>
+            <p class="login-message">Login to comment.</p>
+        </ng-template>
+    </div>
+</div>

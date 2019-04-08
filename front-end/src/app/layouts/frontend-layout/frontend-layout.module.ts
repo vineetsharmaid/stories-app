@@ -3,6 +3,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import {TimeAgoPipe} from 'time-ago-pipe';
+
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
 
 import { HomeComponent } from '../../frontend/home/home.component';
@@ -24,6 +26,7 @@ import { UserService } from "../../frontend/services/user.service";
     CommonModule,
     RouterModule.forChild(FrontendLayoutRoutes),
     FormsModule,
+    ReactiveFormsModule,
     // MatButtonModule,
     // MatRippleModule,
     // MatFormFieldModule,
@@ -35,6 +38,7 @@ import { UserService } from "../../frontend/services/user.service";
     HomeComponent,
     StoriesComponent,
     StoryDetailsComponent,
+    TimeAgoPipe
   ],
   providers: [
     UserService,

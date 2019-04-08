@@ -1,0 +1,67 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+
+        <button class="btn btn-md btn-danger mr-2" [routerLink]="['/admin/comments/pending']">Unpublished</button>
+        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/comments/published']">Published</button>
+
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Unpublished Comments</h4>
+            <!-- <p class="card-story"> List of users.</p> -->            
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="20%">Story </th>
+                  <th width="30%">Comment </th>
+                  <th width="20%">User </th>
+                  <th width="10%">Created </th>
+                  <th width="10%">Action </th>
+                </thead>
+                <tbody *ngIf="comments?.length > 0">
+                  <tr *ngFor="let comment of comments; let indx = index">
+                    <td>
+                      <a href="#" class="user_name"> {{comment.preview_title | titlecase}} </a>
+                    </td>
+                    <td>                    
+                     {{ comment.content }}
+                    </td>
+                    <td>
+                      <a href="#" class="user_name">
+                        {{ comment.first_name | titlecase }} {{comment.last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{comment.username}}
+                      </p>
+                    </td>
+                    <td>{{comment.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-success" (click)="publish(comment.comment_id, indx)">
+                        Publish
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="delete(comment.comment_id, indx)">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="comments?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No comment found.
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

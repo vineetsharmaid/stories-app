@@ -115,6 +115,38 @@ class Users extends REST_Controller {
       }
     }
 
+    public function add_story_comment_post()
+    {
+      
+      $comment = array(
+        'content'   => $this->input->post('comment'),
+        'story_id'  => $this->input->post('story_id'),
+        'parent'    => $this->input->post('parent'),
+        'user_id'   => $this->token_data->id,
+        'approved'  => COMMENT_STATUS_DRAFT,
+      );
+
+      if( $this->common_model->insert_entry('comments', $comment) ) {
+            
+          $comment_data = $this->common_model->get_comment_by_id( $this->db->insert_id() );
+          
+          // Set the response and exit
+          $this->response(  
+            array( 'status' => TRUE, 'data' => $comment_data,'message' => 'comment added to story', ), 
+            REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to add comment',
+              'error' => array('Unable to add comment'),
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     function update_story_post()
     {
 

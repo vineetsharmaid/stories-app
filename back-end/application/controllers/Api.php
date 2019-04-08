@@ -471,7 +471,46 @@ class Api extends REST_Controller {
       }
 
     }
-    
+
+    public function get_story_comments_get($story_id)
+    {
+      
+      if ( isset($this->token_data) ) {
+        
+        $comments = $this->common_model->get_story_comments_for_user(0, $story_id, $this->token_data->id);
+      } else {
+
+        $comments = $this->common_model->get_story_comments(0, $story_id);
+      }
+      
+      if ( !empty($comments) ) {
+        
+        foreach ($comments as $comment) {
+          if ( isset($this->token_data) ) {
+            
+            $comment->children = $this->common_model->get_story_comments_for_user($comment->comment_id, $story_id, $this->token_data->id);
+          } else {
+
+            $comment->children = $this->common_model->get_story_comments($comment->comment_id, $story_id);
+          }
+      
+        }
+
+        // Set the response and exit
+        $this->response(  
+          array(
+            'status' => TRUE,
+            'data'   => $comments,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code      
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No comments were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
 
     /**
      * get access token from header

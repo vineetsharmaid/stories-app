@@ -146,4 +146,38 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_story_comments($parent, $story_id)
+    {
+      $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->from('comments');
+      $this->db->join('users', 'users.user_id = comments.user_id');
+      $this->db->where( array('comments.parent' => $parent, 'comments.story_id' => $story_id,'comments.approved' => 1) );
+      $comments = $this->db->get()->result();
+
+      return $comments;
+    }
+
+    public function get_story_comments_for_user($parent, $story_id, $user_id)
+    {
+      $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->from('comments');
+      $this->db->join('users', 'users.user_id = comments.user_id');
+      $this->db->where( "`comments.parent` = ".$parent." AND `comments.story_id` = ".$story_id." AND (`comments`.`approved` = 1 OR `comments`.`user_id` = ".$user_id." )" );
+      $comments = $this->db->get()->result();
+
+      return $comments;
+    }
+
+    public function get_comment_by_id($comment_id)
+    {
+      $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->from('comments');
+      $this->db->join('users', 'users.user_id = comments.user_id');
+      $this->db->where( array('comments.comment_id' => $comment_id) );
+      $comments = $this->db->get()->row();
+
+      return $comments;
+    }
+
+
 }

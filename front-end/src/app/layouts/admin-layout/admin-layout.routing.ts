@@ -11,6 +11,7 @@ import { NotificationsComponent } from '../../admin/notifications/notifications.
 import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
+import { CommentsComponent } from '../../admin/comments/comments.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
@@ -48,6 +49,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/stories/stories.module#StoriesModule'
+            }
+        ] 
+    },{
+        path: 'comments',
+        component: CommentsComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/comments/comments.module#CommentsModule'
             }
         ] 
     },
