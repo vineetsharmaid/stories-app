@@ -99,7 +99,7 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_stories($where='') {
+    public function get_stories($where='', $limit='', $offset='', $order='') {
         
 
         $this->db->select('stories.preview_title, stories.preview_subtitle, stories.preview_image, stories.slug, stories.created, stories.story_id, stories.author_id, users.first_name, users.last_name, users.username');
@@ -107,6 +107,17 @@ class Common_model extends CI_Model {
         $this->db->join('users', 'users.user_id = stories.author_id');
         $this->db->where( $where );
         $this->db->group_by( 'stories.story_id' );
+
+        if ( $offset != '' && $limit != '' ) {
+          
+          $this->db->limit($limit, $offset);
+        }
+        
+        if ( $order == 'random' ) {
+          
+          $this->db->order_by('stories.preview_title', 'RANDOM');
+        }
+
         return $this->db->get()->result();
     }
 

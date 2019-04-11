@@ -14,11 +14,88 @@
                     <img *ngIf="userInfo.profile_pic?.length > 0" [src]="userInfo.profile_pic" alt="">
                     <img *ngIf="userInfo.profile_pic?.length == 0" src="/assets/img/user/user.jpg" alt="">
                 </div>
-                <h3>{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
-                <span><strong>6</strong> Stories</span>
-                <span><strong>11</strong> PLACES</span>
-                <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young</p>
-                <p class="top20"><a href="#"><strong>yourdomainname.com</strong></a></p>
+                
+                <div class="quick-edit">                
+                    <h3 *ngIf="enableNameEdit == false">{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
+
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableNameEdit == false" (click)="enableNameEdit = true; enableShortInfoEdit = false; enableWebsiteEdit = false; firstNameValue = userInfo.first_name; lastNameValue = userInfo.last_name;">
+                        <i class="fa fa-pencil"></i>
+                    </button>                    
+                </div>
+
+
+                <div class="quick-edit" *ngIf="enableNameEdit == true">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input #firstName [(ngModel)]="firstNameValue" name="firstName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <input #lastName [(ngModel)]="lastNameValue" name="lastName" class="form-control">
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <button class="btn btn-sm btn-danger cancel" (click)="enableNameEdit = false">
+                        <i class="fa fa-close"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-success save" (click)="updateName(firstNameValue, lastNameValue)">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+                
+                <span><strong>{{storiesCount}}</strong> Stories</span>
+                
+
+                <div class="quick-edit">
+                    <p *ngIf="userInfo.short_info?.length > 0 && enableShortInfoEdit == false">{{userInfo.short_info}}</p>
+
+                    <p *ngIf="userInfo.short_info == undefined && enableShortInfoEdit == false">Add short info</p>
+                    
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableShortInfoEdit == false" (click)="enableShortInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; shortInfoValue = userInfo.short_info">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </div>
+
+                <div class="form-group quick-edit" *ngIf="enableShortInfoEdit == true">
+                    <textarea #shortInfo [(ngModel)]="shortInfoValue" name="shortInfo" class="form-control">{{userInfo.short_info}}</textarea>
+                    
+                    <button class="btn btn-sm btn-danger cancel" (click)="enableShortInfoEdit = false">
+                        <i class="fa fa-close"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('short_info', shortInfoValue)">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+
+                <div class="quick-edit">
+                    <p class="top20" *ngIf="userInfo.website?.length > 0 && enableWebsiteEdit == false">
+                        <a href="#"><strong>{{userInfo.website}}</strong></a>
+                    </p>
+
+                    <p class="top20" *ngIf="userInfo.website == undefined && enableWebsiteEdit == false">
+                        <a href="#"><strong>yourdomainname.com</strong></a>
+                    </p>
+
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableWebsiteEdit == false" (click)="enableWebsiteEdit = true; enableShortInfoEdit = false; enableNameEdit = false; websiteValue = userInfo.website">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </div>
+
+
+                <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
+                    <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo.website}}</textarea> -->
+                    <input #website [(ngModel)]="websiteValue" name="website" class="form-control">
+                    <button class="btn btn-sm btn-danger cancel" (click)="enableWebsiteEdit = false">
+                        <i class="fa fa-close"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('website', websiteValue)">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -29,134 +106,23 @@
 
 <!-- Section 2 -->
 <div class="container-fluid stories_wrap_full">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="full_story_box">
-                    <a href="#"><img src="/assets/img/user/us3.jpg" alt=""></a>
-                <div class="right_inner_footer not_absolute">
-                    <div class="right_inner_footer_top">
-                        <a href="#" class="coubt">Russia</a>
-                        <a href="#" class="coubt2">Indigenous</a>
-                    </div>
-                    <div class="right_line">
-                        <h3>Women at the End of the Land</h3>
-                        <div class="inner_divider"></div>
-                        <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
-                    </div>
-                    <div class="right_inner_footer_bottom">
-                        <ul>
-                            <li><img src="/assets/img/like.png" alt=""> 1,003</li>
-                            <li class="bookmark">
-                                <div class="share_img_wrap">
-                                    <img src="/assets/img/bookmark.png" alt="">
-                                    <div class="social_wrap">
-                                        <ul>
-                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                                </div> 14 min rea
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="full_story_box">
-                    <a href="#"><img src="/assets/img/user/us1.jpg" alt=""></a>
-                <div class="right_inner_footer not_absolute">
-                    <div class="right_inner_footer_top">
-                        <a href="#" class="coubt">Russia</a>
-                        <a href="#" class="coubt2">Indigenous</a>
-                    </div>
-                    <div class="right_line">
-                        <h3>Women at the End of the Land</h3>
-                        <div class="inner_divider"></div>
-                        <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
-                    </div>
-                    <div class="right_inner_footer_bottom">
-                        <ul>
-                            <li><img src="/assets/img/like.png" alt=""> 1,003</li>
-                            <li class="bookmark">
-                                <div class="share_img_wrap">
-                                    <img src="/assets/img/bookmark.png" alt="">
-                                    <div class="social_wrap">
-                                        <ul>
-                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                                </div> 14 min rea
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="full_story_box">
-                    <a href="#"><img src="/assets/img/user/us2.jpg" alt=""></a>
-                <div class="right_inner_footer not_absolute">
-                    <div class="right_inner_footer_top">
-                        <a href="#" class="coubt">Russia</a>
-                        <a href="#" class="coubt2">Indigenous</a>
-                    </div>
-                    <div class="right_line">
-                        <h3>Women at the End of the Land</h3>
-                        <div class="inner_divider"></div>
-                        <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
-                    </div>
-                    <div class="right_inner_footer_bottom">
-                        <ul>
-                            <li><img src="/assets/img/like.png" alt=""> 1,003</li>
-                            <li class="bookmark">
-                                <div class="share_img_wrap">
-                                    <img src="/assets/img/bookmark.png" alt="">
-                                    <div class="social_wrap">
-                                        <ul>
-                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                                </div> 14 min rea
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Section 2 -->
+    <div class="row" *ngIf="stories?.length > 0">
 
-
-
-<!-- Section 2 -->
-<div class="container-fluid stories_wrap_full">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h2 class="page_section_divide">Recommended Stories</h2>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4" *ngFor="let story of stories">
             <div class="full_story_box">
-                    <a href="#"><img src="/assets/img/user/us4.jpg" alt=""></a>
+                    <a href="#" [routerLink]="['/story/', story.slug]">
+                        <img [src]="story.preview_image" [alt]="story.preview_title">
+                    </a>
                 <div class="right_inner_footer not_absolute">
                     <div class="right_inner_footer_top">
                         <a href="#" class="coubt">Russia</a>
-                        <a href="#" class="coubt2">Indigenous</a>
+                        <!-- <a href="#" class="coubt2">Indigenous</a> -->
+                        <a *ngFor="let tag of story.tags" [routerLink]="['/tag/', tag.tag_id]" class="coubt2">{{tag.name}}</a>
                     </div>
                     <div class="right_line">
-                        <h3>Women at the End of the Land</h3>
+                        <h3>{{story.preview_title}}</h3>
                         <div class="inner_divider"></div>
-                        <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
+                        <p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
                     </div>
                     <div class="right_inner_footer_bottom">
                         <ul>
@@ -178,39 +144,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="full_story_box">
-                    <a href="#"><img src="/assets/img/user/us5.jpg" alt=""></a>
-                <div class="right_inner_footer not_absolute">
-                    <div class="right_inner_footer_top">
-                        <a href="#" class="coubt">Russia</a>
-                        <a href="#" class="coubt2">Indigenous</a>
-                    </div>
-                    <div class="right_line">
-                        <h3>Women at the End of the Land</h3>
-                        <div class="inner_divider"></div>
-                        <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
-                    </div>
-                    <div class="right_inner_footer_bottom">
-                        <ul>
-                            <li><img src="/assets/img/like.png" alt=""> 1,003</li>
-                            <li class="bookmark">
-                                <div class="share_img_wrap">
-                                    <img src="/assets/img/bookmark.png" alt="">
-                                    <div class="social_wrap">
-                                        <ul>
-                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                                </div> 14 min rea
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
 <!-- Section 2 -->

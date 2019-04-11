@@ -424,6 +424,35 @@ class Api extends REST_Controller {
 
     }
 
+    public function get_featured_stories_get($limit, $offset)
+    {
+
+      $featured_stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.featured' => 1), $limit, $offset, $order = 'random' );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($featured_stories) ) {
+
+          foreach ($featured_stories as $story) {
+            
+            $story->tags = $this->common_model->get_story_tags($story->story_id);
+          }
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $featured_stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
 
     public function get_story_data_get()
     {

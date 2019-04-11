@@ -93,15 +93,23 @@
         </ng-template>
 
         <div class="row" *ngIf="isLoggedIn == 'true'; else showLogin">
-            <div class="col-md-8">
+            <div class="col-md-8" *ngIf="showCommentBox == 'true'; else showCommentButton">
             <form [formGroup]="commentsForm" (ngSubmit)="addComment()">
                 <input type="hidden" formControlName="parent">
                 <div class="form-group">
                     <textarea class="form-control" formControlName="comment"></textarea>
                 </div>
                 <button class="btn btn-sm btn-success">Add</button>
+                <button class="btn btn-sm btn-danger" (click)="showCommentBox = 'false'">Cancel</button>
             </form>
             </div>
+            
+            <ng-template #showCommentButton>
+                <div class="col-md-8">
+                    <button class="btn btn-sm btn-success" (click)="showCommentBox = 'true'">Add</button>
+                </div>
+            </ng-template>
+            
         </div>
         <ng-template #showLogin>
             <p class="login-message">Login to comment.</p>

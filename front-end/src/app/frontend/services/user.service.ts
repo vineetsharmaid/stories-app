@@ -51,6 +51,39 @@ export class UserService {
 			);
 		}
 
+  	updateMetaInfo(key, value): Observable<any>{
+    	
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append(key, value);
+
+			return this.http.post(USER_API_URL+'update_meta_info/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	updateName(firstName, lastName): Observable<any>{
+    	
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('first_name', firstName);
+      formData.append('last_name', lastName);
+
+			return this.http.post(USER_API_URL+'update_user_name/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getUserInfo(): Observable<any>{
 			
 			let httpAuthOptions = {

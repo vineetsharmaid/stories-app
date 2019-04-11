@@ -28,483 +28,208 @@
     </div>
 </div>
 <!-- Section 1 (Content Blocks) -->
-
-
 <!-- Section 2 -->
-<div class="container-fluid section_2">
+<div class="container-fluid section_2" *ngIf="featuredStories?.length > 0">
     <div class="row">
         <div class="col-md-9">
             <div class="big_img_wrap">
-                <div class="img_attribution">© <a href="#">Alegra Ally</a></div>
-                <a href="#"><img src="/assets/img/story.jpg" alt=""></a>
+                <div class="img_attribution">© 
+                    <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+                </div>
+                <a href="#" [routerLink]="['/story/', featuredStories[0].slug]">
+                    <img [src]="featuredStories[0].preview_image" [alt]="featuredStories[0].preview_title">
+                </a>
             </div>
         </div>
         <div class="col-md-3">
             <div class="right_line">
-                    <div class="right_inner">
-                        <a href="#" class="right_ancor">
-                            <span class="diamond_text">
-                                <span class="diamond_content">Featured Story</span>
-                            </span>
-                            <h3>Women at the End of the Land</h3>
-                            <div class="inner_divider"></div>
-                            <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
-                        </a>
-
-                        <div class="inner_link_bottom">
-                            <a href="#">Alegra Ally</a> &amp; <a href="#">Kim Frank</a>
-                        </div>
-
-                        <div class="right_inner_footer">
-                            <div class="right_inner_footer_top">
-                                <a href="#" class="coubt">Russia</a>
-                                <a href="#" class="coubt2">Indigenous</a>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                <div class="right_inner">
+                    <a href="#" [routerLink]="['/story/', featuredStories[0].slug]" class="right_ancor">
+                        <span class="diamond_text">
+                            <span class="diamond_content">Featured Story</span>
+                        </span>
+                        <h3>{{featuredStories[0].preview_title}}</h3>
+                        <div class="inner_divider"></div>
+                        <p [innerHtml]="(featuredStories[0].preview_subtitle?.length >=139) ? featuredStories[0].preview_subtitle+'...' : featuredStories[0].preview_subtitle"></p>
+                    </a>
+                    <div class="inner_link_bottom">
+                        <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
                     </div>
+                    <div class="right_inner_footer">
+                        <div class="right_inner_footer_top">
+                            <a href="#" class="coubt">Russia</a>
+                            <a href="#" class="coubt2">Indigenous</a>
+                        </div>
+                        <div class="right_inner_footer_bottom">
+                            <ul>
+                                <li><img src="/assets/img/like.png" alt=""> 149</li>
+                                <li class="bookmark"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
+                                    <div class="social_wrap">
+                                        <ul>
+                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
+                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
+                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                                        </ul>
+                                    </div>
+                                </div> 14 min read
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- Section 2 -->
-
-
 <!-- Section 3 (Featured Stories) -->
-<div class="container-fluid feature_story_title_wrap">
-    <div class="row1">
-        <div class="col-md-12">
-            <h2>Featured Stories</h2>
-        </div>
+<div class="container-fluid feature_story_title_wrap" *ngIf="featuredStories?.length > 1">
+<div class="row1">
+    <div class="col-md-12">
+        <h2>Featured Stories</h2>
     </div>
 </div>
-
+</div>
 <div class="container-fluid feature_story_wrap">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6">
-                    <a href="#">
-                        <div class="story_box">
-                            <div class="sb_img_big_wrap">
-                                <div class="wp_big"></div>
-                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
-                                <div class="overlay_dark"></div>
-                                <div class="story_content_wrap">
-                                    <div class="st_content_top">
-                                        <div class="story_tag_wrap">
-                                            <a href="#" class="dark_tag">Russia</a>
-                                            <a href="#" class="light_tag">Indigenous</a>
-                                        </div>
-                                        <h3>New Destination Ahead</h3>
+<div class="row" *ngIf="featuredStories?.length > 1">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="#" [routerLink]="['/story/', featuredStories[1].slug]" *ngIf="featuredStories?.length > 1">
+                    <div class="story_box" *ngIf="featuredStories?.length > 1">
+                        <div class="sb_img_big_wrap">
+                            <div class="wp_big" [ngStyle]="{'background-image': 'url('+featuredStories[1].preview_image+')'}"></div>
+                            <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                            <div class="overlay_dark"></div>
+                            <div class="story_content_wrap">
+                                <div class="st_content_top">
+                                    <div class="story_tag_wrap">
+                                        <a href="#" class="dark_tag">Russia</a>
+                                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                                        <a *ngFor="let tag of featuredStories[1].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                                     </div>
-                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetur ac. Consectetur adipiscing elit. Vivamus auctor condimentum sem et gravida. Maecenas id enim...</p>
+                                    <h3>{{featuredStories[1].preview_title}}</h3>
                                 </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
-                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
-                                </ul>
+                                <p [innerHtml]="(featuredStories[1].preview_subtitle?.length >=139) ? featuredStories[1].preview_subtitle+'...' : featuredStories[1].preview_subtitle"></p>
                             </div>
                         </div>
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <a href="#">
-                        <div class="story_box">
-                            <div class="sb_img_small_wrap">
-                                <div class="wp_big st_small1"></div>
-                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
-                                <div class="overlay_dark"></div>
-                                <div class="story_content_wrap">
-                                    <div class="st_content_top">
-                                        <div class="story_tag_wrap">
-                                            <a href="#" class="dark_tag">Russia</a>
-                                            <a href="#" class="light_tag">Indigenous</a>
-                                        </div>
-                                        <h3>New Destination Ahead</h3>
+                        <div class="right_inner_footer_bottom">
+                            <ul>
+                                <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="#" [routerLink]="['/story/', featuredStories[2].slug]" *ngIf="featuredStories?.length > 2">
+                    <div class="story_box" *ngIf="featuredStories?.length > 2">
+                        <div class="sb_img_small_wrap">
+                            <div class="wp_big st_small1" [ngStyle]="{'background-image': 'url('+featuredStories[2].preview_image+')'}"></div>
+                            <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                            <div class="overlay_dark"></div>
+                            <div class="story_content_wrap">
+                                <div class="st_content_top">
+                                    <div class="story_tag_wrap">
+                                        <a href="#" class="dark_tag">Russia</a>
+                                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                                        <a *ngFor="let tag of featuredStories[2].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                                     </div>
-                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetu</p>
+                                    <h3>{{featuredStories[2].preview_title}}</h3>
                                 </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
-                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
-                                </ul>
+                                <p [innerHtml]="(featuredStories[2].preview_subtitle?.length >=139) ? featuredStories[2].preview_subtitle+'...' : featuredStories[2].preview_subtitle"></p>
                             </div>
                         </div>
-                    </a>
-
-                    <a href="#">
-                        <div class="story_box top30">
-                            <div class="sb_img_small_wrap">
-                                <div class="wp_big st_small2"></div>
-                                <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
-                                <div class="overlay_dark"></div>
-                                <div class="story_content_wrap">
-                                    <div class="st_content_top">
-                                        <div class="story_tag_wrap">
-                                            <a href="#" class="dark_tag">Russia</a>
-                                            <a href="#" class="light_tag">Indigenous</a>
-                                        </div>
-                                        <h3>New Destination Ahead</h3>
+                        <div class="right_inner_footer_bottom">
+                            <ul>
+                                <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" [routerLink]="['/story/', featuredStories[3].slug]" *ngIf="featuredStories?.length > 3">
+                    <div class="story_box top30" *ngIf="featuredStories?.length > 3">
+                        <div class="sb_img_small_wrap">
+                            <div class="wp_big st_small2" [ngStyle]="{'background-image': 'url('+featuredStories[3].preview_image+')'}"></div>
+                            <!-- <img src="/assets/img/story_big.jpg" alt=""> -->
+                            <div class="overlay_dark"></div>
+                            <div class="story_content_wrap">
+                                <div class="st_content_top">
+                                    <div class="story_tag_wrap">
+                                        <a href="#" class="dark_tag">Russia</a>
+                                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                                        <a *ngFor="let tag of featuredStories[3].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                                     </div>
-                                    <p>Maecenas ornare varius mauris eu commodo. Aenean nibh risus, rhoncus eget consectetu</p>
+                                    <h3>{{featuredStories[3].preview_title}}</h3>
                                 </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
-                                    <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
-                                </ul>
+                                <p [innerHtml]="(featuredStories[3].preview_subtitle?.length >=139) ? featuredStories[3].preview_subtitle+'...' : featuredStories[3].preview_subtitle"></p>
                             </div>
                         </div>
-                    </a>
-                </div>
+                        <div class="right_inner_footer_bottom">
+                            <ul>
+                                <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                                <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min read</li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
 </div>
+</div>
 <!-- Section 3 (Featured Stories) -->
-
-
 <!-- Section 4 (Stories) -->
 <div class="container-fluid feature_story_title_wrap stories_title">
-    <div class="row1">
-        <div class="col-md-12">
-            <h2>Stories</h2>
-        </div>
+<div class="row1">
+    <div class="col-md-12">
+        <h2>Stories</h2>
     </div>
 </div>
-
+</div>
 <div class="container-fluid main_story_wrap stories_wrap_main_stories_page">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/story_1.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row" *ngIf="stories?.length > 0">
+            <div class="col-md-4" *ngFor="let story of stories">
+                <div class="story_outer_wrap">
+                    <a [routerLink]="['/story/', story.slug]">
+                        <div class="main_story_img_wrap">
+                            <img [src]="story.preview_image" [alt]="story.preview_title">
+                            <div class="overlay_dark"></div>
+                            <div class="story_text_block">
+                                <div class="story_tag_wrap">
+                                    <span class="dark_tag">Russia</span>
+                                    <!-- <span class="light_tag">Russia</span> -->
                                 </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
+                                <h3>{{story.preview_title}}</h3>
+                                <!-- <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p> -->
                             </div>
                         </div>
                     </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st2.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <div class="right_inner_footer_bottom">
+                        <ul>
+                            <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
+                            <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
+                                <div class="social_wrap">
+                                    <ul>
+                                        <li><a (click)="share()"><img src="/assets/img/facebook.png" alt=""></a></li>
+                                        <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
+                                        <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st3.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st4.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st5.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st6.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div> 
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st5.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st4.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a [routerLink]="['/story/test']">
-                        <div class="story_outer_wrap">
-                            <div class="main_story_img_wrap">
-                                <img src="/assets/img/st2.jpg" alt="">
-                                <div class="overlay_dark"></div>
-                                <div class="story_text_block">
-                                    <div class="story_tag_wrap">
-                                        <span class="dark_tag">Russia</span>
-                                        <!-- <span class="light_tag">Russia</span> -->
-                                    </div>
-                                    <h3>New Destination Ahead</h3>
-                                    <p class="one_liner_content">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                </div>
-                            </div>
-                            <div class="right_inner_footer_bottom">
-                                <ul>
-                                    <li class="fl"><img src="/assets/img/like.png" alt=""> 149</li>
-                                    <li class="bookmark fr"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
-                                        <div class="social_wrap">
-                                            <ul>
-                                                <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
-                                            </ul>
-                                        </div>
-                                    </div> 14 min read
-                                    </li>
-                                </ul>
-                                <div class="clear"></div>
-                            </div>
-                        </div>
-                    </a>
+                            </div> 14 min rea
+                        </li>
+                    </ul>
+                    <div class="clear"></div>
                 </div>
             </div>
         </div>
     </div>
+    
+</div>
+</div>
 </div>
 <!-- Section 4 (Stories) -->

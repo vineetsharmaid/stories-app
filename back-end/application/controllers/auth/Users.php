@@ -38,7 +38,7 @@ class Users extends REST_Controller {
         $this->methods['users_post']['limit'] = 100; // 100 requests per hour per user/key
         $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
 
-        // $this->load->model()
+        $this->load->model('user_model');
 
         if ( is_null($this->input->get_request_header('Authorization')) ) {
 
@@ -284,24 +284,15 @@ class Users extends REST_Controller {
 
     public function get_user_info_get() {
 
-      $user = $this->common_model->get_data( 'users', array('username' => $this->token_data->username) );
+      $user = $this->user_model->get_user_info( array('users.user_id' => $this->token_data->id) );
 
       if ( !empty($user) ) {
           
-          $user_data = array(
-              'first_name'  => $user[0]->first_name,
-              'last_name'   => $user[0]->last_name,
-              'profile_pic' => $user[0]->profile_pic,
-              'user_email'  => $user[0]->user_email,
-              'user_type'   => $user[0]->user_type,
-              'username'    => $user[0]->username,
-            );
-
           // Set the response and exit
           $this->response(  
             array(
               'status' => TRUE,
-              'data' => $user_data,
+              'data' => $user,
             ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
       } else {
 
@@ -355,6 +346,61 @@ class Users extends REST_Controller {
       
     }
 
+    public function update_meta_info_post()
+    {
+      $where = array('user_id' => $this->token_data->id);
+      foreach ($_POST as $key => $value) {
+        
+        $where['meta_key']   = $key;
+        
+        $data = array( 'meta_value' => $this->input->post($key) );
+
+        if( $this->common_model->data_exists('usermeta', $where) > 0 ) {
+
+          $this->common_model->update_entry('usermeta', $data, $where);
+
+          // Set the response and exit
+          $this->response(  
+            array( 'status' => TRUE, 'message' => 'Meta info updated', ), 
+            REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code
+        } else {
+
+          $data['user_id']    = $this->token_data->id;
+          $data['meta_key']   = $key;
+          $this->common_model->insert_entry('usermeta', $data);
+
+          // Set the response and exit
+          $this->response(  
+            array( 'status' => TRUE, 'message' => 'Meta info added', ), 
+            REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code          
+        }
+        
+      }
+    }
+
+    public function update_user_name_post() {
+      
+      $data  = array( 'first_name' => $this->input->post('first_name'), 'last_name' => $this->input->post('last_name') );
+      $where = array( 'user_id' => $this->token_data->id );
+      if( $this->common_model->update_entry('users', $data, $where) ) {
+
+        // Set the response and exit
+        $this->response(  
+          array( 'status' => TRUE, 'message' => 'name updated', ), 
+          REST_Controller::HTTP_OK
+        ); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'Unable to update name in db',
+            'error' => array('Unable to update name in db'),
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
 
     public function add_tag_to_story_post()
     {
@@ -521,6 +567,53 @@ class Users extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
       
+    }    
+
+    public function get_user_stories_count_get() {
+
+      $count = $this->common_model->data_exists( 'stories', array('author_id' => $this->token_data->id) );
+
+      // Set the response and exit
+      $this->response(  
+        array(
+          'status' => TRUE,
+          'data' => $count,
+        ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+    }
+
+    public function get_user_stories_get($limit, $offset)
+    {
+      $stories = $this->common_model->get_stories( 
+        array(
+          'stories.status'    => STORY_STATUS_PUBLISHED, 
+          'stories.author_id' => $this->token_data->id
+        ), 
+        $limit,
+        $offset,
+        $order = ''
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($stories) ) {
+
+          foreach ($stories as $story) {
+            
+            $story->tags = $this->common_model->get_story_tags($story->story_id);
+          }
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
     }    
 
 

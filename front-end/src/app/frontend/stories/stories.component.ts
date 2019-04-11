@@ -5,7 +5,6 @@ import { StoriesService } from '../services/stories.service'
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
 
-
 @Component({
   selector: 'app-stories',
   templateUrl: './stories.component.html',

@@ -57,3 +57,13 @@
 .social_wrap ul li img{margin: 0}
 .right_inner_footer_bottom li.fl{color: #333}
 /*Share style*/
+
+
+/*Custom css*/
+.quick-edit { position: relative; }
+.quick-edit button.edit { display: none; position: absolute; right: 0; top: 0; }
+.quick-edit button.save { position: absolute; right: 0; }
+.quick-edit button.cancel { position: absolute; right: 65px; }
+.quick-edit:hover button.edit { display: block; }
+.quick-edit button.btn-white { background: white; border: 1px solid #a8a8a887; }
+.quick-edit button.btn-white i { color: #a8a8a8; }

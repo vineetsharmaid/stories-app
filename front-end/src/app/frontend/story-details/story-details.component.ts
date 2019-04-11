@@ -18,6 +18,7 @@ export class StoryDetailsComponent implements OnInit {
   public commentsForm: FormGroup;
 	public displayStory: boolean = false;
 	public displayStoryError: boolean = false;
+  public showCommentBox: boolean = false;
   public isLoggedIn: string = 'false';
 
 	constructor(private activatedRoute: ActivatedRoute, private storiesService : StoriesService, private formBuilder : FormBuilder) { }
@@ -80,9 +81,6 @@ export class StoryDetailsComponent implements OnInit {
       return;
     } else {
       
-      console.log('Comment added.');
-      console.log('index', index);
-
       var comment = {
           content: this.commentsForm.get('comment').value,
           story_id: this.storyData['story_id'],
@@ -91,13 +89,21 @@ export class StoryDetailsComponent implements OnInit {
 
       this.storiesService.addStoryComment(comment).subscribe((response: Array<Object>) => {
 
-        console.log('response', response);
         this.commentsForm.reset();
         
+
         // set position of new comment in the comments json
-        typeof index == 'undefined' ? this.comments.push(response['data']) : this.comments[index]['children'].push(response['data']);
-        console.log('this.comments', this.comments);
-        
+        if (typeof index == 'undefined') {
+
+          this.comments.push(response['data'])
+          // update property to hide comment box in frontend
+          this.showCommentBox = false;
+        } else {
+
+          this.comments[index]['children'].push(response['data']);
+          // update property to hide comment box in frontend
+          this.comments[index]['addReply'] = false;
+        }
       }, error => {
 
         console.log('error', error);

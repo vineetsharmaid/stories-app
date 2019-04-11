@@ -33,6 +33,42 @@ export class StoriesService {
 	    );
 		}
 
+  	getUserStories(limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_stories/'+limit+'/'+offset, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getfeaturedStories(limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_featured_stories/'+limit+'/'+offset, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getUserStoriesCount(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_stories_count/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getStoryData(slug): Observable<any>{
 
 			let httpOptions = {
