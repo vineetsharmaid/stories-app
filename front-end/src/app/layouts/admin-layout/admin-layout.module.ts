@@ -15,6 +15,7 @@ import { NotificationsComponent } from '../../admin/notifications/notifications.
 import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { UserListComponent } from '../../admin/user-list/user-list.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
+import { TagsComponent } from '../../admin/tags/tags.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 
@@ -54,6 +55,7 @@ import {
     UpgradeComponent,
     UserListComponent,
     CategoriesComponent,
+    TagsComponent,
     StoriesComponent,
     CommentsComponent,
   ],

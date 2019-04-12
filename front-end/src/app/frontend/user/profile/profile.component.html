@@ -1,8 +1,21 @@
 <!-- Section 1 -->
 <div class="container-fluid user_info_wrap">
     <div class="row">
-        <div class="col-md-8 nopadding">
-            <img src="/assets/img/user/intro.jpg" alt="">
+        <div class="col-md-8 nopadding quick-edit">
+            
+            <img src="/assets/img/user/intro.jpg" alt="" *ngIf="userInfo.cover_pic == ''">
+            <img [src]="userInfo.cover_pic" alt="" *ngIf="userInfo.cover_pic != ''">
+
+            <button class="btn btn-sm btn-white edit" (click)="triggerUpload()">
+                <i class="fa fa-pencil"></i>
+            </button> 
+
+            <label class="image-upload-container">
+                <input #imageInput
+                type="file"
+                accept="image/*"
+                (change)="uploadCoverPic(imageInput)" class="d-none">
+            </label>
         </div>
         <div class="col-md-4 nopadding">
             <div class="user_intro_box">
@@ -10,9 +23,21 @@
                 <a href="" [routerLink]="['./story/new']" class="mr-2 mb-2">Add Story</a>
                 <a href="" [routerLink]="['./story/list']">Stories</a>
 
-                <div class="user_profile_pic_wrap">
+                <div class="user_profile_pic_wrap quick-edit">
                     <img *ngIf="userInfo.profile_pic?.length > 0" [src]="userInfo.profile_pic" alt="">
                     <img *ngIf="userInfo.profile_pic?.length == 0" src="/assets/img/user/user.jpg" alt="">
+
+
+                    <button class="btn btn-sm btn-white edit" (click)="triggerProfilePicUpload()">
+                        <i class="fa fa-pencil"></i>
+                    </button> 
+
+                    <label class="image-upload-container">
+                        <input #imageInputProfile
+                        type="file"
+                        accept="image/*"
+                        (change)="uploadProfilePic(imageInputProfile)" class="d-none">
+                    </label>    
                 </div>
                 
                 <div class="quick-edit">                

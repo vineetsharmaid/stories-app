@@ -89,7 +89,7 @@
                         <div class="story_outer_wrap">
                     		<a [routerLink]="['/story/', story.slug]">
 	                            <div class="main_story_img_wrap">
-	                                <img [src]="story.preview_image" alt="">
+	                                <img [src]="story.preview_image" [alt]="story.preview_title">
 	                                <div class="overlay_dark"></div>
 	                                <div class="story_text_block">
 	                                    <div class="story_tag_wrap">
@@ -97,7 +97,7 @@
 	                                        <!-- <span class="light_tag">Russia</span> -->
 	                                    </div>
 	                                    <h3>{{story.preview_title}}</h3>
-	                                    <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p>
+	                                    <p class="one_liner_content" [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
 	                                </div>
 	                            </div>
                     		</a>

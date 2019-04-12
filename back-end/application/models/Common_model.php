@@ -80,12 +80,42 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_searched_tags($filter_value)
+    public function get_searched_tags($where='', $filter_value='')
     {
 
         $this->db->select('*');
         $this->db->from('tags');
-        $this->db->like('name', $filter_value, 'after');     // Produces: WHERE `name` LIKE 'filter_value%' ESCAPE '!'
+        if ( $where != '' ) {
+          
+          $this->db->where($where);
+        }
+
+        if ( $filter_value != '' ) {
+          
+          $this->db->like('name', $filter_value, 'after');     // Produces: WHERE `name` LIKE 'filter_value%' ESCAPE '!'
+        }
+
+        return $this->db->get()->result();
+    }
+
+
+    public function get_searched_authors($where='', $filter_value='')
+    {
+
+        $this->db->select('users.first_name, users.last_name, users.username, users.user_id as author_id');
+        $this->db->from('users');
+        if ( $where != '' ) {
+          
+          $this->db->where($where);
+        }
+
+        if ( $filter_value != '' ) {
+          
+          $this->db->like('first_name', $filter_value, 'after');
+          $this->db->or_like('last_name', $filter_value, 'after');
+          $this->db->or_like('username', $filter_value, 'after');
+        }
+
         return $this->db->get()->result();
     }
     
@@ -99,18 +129,24 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_stories($where='', $limit='', $offset='', $order='') {
+    public function get_stories($where='', $limit='', $offset='', $order='', $like='') {
         
 
         $this->db->select('stories.preview_title, stories.preview_subtitle, stories.preview_image, stories.slug, stories.created, stories.story_id, stories.author_id, users.first_name, users.last_name, users.username');
         $this->db->from('stories');
         $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->join('story_tags', 'story_tags.story_id = stories.story_id', 'left');
         $this->db->where( $where );
         $this->db->group_by( 'stories.story_id' );
 
         if ( $offset != '' && $limit != '' ) {
           
           $this->db->limit($limit, $offset);
+        }
+
+        if ( $like != '' ) {
+          
+          $this->db->like($like);
         }
         
         if ( $order == 'random' ) {
@@ -181,13 +217,25 @@ class Common_model extends CI_Model {
 
     public function get_comment_by_id($comment_id)
     {
-      $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.profile_pic, users.user_type');
       $this->db->from('comments');
       $this->db->join('users', 'users.user_id = comments.user_id');
       $this->db->where( array('comments.comment_id' => $comment_id) );
       $comments = $this->db->get()->row();
 
       return $comments;
+    }
+
+    public function get_tags($where='', $like='')
+    {
+         
+        $this->db->select('tags.*, count(story_tags.story_id) as stories, users.first_name, users.last_name, users.username');
+        $this->db->from('tags');
+        $this->db->join('story_tags', 'story_tags.tag_id = tags.tag_id', 'left');
+        $this->db->join('users', 'users.user_id = tags.created_by', 'left');
+        $this->db->group_by('tags.tag_id');
+        $this->db->order_by('stories', 'desc');
+        return $this->db->get()->result();
     }
 
 

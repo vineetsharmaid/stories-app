@@ -50,6 +50,17 @@ export class StoryListComponent implements OnInit {
   	});
   }
 
+  deleteStory(storyId, index) {
+
+    this.storyService.deleteDraftStory(storyId).subscribe((response) => {
+
+      this.draftStories.splice(index, 1);
+    }, (error) => {
+
+      console.log('error', error);
+    });
+  }
+
   getPublishedStories() {
 
     this.storyService.getPublishedStories().subscribe((response) => {

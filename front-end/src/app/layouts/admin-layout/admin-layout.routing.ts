@@ -10,6 +10,7 @@ import { MapsComponent } from '../../admin/maps/maps.component';
 import { NotificationsComponent } from '../../admin/notifications/notifications.component';
 import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
+import { TagsComponent } from '../../admin/tags/tags.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { 
@@ -40,6 +41,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/categories/categories.module#CategoriesModule'
+            }
+        ] 
+    },{
+        path: 'tags',
+        component: TagsComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/tags/tags.module#TagsModule'
             }
         ] 
     },{

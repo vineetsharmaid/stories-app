@@ -454,6 +454,112 @@ class Api extends REST_Controller {
     }
 
 
+    public function search_stories_post($limit, $offset)
+    {
+      
+      $where = array( 'stories.status'  => STORY_STATUS_PUBLISHED );
+
+      if ( $this->input->post('search_tag') != "" ) {
+        
+        $where['story_tags.tag_id'] = $this->input->post('search_tag');
+      }
+
+      if ( $this->input->post('search_author') != "" ) {
+
+        $where['stories.author_id'] = $this->input->post('search_author');
+      }
+
+      if ( $this->input->post('search_text') != "" ) {
+        
+        $like  = array('stories.title' => $this->input->post('search_text'));
+      } else {
+
+        $like  = "";
+      }
+
+      $stories = $this->common_model->get_stories( $where, $limit, $offset, ''/*order*/,  $like );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($stories) ) {
+
+          foreach ($stories as $story) {
+            
+            $story->tags = $this->common_model->get_story_tags($story->story_id);
+          }
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function search_tags_get($search_tag)
+    {
+
+      $tags = $this->common_model->get_searched_tags( 
+        array( 'tags.status'  => TAG_STATUS_PUBLISHED ), //where
+        $search_tag // like
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($tags) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $tags,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No tags were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function search_authors_get($search_author)
+    {
+
+      $authors = $this->common_model->get_searched_authors( 
+        array( 'users.status'  => 1 ), //where
+        $search_author // like
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($authors) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $authors,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No authors were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
     public function get_story_data_get()
     {
 

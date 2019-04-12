@@ -34,7 +34,7 @@
     
       <!-- On click these links shows login/signup forms and hide the reset password form (if it was opened) -->
       <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true; showForgotPassword = false; passwordEmailSent = false;">Join</a> | 
-      <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false; showForgotPassword = false; passwordEmailSent = false;">Login</a>
+      <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false; showForgotPassword = false; passwordEmailSent = false;" #showLoginModal>Login</a>
 
     </div>
     <div class="header_login_wrap" *ngIf="loggedIn">

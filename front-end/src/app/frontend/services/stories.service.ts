@@ -57,6 +57,47 @@ export class StoriesService {
 	    );
 		}
 
+  	searchStories(searchData, limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			const formData = new FormData();
+			console.log(searchData['search_tag']);
+      formData.append('search_tag', searchData['search_tag']);
+      formData.append('search_text', searchData['search_text']);
+      formData.append('search_author', searchData['search_author']);
+
+			return this.http.post(API_URL+'search_stories/'+limit+'/'+offset, formData,httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	searchTags(searchTag): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'search_tags/'+searchTag, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+  	searchAuthors(searchAuthor): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'search_authors/'+searchAuthor, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getUserStoriesCount(): Observable<any>{
 
 			let httpOptions = {

@@ -99,6 +99,24 @@ export class UserService {
 		}
 
 
+		public uploadImage(image: File, type: string): Observable<string> {
+	    
+
+ 			const formData = new FormData();
+      
+      formData.append('image', image);
+      formData.append('type', type);
+
+      const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+      
+      return this.http.post(USER_API_URL+'user_image_upload', formData, {
+          headers,
+          responseType: 'text'
+      });
+	  }
+
+
+
 
 
 handleError(error) {

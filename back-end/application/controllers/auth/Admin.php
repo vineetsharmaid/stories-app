@@ -308,6 +308,71 @@ class Admin extends REST_Controller {
     }
 
 
+    public function get_tags_get()
+    {
+ 
+        $tag_id = $this->uri->segment(4);
+
+        // If the id parameter doesn't exist return all the tags
+        if ($tag_id === NULL) {
+
+          $tags = $this->common_model->get_tags();
+        } else {
+          
+          // Find and return a single record.
+          $tag_id = (int) $tag_id;
+
+          $tags = $this->common_model->get_tag($tag_id);
+        }
+
+        // Check if the tags data store contains tags (in case the database result returns NULL)
+        if ( !empty($tags) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $tags,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No tags were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
+    public function add_tag_post() {
+      
+      $tag_data = array( 
+        'status' => 1, 
+        'name' => ucfirst( $this->input->post('tag') ),
+        'created_by' => $this->token_data->id
+      );
+
+      if( $this->common_model->insert_entry( 'tags', $tag_data ) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'tag_added_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to add tag'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
     public function get_stories_by_review_status_get($review_status)
     { 
 

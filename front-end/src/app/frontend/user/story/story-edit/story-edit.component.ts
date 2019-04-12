@@ -190,7 +190,7 @@ export class StoryEditComponent implements OnInit {
         
         if ( this.story['preview_image'] != "" ) {
           
-          this.filePath = APP_URL+'/assets/uploads/'+this.story['preview_image'];
+          this.filePath = APP_URL+'/assets/uploads/stories/'+this.story['preview_image'];
         }
 
         /****SET FORM FIELDS VALUE****/ 

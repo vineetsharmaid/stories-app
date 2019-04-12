@@ -25,7 +25,6 @@ export class UserListComponent implements OnInit {
 	      console.log('getUsers response', response);
 	      if ( response['status'] == true ) {
 	        
-	        console.log('list users');
 	        this.users = response['data'];
 	      }
 	    }, error => {

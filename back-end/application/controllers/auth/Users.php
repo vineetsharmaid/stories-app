@@ -187,6 +187,31 @@ class Users extends REST_Controller {
       }
     }
 
+    function delete_story_get($story_id)
+    {
+      // before delete check whether user is the author of the story and story is in draft
+      $where = array('status' => STORY_STATUS_DRAFT, 'author_id' => $this->token_data->id, 'story_id' => $story_id );
+      if( $this->common_model->data_exists('stories', $where) > 0 ) {
+
+        $this->common_model->delete_entry('stories', array('story_id' => $story_id));
+
+        // Set the response and exit
+        $this->response([
+            'status' => TRUE,
+            'data' => array('story_id' => $story_id),
+            'message' => 'story_deleted',
+        ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'authentication_error',
+            'error' => array('You do no have access to delete this story.'),
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
 
     function submit_story_for_review_post()
     {
@@ -227,7 +252,7 @@ class Users extends REST_Controller {
 
     public function image_upload_post() { 
       
-      $config['upload_path']          = './assets/uploads/';
+      $config['upload_path']          = './assets/uploads/stories/';
       $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048;
       // $config['max_width']            = 1024;
@@ -261,6 +286,75 @@ class Users extends REST_Controller {
           $where = array('story_id' => $this->input->post('story_id'));
 
           if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => 'image_uploaded_updated',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'not_updated_db_error',
+                'error'   => 'Something went wrong, unable to update preview image.',
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }          
+      }
+
+    }
+
+    public function user_image_upload_post() { 
+      
+      $config['upload_path']          = './assets/uploads/users/';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
+      $config['max_size']             = 2048;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
+
+      $this->load->library('upload', $config);
+      $this->load->library('image_lib');
+      if ( ! $this->upload->do_upload('image'))
+      {
+          $error = array('error' => $this->upload->display_errors());
+
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'not_uploaded',
+              'error'   => $error,
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+
+            // $configer =  array(
+            //   'image_library'   => 'gd2',
+            //   'source_image'    =>  $upload_data['full_path'],
+            //   'maintain_ratio'  =>  TRUE,
+            //   'width'           =>  1200,
+            //   'height'          =>  840,
+            // );
+            // $this->image_lib->clear();
+            // $this->image_lib->initialize($configer);
+            // $this->image_lib->resize();
+
+          $upload_data['raw_name'].$upload_data['file_ext'];
+          
+          $user = array(
+            $this->input->post('type') => $upload_data['raw_name'].$upload_data['file_ext'],
+          );
+          
+          $where = array('user_id' => $this->token_data->id);
+
+          if( $this->common_model->update_entry('users', $user, $where) ) {
 
 
             // Set the response and exit

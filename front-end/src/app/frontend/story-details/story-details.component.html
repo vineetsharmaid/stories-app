@@ -71,7 +71,7 @@
                             <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
                         </ul>
                         
-                        <a class="alink" *ngIf="comment.parent == 0" (click)="comment.addReply = 'true'">Reply</a>
+                        <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
 
                         <form [formGroup]="commentsForm" (ngSubmit)="addComment(comment.comment_id, indx)" *ngIf="comment.parent == 0 && comment.addReply == 'true'">
                             <input type="hidden" formControlName="parent" value="comment.comment_id">
@@ -112,7 +112,7 @@
             
         </div>
         <ng-template #showLogin>
-            <p class="login-message">Login to comment.</p>
+            <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
         </ng-template>
     </div>
 </div>

@@ -23,7 +23,7 @@
 			<div class="tab-content">
 				<div id="drafts" class="container tab-pane fade" role="tabpanel" [ngClass]="{'active show': viewType == 'drafts'}"><br>
 					<div class="row">
-						<div class="col-md-4 mb-5" *ngFor="let story of draftStories">
+						<div class="col-md-4 mb-5" *ngFor="let story of draftStories; let indx = index">
 							<mat-card class="stories-card">
 							<mat-card-header>
 							<!-- <div mat-card-avatar class="example-header-image"></div> -->
@@ -36,7 +36,7 @@
 							</mat-card-content>
 							<mat-card-actions>
 							<button mat-button [routerLink]="['/user/story/edit/', story.story_id]">EDIT</button>
-							<button mat-button>DELETE</button>
+							<button mat-button (click)="deleteStory(story.story_id, indx)">DELETE</button>
 							</mat-card-actions>
 							</mat-card>
 						</div>
@@ -58,8 +58,7 @@
 							</mat-card-content>
 							
 							<mat-card-actions>
-							<button mat-button [routerLink]="['/user/story/edit/', story.story_id]">EDIT</button>
-							<button mat-button>DELETE</button>
+								<a mat-button [routerLink]="['/story/', story.slug]" target="_blank">View</a>
 							</mat-card-actions>
 							</mat-card>
 						</div>

@@ -13,13 +13,14 @@ export const ROUTES: RouteInfo[] = [
     { path: '/admin/user-profile', title: 'User Profile',  icon:'person', class: '' },
     { path: '/admin/user-list', title: 'User List',  icon:'content_paste', class: '' },
     { path: '/admin/stories', title: 'Stories',  icon:'content_paste', class: '' },
-    { path: '/admin/category', title: 'Categories',  icon:'notifications', class: '' },
     { path: '/admin/comments', title: 'Comments',  icon:'library_books', class: '' },
-    { path: '/admin/table-list', title: 'Table List',  icon:'content_paste', class: '' },
-    { path: '/admin/typography', title: 'Typography',  icon:'library_books', class: '' },
-    { path: '/admin/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
-    { path: '/admin/maps', title: 'Maps',  icon:'location_on', class: '' },
-    { path: '/admin/notifications', title: 'Notifications',  icon:'notifications', class: '' },
+    { path: '/admin/category', title: 'Categories',  icon:'notifications', class: '' },
+    { path: '/admin/tags', title: 'Tags',  icon:'notifications', class: '' },
+    // { path: '/admin/table-list', title: 'Table List',  icon:'content_paste', class: '' },
+    // { path: '/admin/typography', title: 'Typography',  icon:'library_books', class: '' },
+    // { path: '/admin/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
+    // { path: '/admin/maps', title: 'Maps',  icon:'location_on', class: '' },
+    // { path: '/admin/notifications', title: 'Notifications',  icon:'notifications', class: '' },  
 ];
 
 @Component({

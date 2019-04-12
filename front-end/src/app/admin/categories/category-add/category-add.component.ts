@@ -86,7 +86,6 @@ export class CategoryAddComponent implements OnInit {
 	      console.log('getCategories response', response);
 	      if ( response['status'] == true ) {
 	        
-	        console.log('list users');
 	        this.categories = response['data'];
 
 	  		this.filteredCategories = this.addCategoryForm.controls['parent'].valueChanges

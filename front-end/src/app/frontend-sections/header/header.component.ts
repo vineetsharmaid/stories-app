@@ -3,16 +3,18 @@ import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+
 declare const gapi: any;
 declare const FB: any;
 
 import { UserService } from "../../frontend/services/user.service";
+import { SharedService } from "../../frontend/services/shared.service";
 import { UserValidators } from '../../frontend/services/validators/user.validator';
 
 @Component({
   selector: 'frontend-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
 })
 
 
@@ -38,7 +40,8 @@ export class HeaderComponent implements OnInit {
   private forgotPassErrors: Array<string>;
   public  passwordEmailSuccess: string;
 
-	@ViewChild('closeLoginModal') closeLoginModal: ElementRef;
+	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
+  @ViewChild('closeLoginModal') closeLoginModal: ElementRef;
 	@ViewChild('showHideLoginBtn') showHideLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn') googleLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn2') googleLoginBtn2: ElementRef;
@@ -46,6 +49,7 @@ export class HeaderComponent implements OnInit {
   constructor(
   	private formBuilder: FormBuilder, 
   	private userService: UserService,
+    private sharedService: SharedService,
   	private router: Router,
   	private injector: Injector,
   	private userValidators: UserValidators ) {
@@ -58,6 +62,15 @@ export class HeaderComponent implements OnInit {
 
   		this.loggedIn = true;
   	}
+
+    this.sharedService.currentMessage.subscribe((message) => {
+
+      console.log('header message', message);
+      if (message == 'show_login') {
+        
+        this.showLoginModal.nativeElement.click();
+      }
+    });
 
   	this.loadFacebookSDK();
 

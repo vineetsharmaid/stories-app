@@ -1,0 +1,61 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Tag List</h4>
+            <!-- <p class="card-category"> List of users.</p> -->
+            <button class="btn btn-sm btn-success pull-right" [routerLink]="['./add']">
+               Add New
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="20%">Name </th>
+                  <th width="20%">Stories </th>
+                  <th width="30%">Created By </th>
+                  <th width="10%">Created </th>
+                  <th width="10%">Action </th>
+                </thead>
+                <tbody *ngIf="tags?.length > 0">
+                  <tr *ngFor="let tag of tags">
+                    <td>
+                      <a href="#" class="user_name"> {{tag.name | titlecase}} </a>
+                    </td>
+                    
+                    <td>{{tag.stories}}</td>
+                    
+                    <td>{{tag.first_name}} {{tag.last_name}}</td>
+
+                    <td>{{tag.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-info" routerLink="./edit/{{tag.cat_id}}">
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="tags?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No tag found.
+                      <br>
+                      <button class="btn btn-sm btn-success" [routerLink]="['./add']">
+                         Add New
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

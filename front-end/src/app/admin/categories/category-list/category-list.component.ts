@@ -25,7 +25,6 @@ export class CategoryListComponent implements OnInit {
 	      console.log('getCategories response', response);
 	      if ( response['status'] == true ) {
 	        
-	        console.log('list users');
 	        this.categories = response['data'];
 	      }
 

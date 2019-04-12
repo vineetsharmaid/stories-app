@@ -45,6 +45,17 @@ export class StoryService {
 	    );
 		}
 
+  	deleteDraftStory(storyId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};    	
+    	
+			return this.http.get(USER_API_URL+'delete_story/'+storyId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
 
   	submitForReview(story): Observable<any>{
 

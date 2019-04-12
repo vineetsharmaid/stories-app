@@ -122,7 +122,6 @@ export class CategoryEditComponent implements OnInit {
 	      console.log('getParentCategories response', response);
 	      if ( response['status'] == true ) {
 	        
-	        console.log('list users');
 	        this.categories = response['data'];
 
 		    let parentCategory = this.categories.filter((category) => category['cat_id'] == this.category['parent'] );

@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http'; 
 import { RouterModule } from '@angular/router';
 
+import { SharedService } from "./frontend/services/shared.service";
 
 /************Social Media Login Starts****************
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
@@ -92,6 +93,7 @@ import { LinkedInSharingComponent } from './linkedin-sharing.component';
     LinkedInSharingComponent,
   ],
   providers: [
+      SharedService,
       // {
       //   provide: AuthServiceConfig,
       //   useFactory: provideConfig

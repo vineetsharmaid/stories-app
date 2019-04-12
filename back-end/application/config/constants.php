@@ -89,6 +89,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 define('STORY_STATUS_DRAFT',0);
 define('STORY_STATUS_PUBLISHED',1);
 
+define('TAG_STATUS_DRAFT',0);
+define('TAG_STATUS_PUBLISHED',1);
 
 define('COMMENT_STATUS_DRAFT',0);
 define('COMMENT_STATUS_PUBLISHED',1);

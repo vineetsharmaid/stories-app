@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
 
         	if ( story['preview_image'] != "" ) {
           
-          		story['preview_image'] = APP_URL+'/assets/uploads/'+story['preview_image'];
+          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
         	}
 
         	stories.push(story);
@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit {
 
         	if ( story['preview_image'] != "" ) {
           
-          		story['preview_image'] = APP_URL+'/assets/uploads/'+story['preview_image'];
+          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
         	}
 
         	featuredStories.push(story);

@@ -3,13 +3,14 @@ import { Router, ActivatedRoute, RoutesRecognized } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { StoriesService } from '../services/stories.service'
+import { SharedService } from "../services/shared.service";
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
 
 @Component({
   selector: 'app-story-details',
   templateUrl: './story-details.component.html',
-  styleUrls: ['./story-details.component.css']
+  styleUrls: ['./story-details.component.css'],
 })
 export class StoryDetailsComponent implements OnInit {
 
@@ -21,7 +22,10 @@ export class StoryDetailsComponent implements OnInit {
   public showCommentBox: boolean = false;
   public isLoggedIn: string = 'false';
 
-	constructor(private activatedRoute: ActivatedRoute, private storiesService : StoriesService, private formBuilder : FormBuilder) { }
+	constructor(private activatedRoute: ActivatedRoute, 
+    private sharedService: SharedService,
+    private storiesService : StoriesService, 
+    private formBuilder : FormBuilder) { }
 
 	ngOnInit() {
 
@@ -29,6 +33,8 @@ export class StoryDetailsComponent implements OnInit {
       'comment': ['', Validators.required],
       'parent': [0],
     })
+
+    this.sharedService.currentMessage.subscribe(message => console.log('detail message', message) );
 
     this.isLoggedIn = localStorage.getItem('isLoggedIn');
 
@@ -43,7 +49,7 @@ export class StoryDetailsComponent implements OnInit {
       	this.storyData = response['data'];
         this.getStoryComments();
       	
-       	this.storyData['preview_image'] = APP_URL+'/assets/uploads/'+this.storyData['preview_image'];
+       	this.storyData['preview_image'] = APP_URL+'/assets/uploads/stories/'+this.storyData['preview_image'];
       	
       	this.displayStory = true;
 
@@ -62,6 +68,11 @@ export class StoryDetailsComponent implements OnInit {
     this.storiesService.getStoryComments(this.storyData['story_id']).subscribe((response: Array<Object>) => {
 
       this.comments = response['data'];
+      this.comments.forEach((comment) => {
+
+        comment['profile_pic'] = comment['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
+      });
+
       console.log('getStoryComments this.comments', this.comments);
       
     }, error => {
@@ -124,6 +135,11 @@ export class StoryDetailsComponent implements OnInit {
     	
     	console.log('getstories error', error);
     });  	
+  }
+
+  showLoginPopup() {
+
+    this.sharedService.changeMessage("show_login");
   }
 
 }
