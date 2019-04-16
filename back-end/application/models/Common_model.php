@@ -161,18 +161,22 @@ class Common_model extends CI_Model {
         
         if ( $user_id == '' ) {
           
-          $this->db->select('stories.*, users.first_name, users.last_name, users.username');
+          $this->db->select("stories.*, users.first_name, users.last_name, users.username, users.profile_pic,
+            max(case when usermeta.meta_key='professional_info' then usermeta.meta_value end) as professional_info");
           $this->db->from('stories');
           $this->db->join('users', 'users.user_id = stories.author_id');
+          $this->db->join('usermeta', 'usermeta.user_id = stories.author_id', 'left');
           $this->db->where( $where );
           $this->db->group_by( 'stories.story_id' );
           return $this->db->get()->result();
         } else {
 
-          $this->db->select('stories.*, users.first_name, users.last_name, users.username, story_user_likes.user_id as liked_by');
+          $this->db->select("stories.*, users.first_name, users.last_name, users.username, story_user_likes.user_id as liked_by, users.profile_pic,
+            max(case when usermeta.meta_key='professional_info' then usermeta.meta_value end) as professional_info");
           $this->db->from('stories');
             
           $this->db->join('users', 'users.user_id = stories.author_id');
+          $this->db->join('usermeta', 'usermeta.user_id = stories.author_id', 'left');
           $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id AND story_user_likes.user_id = '.$user_id.'', 'left');
 
           $this->db->where( $where );

@@ -21,13 +21,13 @@ export class StoriesService {
 
   	constructor(private http: HttpClient) { }
 
-  	getStories(): Observable<any>{
+  	getStories(limit, offset): Observable<any>{
 
 			let httpOptions = {
 			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 
-			return this.http.get(API_URL+'get_stories/', httpOptions)
+			return this.http.get(API_URL+'get_stories/'+limit+'/'+offset, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -66,6 +66,7 @@ export class StoriesService {
 			const formData = new FormData();
 			console.log(searchData['search_tag']);
       formData.append('search_tag', searchData['search_tag']);
+      formData.append('search_type', searchData['search_type']);
       formData.append('search_text', searchData['search_text']);
       formData.append('search_author', searchData['search_author']);
 
@@ -82,6 +83,30 @@ export class StoriesService {
 			};
 
 			return this.http.get(API_URL+'search_tags/'+searchTag, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getTag(tagId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_tag/'+tagId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getAuthor(authorId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_author/'+authorId, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

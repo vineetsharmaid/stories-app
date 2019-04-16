@@ -8,11 +8,24 @@
 <div class="container">
   <div class="row search-box-wrap">
   <!-- <div class="row search-box-wrap" *ngIf="searchText !== undefined && stories?.length > 0"> -->
-    <div class="col-md-6">
+    <div class="col-md-12 form-group">
       <input type="search" class="search" [(ngModel)]="searchText" placeholder="Search Stories" (keyup)="startCountDown($event)" (keydown)="clearCountDown()">
     </div>
     
-    <div class="col-md-3">      
+    <div class="col-md-4">      
+      <div class="form-group">
+        <mat-form-field class="example-full-width">
+          <input type="search" placeholder="Search By Type" aria-label="tag" [(ngModel)]="searchType" matInput [matAutocomplete]="autoType" (ngModelChange)="typeSearchChanged($event)">
+          <mat-autocomplete #autoType="matAutocomplete" [displayWith]="displayFnType">
+            <mat-option *ngFor="let type of filteredTypes" [value]="type">
+              {{type.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="col-md-4">      
       <div class="form-group">
         <mat-form-field class="example-full-width">
           <input type="search" placeholder="Search By Tag" aria-label="tag" [(ngModel)]="searchTag" matInput [matAutocomplete]="auto" (ngModelChange)="tagSearchChanged($event)">
@@ -25,7 +38,7 @@
       </div>
     </div>
 
-    <div class="col-md-3">      
+    <div class="col-md-4">      
       <div class="form-group">
         <mat-form-field class="example-full-width">
           <input type="search" placeholder="Search By Author" aria-label="author" [(ngModel)]="searchAuthor" matInput [matAutocomplete]="autoAuhtor" (ngModelChange)="authorSearchChanged($event)">
@@ -44,8 +57,11 @@
     <div class="col-md-12">
       <span class="search-section-heading">STORIES</span>
       <hr>
-      <div class="row">
-        <div class="col-md-4" *ngFor="let story of stories">
+      <div class="row" infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()">
+        <div class="col-md-6" *ngFor="let story of stories">
           <div class="story_outer_wrap">
             <a [routerLink]="['/story/', story.slug]">
               <div class="main_story_img_wrap">

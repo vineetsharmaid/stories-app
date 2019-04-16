@@ -399,10 +399,10 @@ class Api extends REST_Controller {
 
     }
 
-    public function get_stories_get()
+    public function get_stories_get($limit="", $offset="")
     {
 
-      $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED) );
+      $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED), $limit, $offset);
 
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($stories) ) {
@@ -462,6 +462,11 @@ class Api extends REST_Controller {
       if ( $this->input->post('search_tag') != "" ) {
         
         $where['story_tags.tag_id'] = $this->input->post('search_tag');
+      }
+
+      if ( $this->input->post('search_type') != "" ) {
+        
+        $where['stories.type'] = $this->input->post('search_type');
       }
 
       if ( $this->input->post('search_author') != "" ) {
@@ -526,6 +531,65 @@ class Api extends REST_Controller {
           $this->response([
               'status' => FALSE,
               'message' => 'No tags were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function get_tag_get($tag_id) {
+
+      $tags = $this->common_model->get_data( 'tags',
+        array( 'tags.status'  => TAG_STATUS_PUBLISHED, 'tag_id' => $tag_id ) //where
+      );
+
+      // echo $this->db->last_query();
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($tags) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $tags,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No tags were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
+    public function get_author_get($author_id) {
+
+      $users = $this->common_model->get_data( 'users',
+        array( 'status'  => USER_STATUS_ACTIVE, 'user_id' => $author_id ) //where
+      );
+
+      // echo $this->db->last_query();
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($users) ) {
+          
+          unset($users[0]->password);
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $users,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No users were found'
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 

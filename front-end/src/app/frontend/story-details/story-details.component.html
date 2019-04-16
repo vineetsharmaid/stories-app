@@ -2,8 +2,40 @@
 <div *ngIf="displayStoryError == true">
     We couldn’t find this page.
 </div>
-<div class="single_story_page_title" *ngIf="displayStory == true" [ngStyle]="{ 'background-image': 'url(' + storyData.preview_image + ')'}">
+<div class="single_story_page_title text-left single_story_page_title_col" *ngIf="displayStory == true" [ngStyle]="{ 'background-image': 'url(' + storyData.preview_image + ')'}">
     <div class="container">
+        <div class="singleStory_head">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="story_tag_wrap">
+                        <a href="#" class="dark_tag">Russia</a>
+                        <a *ngFor="let tag of storyData.tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                    </div>
+                    <h1>{{storyData.title}}</h1>
+                    <div class="right_inner_footer_bottom top20">
+                        <ul>
+                            <li><img src="/assets/img/like_white.png" alt=""> FASCINATING</li>
+                            <li class="bookmark"><img src="/assets/img/bookmark.png" alt=""> 14 min rea</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="story_post_date story_post_date_single">{{storyData.created | date: 'mediumDate'}}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="coFounder_top_img">
+                    <img [src]="storyData.profile_pic" alt="">
+                </div>
+                <div class="coFounder_top_des">
+                    <h1 class="singleStory_title">
+                        {{storyData.first_name}} {{storyData.last_name}}
+                    </h1>
+                <h3 class="singleStory_Subtitle">{{storyData.professional_info}}</h3></div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="story_tag_wrap">
@@ -21,8 +53,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="story_post_date">{{storyData.created | date: 'mediumDate'}} </div>
+    </div> -->
+    <!-- <div class="story_post_date">{{storyData.created | date: 'mediumDate'}} </div> -->
 </div>
 <!-- Single story page title -->
 <!-- Single story page section 2 -->
@@ -33,8 +65,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- Comments section -->
 <div class="container-fluid single_page_comments comment-wrapper" *ngIf="displayStory == true">
     <div class="container">
@@ -42,18 +72,16 @@
             <ul class="media-list col-md-8">
                 <ng-template #commentsList let-comments>
                 <li class="media" *ngFor="let comment of comments; let indx = index">
-                    <a href="#" class="pull-left pr-3">                        
-                      <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
-
-                      <ng-template #defaultImage>
+                    <a href="#" class="pull-left pr-3">
+                        <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+                        <ng-template #defaultImage>
                         <!-- <img class="rounded-circle" src="/assets/img/default-user-image.jpg"> -->
                         <div class="user-imageholder">
-                         <span class="name-letter">
-                            {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
-                        </span>
+                            <span class="name-letter">
+                                {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
+                            </span>
                         </div>
-                      </ng-template>
-
+                        </ng-template>
                     </a>
                     <div class="media-body">
                         <span class="text-muted pull-right">
@@ -66,13 +94,11 @@
                         <p *ngIf="comment.approved == 0">
                             <small class="text-muted">(Pending Approval)</small>
                         </p>
-
                         <ul *ngIf="comment.children?.length > 0">
                             <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
                         </ul>
                         
                         <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
-
                         <form [formGroup]="commentsForm" (ngSubmit)="addComment(comment.comment_id, indx)" *ngIf="comment.parent == 0 && comment.addReply == 'true'">
                             <input type="hidden" formControlName="parent" value="comment.comment_id">
                             <div class="form-group">
@@ -87,32 +113,30 @@
                 <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comments }"></ng-container>
             </ul>
         </div>
-
         <ng-template #noComments>
-            No comments yet!!
+        No comments yet!!
         </ng-template>
-
         <div class="row" *ngIf="isLoggedIn == 'true'; else showLogin">
             <div class="col-md-8" *ngIf="showCommentBox == 'true'; else showCommentButton">
-            <form [formGroup]="commentsForm" (ngSubmit)="addComment()">
-                <input type="hidden" formControlName="parent">
-                <div class="form-group">
-                    <textarea class="form-control" formControlName="comment"></textarea>
-                </div>
-                <button class="btn btn-sm btn-success">Add</button>
-                <button class="btn btn-sm btn-danger" (click)="showCommentBox = 'false'">Cancel</button>
-            </form>
+                <form [formGroup]="commentsForm" (ngSubmit)="addComment()">
+                    <input type="hidden" formControlName="parent">
+                    <div class="form-group">
+                        <textarea class="form-control" formControlName="comment"></textarea>
+                    </div>
+                    <button class="btn btn-sm btn-success">Add</button>
+                    <button class="btn btn-sm btn-danger" (click)="showCommentBox = 'false'">Cancel</button>
+                </form>
             </div>
             
             <ng-template #showCommentButton>
-                <div class="col-md-8">
-                    <button class="btn btn-sm btn-success" (click)="showCommentBox = 'true'">Add</button>
-                </div>
+            <div class="col-md-8">
+                <button class="btn btn-sm btn-success" (click)="showCommentBox = 'true'">Add</button>
+            </div>
             </ng-template>
             
         </div>
         <ng-template #showLogin>
-            <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
+        <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
         </ng-template>
     </div>
 </div>

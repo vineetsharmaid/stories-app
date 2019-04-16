@@ -7,7 +7,6 @@
 		</div>
 		
 		<div class="clearfix"></div>
-
 		<div class="col-md-12" *ngIf="showNewForm" [@slideInOut]>
 			
 			<form [formGroup]="editStoryForm" (ngSubmit)="updateDraft()">
@@ -24,16 +23,11 @@
 				</div>
 			</form>
 		</div>
-
 		<div class="clearfix"></div>
-
-
-
 		<div class="col-md-12" *ngIf="showPreview" [@slideInOut]>
 			<p>Story Preview</p>
 			<a href="#" [routerLink]="['/story/', story.slug]" target="_blank">Preview</a>
-
-		 	
+			
 			<form [formGroup]="previewForm" (ngSubmit)="submitPreview()">
 				<div class="col-md-4">
 					<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
@@ -55,44 +49,54 @@
 						<textarea class="form-field" formControlName="previewSubtitle" placeholder="Write a preview subtitle...">
 						</textarea>
 					</div>
+
+					<div class="form-group">
+						<label class="d-block mb-1">Type</label>
+						<mat-radio-group formControlName="previewType">
+						<mat-radio-button class="example-margin mr-2" color="primary" value="1">
+							Workplace Story {{previewType}}
+						</mat-radio-button>
+						
+						<mat-radio-button class="example-margin ml-2" color="primary" value="2">
+							Business Story
+						</mat-radio-button>
+						</mat-radio-group>						
+					</div>
 				</div>
 
 				<div class="col-md-6">
 					<mat-form-field class="example-chip-list">
-					  <mat-chip-list #chipList aria-label="tag selection">
-					    <mat-chip
-					      *ngFor="let tag of tags;let indx=index;"
-					      [selectable]="selectable"
-					      [removable]="removable"
-					      (removed)="remove(tag,indx)">
-					      {{tag.name}}
-					      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-					    </mat-chip>
-					    <input
-					      placeholder="Add or change tags (up to 5) so readers know what your story is about"
-					      #tagInput
-					      formControlName="previewTags"
-					      [matAutocomplete]="auto"
-					      [matChipInputFor]="chipList"
-					      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-					      [matChipInputAddOnBlur]="addOnBlur"
-					      (matChipInputTokenEnd)="add($event)">
-					  </mat-chip-list>
-					  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-					    <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
-					      {{tag.name}}
-					    </mat-option>
-					  </mat-autocomplete>
+					<mat-chip-list #chipList aria-label="tag selection">
+					<mat-chip
+					*ngFor="let tag of tags;let indx=index;"
+					[selectable]="selectable"
+					[removable]="removable"
+					(removed)="remove(tag,indx)">
+					{{tag.name}}
+					<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+					</mat-chip>
+					<input
+					placeholder="Add or change tags (up to 5) so readers know what your story is about"
+					#tagInput
+					formControlName="previewTags"
+					[matAutocomplete]="auto"
+					[matChipInputFor]="chipList"
+					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+					[matChipInputAddOnBlur]="addOnBlur"
+					(matChipInputTokenEnd)="add($event)">
+					</mat-chip-list>
+					<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+					<mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+					{{tag.name}}
+					</mat-option>
+					</mat-autocomplete>
 					</mat-form-field>
 				</div>
-
 				<button class="btn btn-sm btn-success">Submit for review</button>
 			</form>
 			
 			<button class="btn btn-sm btn-danger" (click)="toggleView()">Back</button>
 		</div>
 	</div>
-
-
 	
 </div>

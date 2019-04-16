@@ -50,6 +50,7 @@ export class StoryDetailsComponent implements OnInit {
         this.getStoryComments();
       	
        	this.storyData['preview_image'] = APP_URL+'/assets/uploads/stories/'+this.storyData['preview_image'];
+        this.storyData['profile_pic'] = APP_URL+'/assets/uploads/users/'+this.storyData['profile_pic'];
       	
       	this.displayStory = true;
 

@@ -4,6 +4,7 @@ import { StoriesService } from '../services/stories.service'
 
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,7 @@ export class HomeComponent implements OnInit {
 
 	getStories() {
    	
-    this.storiesService.getStories().subscribe((response: Array<Object>) => {
+    this.storiesService.getStories(DEFAULT_LISTING_COUNT, 0).subscribe((response: Array<Object>) => {
 
       	var stories = [];
       	response['data'].forEach((story) => {

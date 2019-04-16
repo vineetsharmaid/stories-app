@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
   public enableNameEdit: boolean = false;
   public enableWebsiteEdit: boolean = false;
   public enableShortInfoEdit: boolean = false;
+  public enableProfessionalInfoEdit: boolean = false;
   public coverPicFile: any;
   public profilePicFile: any;
 
@@ -107,6 +108,7 @@ export class ProfileComponent implements OnInit {
       console.log('response', response);
 
       this.userInfo[key] = value;
+      this.enableProfessionalInfoEdit = false;
       this.enableShortInfoEdit = false;
       this.enableWebsiteEdit = false;
     }, (error) => {

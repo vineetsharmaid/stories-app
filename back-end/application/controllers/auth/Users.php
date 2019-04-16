@@ -226,6 +226,7 @@ class Users extends REST_Controller {
         'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
         'author_id' => $user[0]->user_id,
         'status' => 0,
+        'type'   => $post_data->type,
         'review' => 2, // submitted for review
       );
       

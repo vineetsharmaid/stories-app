@@ -86,6 +86,12 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 
+define('USER_STATUS_INACTIVE',0);
+define('USER_STATUS_ACTIVE',1);
+
+define('STORY_TYPE_WORKPLACE',1);
+define('STORY_TYPE_BUSINESS',2);
+
 define('STORY_STATUS_DRAFT',0);
 define('STORY_STATUS_PUBLISHED',1);
 

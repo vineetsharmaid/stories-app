@@ -52,6 +52,7 @@ import { FrontendSectionsModule } from './frontend-sections/frontend-sections.mo
 import { AppComponent } from './app.component';
 
 import { ShareButtonModule } from '@ngx-share/button';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import {
   AgmCoreModule
@@ -78,6 +79,7 @@ import { LinkedInSharingComponent } from './linkedin-sharing.component';
     RouterModule,
     AppRoutingModule,
     ShareButtonModule,
+    InfiniteScrollModule,
     AgmCoreModule.forRoot({
       apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
     })

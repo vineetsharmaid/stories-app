@@ -8,6 +8,7 @@ import { StoryService } from '../services/story.service'
 
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
 @Component({
   selector: 'app-search',
@@ -16,73 +17,185 @@ const APP_URL  =  environment.baseUrl;
 })
 export class SearchComponent implements OnInit {
 
-	public stories: Array<object>;	
+	public stories: Array<object> = [];
 	public filteredTags: Array<object>;
+	public filteredTypes: Array<object>;
 	public filteredAuthors: Array<object>;
+	public allTypes: Array<object>;
 	public typingTimer: any;
 	public searchText: any;
 	public searchTag: any;
+	public searchType: any;
 	public selectedTag: any = "";
+	public selectedType: any = "";
 	public searchAuthor: any;
 	public selectedAuthor: string = "";
 	public doneTypingInterval: number = 5000;
+	public limitOffset: number = 0;
 
   	constructor( private storyService : StoryService,private storiesService : StoriesService, private router: Router, private activatedRoute: ActivatedRoute ) { }
  
   	ngOnInit() {
 
-  		this.activatedRoute.queryParams.subscribe(queryParams => {
-		    
-		    if ( queryParams['q'] != '' ) {
-		    	
-		    	this.searchText = queryParams['q'];
-  				this.getStories(5, 0);
-		    }
-		});
+  		this.allTypes = [
+  				{type_id: 1, name: 'Workplace Stories'},
+  				{type_id: 2, name: 'Business Stories'},
+  			];
 
+  		this.filteredTypes = this.allTypes;
+
+  		// Look for changes in the query params
+  		this.trackQueryParams();
   	}
 
 
-  	getStories(limit, offset) {
+  	trackQueryParams() {
+
+  		this.activatedRoute.queryParams.subscribe(queryParams => {
+		    
+		    if ( typeof queryParams['q'] !== 'undefined' && queryParams['q'] != '' ) {
+		    	
+		    	this.searchText = queryParams['q'];
+		    }
+
+		    if ( typeof queryParams['type'] !== 'undefined' && queryParams['type'] != '' ) {
+		    	
+		    	this.selectedType = queryParams['type'];		    	
+  				
+				let type = this.allTypes.filter((type) => this.selectedType == type['type_id']);
+		    	if ( type.length > 0 ) {
+		    		
+		    		this.searchType = type[0];
+		    	}
+		    }
+
+		    if ( typeof queryParams['tag'] !== 'undefined' && queryParams['tag'] != '' ) {
+		    	
+		    	this.selectedTag = queryParams['tag'];
+
+				this.storiesService.getTag(this.selectedTag).subscribe((response: Array<Object>) => {
+
+					this.filteredTags = response['data'];
+					this.searchTag = this.filteredTags[0];
+
+				}, (error) => {
+
+					console.log('get tag error', error);
+					this.filteredTags = [];
+				});
+
+		    }
+
+		    if ( typeof queryParams['author'] !== 'undefined' && queryParams['author'] != '' ) {
+		    	
+		    	this.selectedAuthor = queryParams['author'];
+
+		    	this.storiesService.getAuthor(this.selectedAuthor).subscribe((response) => {
+
+		    		this.filteredAuthors = response['data'];
+					this.searchAuthor = this.filteredAuthors[0];
+		    	}, (error) => {
+
+		    		console.log('error', error);
+		    		this.filteredAuthors = [];
+		    	});		    	
+  				
+		    }
+		    
+		    this.limitOffset = 0;
+  			this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+		});  		
+  	}
+
+  	onScroll() {
+	    console.log('scrolled!!');
+	    this.limitOffset += DEFAULT_LISTING_COUNT;
+	    this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, true);
+	}
+
+  	getStories(limit, offset, isOnScroll) {
 	   	
 	   	var searchData = { 
-	   		'search_tag': this.selectedTag, 
-	   		'search_text': this.searchText, 
-	   		'search_author': this.selectedAuthor,
+	   		'search_tag': typeof this.selectedTag == 'undefined' ? "" : this.selectedTag,
+	   		'search_type': typeof this.selectedType == 'undefined' ? "" : this.selectedType, 
+	   		'search_text': typeof this.searchText == 'undefined' ? "" : this.searchText, 
+	   		'search_author': typeof this.selectedAuthor == 'undefined' ? "" : this.selectedAuthor,
 	   	};
-
+  	
 	    this.storiesService.searchStories(searchData, limit, offset).subscribe((response: Array<Object>) => {
 
-	      	var stories = [];
-	      	response['data'].forEach((story) => {
+	      	if ( response['data'].length > 0 ) {
+	      		
+	      		var stories = [];
+		      	response['data'].forEach((story) => {
 
-	        	if ( story['preview_image'] != "" ) {
-	          
-	          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
-	        	}
+		        	if ( story['preview_image'] != "" ) {
+		          
+		          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
+		        	}
 
-	        	stories.push(story);
+		        	stories.push(story);
 
-	      	})
-	      	
-	      	this.stories = stories;
+		      	})
+		      	
+		      	if ( isOnScroll == true ) {
+		      		
+		      		Array.prototype.push.apply(this.stories, stories);
+		      	} else {
+
+		      		this.stories = stories;
+		      	}
+	      	}
 
 	      console.log('getStories this.stories', this.stories);
+	      console.log('getStories stories', stories);
 	      
 	    }, error => {
 
-	    	this.stories = [];
+
+	      	if ( isOnScroll == false ) {	      		
+	      		
+	    		this.stories = [];
+	      	}
 	    	console.log('getstories error', error);
 	    });
-  	}  	
+  	}
+
+
+  	typeSearchChanged(event: any) {
+
+  		if ( typeof event == 'object' ) {
+  			
+  			this.selectedType = event.type_id;
+  			this.limitOffset = 0;
+  			this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+  		} else {
+
+  			this.selectedType  = "";
+		    const filterValue = this.searchType.toString().toLowerCase();
+		    if ( filterValue != '' ) {
+
+		    	this.filteredTypes = this.allTypes.filter(type => type['name'].toLowerCase().indexOf(filterValue) === 0);
+		    } else {
+
+		    	this.filteredTypes = [];
+		    }
+  		}
+  	}
+
+
+	displayFnType(type): Object | undefined {
+		console.log('select type', type);
+		return type ? type.name : undefined;
+	}
 
   	tagSearchChanged(event: any) {
-
 
   		if ( typeof event == 'object' ) {
   			
   			this.selectedTag = event.tag_id;
-  			this.getStories(5, 0);
+  			this.limitOffset = 0;
+  			this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
   		} else {
 
   			this.selectedTag  = "";
@@ -104,9 +217,9 @@ export class SearchComponent implements OnInit {
   		}
   	}
 
-
 	displayFn(tag): Object | undefined {
 		
+		console.log('display tag', tag);
 		return tag ? tag.name : undefined;
 	}
 
@@ -117,7 +230,8 @@ export class SearchComponent implements OnInit {
   		if ( typeof event == 'object' ) {
   			
   			this.selectedAuthor = event.author_id;
-  			this.getStories(5, 0);
+  			this.limitOffset = 0;
+  			this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
   		} else {
 
   			this.selectedAuthor = "";

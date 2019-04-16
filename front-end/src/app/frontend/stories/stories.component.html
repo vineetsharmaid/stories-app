@@ -18,34 +18,39 @@
 
 
 <!-- Section 2 -->
-<div class="container-fluid section_2">
+<div class="container-fluid section_2" *ngIf="featuredStories?.length > 0">
     <div class="row">
         <div class="col-md-9">
             <div class="big_img_wrap">
-                <div class="img_attribution">© <a href="#">Alegra Ally</a></div>
-                <a href="#"><img src="/assets/img/story.jpg" alt=""></a>
+                <div class="img_attribution">© 
+                    <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+                </div>
+                <a href="#" [routerLink]="['/story/', featuredStories[0].slug]">
+                    <img [src]="featuredStories[0].preview_image" [alt]="featuredStories[0].preview_title">
+                </a>
             </div>
         </div>
         <div class="col-md-3">
             <div class="right_line">
                     <div class="right_inner">
-                        <a href="#" class="right_ancor">
+                        <a href="#" [routerLink]="['/story/', featuredStories[0].slug]" class="right_ancor">
                             <span class="diamond_text">
                                 <span class="diamond_content">Featured Story</span>
                             </span>
-                            <h3>Women at the End of the Land</h3>
+                            <h3>{{featuredStories[0].preview_title}}</h3>
                             <div class="inner_divider"></div>
-                            <p>For centuries, the nomadic Nenets reindeer herders of the Siberian arctic have migrated across one of the most challenging environments on Earth. Today, the permafrost is melting, posing significant threat to their unique way of life. This is the intimate story of Lena, a young... </p>
+                            <p [innerHtml]="(featuredStories[0].preview_subtitle?.length >=139) ? featuredStories[0].preview_subtitle+'...' : featuredStories[0].preview_subtitle"></p>
                         </a>
 
                         <div class="inner_link_bottom">
-                            <a href="#">Alegra Ally</a> &amp; <a href="#">Kim Frank</a>
+                            <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
                         </div>
 
                         <div class="right_inner_footer">
                             <div class="right_inner_footer_top">
                                 <a href="#" class="coubt">Russia</a>
-                                <a href="#" class="coubt2">Indigenous</a>
+                                <!-- <a href="#" class="coubt2">Indigenous</a> -->
+                                <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                             </div>
                             <div class="right_inner_footer_bottom">
                                 <ul>

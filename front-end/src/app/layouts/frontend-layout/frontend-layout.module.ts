@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
 
@@ -30,6 +31,7 @@ import {
     MatAutocompleteModule,  
     MatFormFieldModule,  
     MatSelectModule,
+    InfiniteScrollModule,
   ],
   declarations: [
     HomeComponent,

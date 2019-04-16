@@ -159,6 +159,7 @@ export class StoryEditComponent implements OnInit {
   		previewTitle: [''],
   		previewSubtitle: [''],
       previewTags: [''],
+      previewType: [''],
   		// previewImage: ['', Validators.required],
   	});
 
@@ -191,6 +192,20 @@ export class StoryEditComponent implements OnInit {
         if ( this.story['preview_image'] != "" ) {
           
           this.filePath = APP_URL+'/assets/uploads/stories/'+this.story['preview_image'];
+        }
+
+        if ( this.story['type'] != "" || this.story['type'] != 0 ) {
+          
+          this.previewForm.patchValue({  
+
+            previewType: '1',
+          });
+        } else {
+
+          this.previewForm.patchValue({  
+
+            previewType: this.story['type'],
+          });  
         }
 
         /****SET FORM FIELDS VALUE****/ 
@@ -401,7 +416,8 @@ export class StoryEditComponent implements OnInit {
       previewTitle: this.previewForm.get('previewTitle').value,
       previewSubtitle: this.previewForm.get('previewSubtitle').value,
       story: this.story['story_id'],
-      username: localStorage.getItem('username'),      
+      username: localStorage.getItem('username'),
+      type: this.previewForm.get('previewType').value,
     };
 
     // stop here if form is invalid

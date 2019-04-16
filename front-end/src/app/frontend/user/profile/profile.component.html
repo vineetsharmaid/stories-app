@@ -43,13 +43,13 @@
                 <div class="quick-edit">                
                     <h3 *ngIf="enableNameEdit == false">{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
 
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableNameEdit == false" (click)="enableNameEdit = true; enableShortInfoEdit = false; enableWebsiteEdit = false; firstNameValue = userInfo.first_name; lastNameValue = userInfo.last_name;">
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableNameEdit == false" (click)="enableNameEdit = true; enableShortInfoEdit = false; enableWebsiteEdit = false; firstNameValue = userInfo.first_name; lastNameValue = userInfo.last_name; enableProfessionalInfoEdit = false;">
                         <i class="fa fa-pencil"></i>
                     </button>                    
                 </div>
 
 
-                <div class="quick-edit" *ngIf="enableNameEdit == true">
+                <div class="form-group quick-edit" *ngIf="enableNameEdit == true">
                     <div class="row">
                         <div class="col-md-6">
                             <input #firstName [(ngModel)]="firstNameValue" name="firstName" class="form-control">
@@ -68,6 +68,31 @@
                         <i class="fa fa-save"></i>
                     </button>
                 </div>
+
+
+                <div class="quick-edit mb-4">
+                    <p *ngIf="userInfo.professional_info?.length > 0 && enableProfessionalInfoEdit == false">{{userInfo.professional_info}}</p>
+
+                    <p *ngIf="(userInfo.professional_info == undefined || userInfo.professional_info == '' ) && enableProfessionalInfoEdit == false">Add profile credentials</p>
+                    
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableProfessionalInfoEdit == false" (click)="enableProfessionalInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; professionalInfoValue = userInfo.professional_info">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </div>
+
+
+                <div class="form-group quick-edit mb-4" *ngIf="enableProfessionalInfoEdit == true">
+                    <textarea #professionalInfo [(ngModel)]="professionalInfoValue" name="professionalInfo" class="form-control">{{userInfo.professional_info}}</textarea>
+                    
+                    <button class="btn btn-sm btn-danger cancel" (click)="enableProfessionalInfoEdit = false">
+                        <i class="fa fa-close"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('professional_info', professionalInfoValue)">
+                        <i class="fa fa-save"></i>
+                    </button>
+                </div>                
+
                 
                 <span><strong>{{storiesCount}}</strong> Stories</span>
                 
@@ -75,9 +100,9 @@
                 <div class="quick-edit">
                     <p *ngIf="userInfo.short_info?.length > 0 && enableShortInfoEdit == false">{{userInfo.short_info}}</p>
 
-                    <p *ngIf="userInfo.short_info == undefined && enableShortInfoEdit == false">Add short info</p>
+                    <p *ngIf="(userInfo.short_info == undefined || userInfo.short_info == '' ) && enableShortInfoEdit == false">Write a description about yourself</p>
                     
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableShortInfoEdit == false" (click)="enableShortInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; shortInfoValue = userInfo.short_info">
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableShortInfoEdit == false" (click)="enableShortInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; shortInfoValue = userInfo.short_info; enableProfessionalInfoEdit = false;">
                         <i class="fa fa-pencil"></i>
                     </button>
                 </div>
@@ -99,11 +124,11 @@
                         <a href="#"><strong>{{userInfo.website}}</strong></a>
                     </p>
 
-                    <p class="top20" *ngIf="userInfo.website == undefined && enableWebsiteEdit == false">
-                        <a href="#"><strong>yourdomainname.com</strong></a>
+                    <p class="top20" *ngIf="(userInfo.website == undefined || userInfo.website == '') && enableWebsiteEdit == false">
+                        <a href="#"><strong>Add your website/blog url</strong></a>
                     </p>
 
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableWebsiteEdit == false" (click)="enableWebsiteEdit = true; enableShortInfoEdit = false; enableNameEdit = false; websiteValue = userInfo.website">
+                    <button class="btn btn-sm btn-white edit" *ngIf="enableWebsiteEdit == false" (click)="enableWebsiteEdit = true; enableShortInfoEdit = false; enableNameEdit = false; websiteValue = userInfo.website;  enableProfessionalInfoEdit = false">
                         <i class="fa fa-pencil"></i>
                     </button>
                 </div>
@@ -111,7 +136,7 @@
 
                 <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
                     <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo.website}}</textarea> -->
-                    <input #website [(ngModel)]="websiteValue" name="website" class="form-control">
+                    <input #website [(ngModel)]="websiteValue" name="website" class="form-control" placeholder="www.yourwebsite.com">
                     <button class="btn btn-sm btn-danger cancel" (click)="enableWebsiteEdit = false">
                         <i class="fa fa-close"></i>
                     </button>

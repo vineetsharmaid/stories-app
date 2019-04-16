@@ -2,7 +2,7 @@
 <div class="container-fluid content_block_wrap">
     <div class="row">
         <div class="col-md-4">
-            <a href="#">
+            <a href="#" [routerLink]="['/search']" [queryParams]="{type:'1'}">
                 <div class="content_box cb1">
                     <h3>Workplace Stories</h3>
                     <p>Travel somewhere new for 5 minutes every day</p>
@@ -10,7 +10,7 @@
             </a>
         </div>
         <div class="col-md-4">
-            <a href="#">
+            <a href="#" [routerLink]="['/search']" [queryParams]="{type:'2'}">
                 <div class="content_box cb2">
                     <h3>Business Stories</h3>
                     <p>Explore the world by country and spectacular place</p>
@@ -58,7 +58,8 @@
                     <div class="right_inner_footer">
                         <div class="right_inner_footer_top">
                             <a href="#" class="coubt">Russia</a>
-                            <a href="#" class="coubt2">Indigenous</a>
+                            <!-- <a href="#" class="coubt2">Indigenous</a> -->
+                            <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                         </div>
                         <div class="right_inner_footer_bottom">
                             <ul>
