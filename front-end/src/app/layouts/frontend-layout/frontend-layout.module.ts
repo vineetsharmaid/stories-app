@@ -9,17 +9,25 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
 
 import { HomeComponent } from '../../frontend/home/home.component';
+import { ForumComponent } from '../../frontend/forum/forum.component';
 import { SearchComponent } from '../../frontend/search/search.component';
 import { StoriesComponent } from '../../frontend/stories/stories.component';
 import { StoryDetailsComponent } from '../../frontend/story-details/story-details.component';
 
 import { UserService } from "../../frontend/services/user.service";
 
-import {  
-  MatInputModule,  
-  MatAutocompleteModule,  
-  MatFormFieldModule,  
+import {
+  MatButtonModule,
+  MatInputModule,
+  MatRippleModule,
+  MatFormFieldModule,
+  MatTooltipModule,
   MatSelectModule,
+  MatAutocompleteModule,
+  MatRadioModule,
+  MatIconModule,
+  MatChipsModule,
+  MatCardModule,
 } from '@angular/material';
 @NgModule({
   imports: [
@@ -27,14 +35,22 @@ import {
     RouterModule.forChild(FrontendLayoutRoutes),
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule,  
-    MatAutocompleteModule,  
-    MatFormFieldModule,  
+    MatButtonModule,
+    MatInputModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatTooltipModule,
     MatSelectModule,
+    MatAutocompleteModule,
+    MatRadioModule,
+    MatIconModule,
+    MatChipsModule,
+    MatCardModule,
     InfiniteScrollModule,
   ],
   declarations: [
     HomeComponent,
+    ForumComponent,
     SearchComponent,
     StoriesComponent,
     StoryDetailsComponent,

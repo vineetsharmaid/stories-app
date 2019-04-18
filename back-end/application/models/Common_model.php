@@ -242,5 +242,19 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_question_data($where)
+    {
+        return $this->get_data('forum_threads', $where);
+         
+        // $this->db->select('forum_threads.*, users.first_name, users.last_name, users.username, 
+        //   thread_topics.topic_id, topics.name');
+        // $this->db->from('forum_threads');
+        // $this->db->join('thread_topics', 'thread_topics.thread_id = forum_threads.thread_id', 'left');
+        // $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');
+        // $this->db->join('users', 'users.user_id = forum_threads.author_id', 'left');
+        // $this->db->group_by('forum_threads.thread_id');
+        // return $this->db->get()->result();
+    }
+
 
 }

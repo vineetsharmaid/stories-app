@@ -551,6 +551,9 @@ export class StoryEditComponent implements OnInit {
     
     const filterValue = value.toString().toLowerCase();
     
+    console.log('filterValue', filterValue);
+    console.log('this.filteredTags', this.filteredTags);
+
     return this.allTags.filter( tag => tag.name.toLowerCase().startsWith(filterValue) );
   }
 

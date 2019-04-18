@@ -251,6 +251,55 @@ class Users extends REST_Controller {
     }
 
 
+    function add_question_post()
+    {
+
+      $title= $this->input->post('title');
+
+
+      $slug   = $this->slugify($title).'-'.strtotime(date('Y-m-d h:i:s'));
+      // strtolower( str_replace(array(' ', '?'), '-', $title) ).''.strtotime(date('Y-m-d h:i:s'));
+
+      $question = array(
+        'author_id' => $this->token_data->id,
+        'title' => trim( strip_tags($title) ),
+        'slug' => $slug,
+      );
+      
+      $topic_ids = explode(',', $this->input->post('topics'));
+      
+      if( $this->common_model->insert_entry('forum_threads', $question) ) {
+
+            $question['thread_id'] = $this->db->insert_id();
+
+            if ( !empty($topic_ids) ) {
+              foreach ($topic_ids as $topic_id) {
+                
+                $this->common_model->insert_entry(
+                      'thread_topics', 
+                      array('thread_id' => $question['thread_id'], 'topic_id' => $topic_id)
+                    );
+              }
+            }
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => $question,
+                'message' => 'question_added',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to add question.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
     public function image_upload_post() { 
       
       $config['upload_path']          = './assets/uploads/stories/';
@@ -554,6 +603,36 @@ class Users extends REST_Controller {
 
     }
 
+    public function add_new_topic_post()
+    {
+
+      $topic_data = array( 'status' => 1, 'name' => ucfirst($this->input->post('topic_name')), 'created_by' => $this->token_data->id );
+
+      if( $this->common_model->insert_entry( 'topics', $topic_data ) ) {
+
+        $topic_id = $this->db->insert_id();
+
+        // Set the response and exit
+        $this->response(  
+          array( 
+            'status' => TRUE, 
+            'data' => array('topic_id' => $topic_id, 'topic_name' => $this->input->post('topic_name')), 
+            'message' => 'New topic created', ),
+          REST_Controller::HTTP_OK
+        ); // OK (200) being the HTTP response code
+
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to create new topic',
+                'error' => array('Unable to create new topic'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function remove_tag_from_story_post()
     {
 
@@ -664,6 +743,33 @@ class Users extends REST_Controller {
       
     }    
 
+
+    public function get_topics_get()
+    {
+        $topics = $this->common_model->get_data('topics');
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($topics) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $topics,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No topics were found',
+                'error' => array('No topics were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }    
+
     public function get_user_stories_count_get() {
 
       $count = $this->common_model->data_exists( 'stories', array('author_id' => $this->token_data->id) );
@@ -762,6 +868,32 @@ class Users extends REST_Controller {
         }
         return null;
     }
-    
+
+    public static function slugify($text)
+    {
+      // replace non letter or digits by -
+      $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+
+      // transliterate
+      $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+
+      // remove unwanted characters
+      $text = preg_replace('~[^-\w]+~', '', $text);
+
+      // trim
+      $text = trim($text, '-');
+
+      // remove duplicate -
+      $text = preg_replace('~-+~', '-', $text);
+
+      // lowercase
+      $text = strtolower($text);
+
+      if (empty($text)) {
+        return 'n-a';
+      }
+
+      return $text;
+    }    
 
 }

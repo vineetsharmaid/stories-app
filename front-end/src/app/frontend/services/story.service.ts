@@ -69,6 +69,23 @@ export class StoryService {
 	    );
 		}
 
+  	addQuestion(question): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('title', question.title);
+      formData.append('topics', question.topics);
+
+      console.log('question.topics', question.topics);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'add_question', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	saveReview(story): Observable<any>{
 
 			let httpOptions = {
@@ -90,6 +107,19 @@ export class StoryService {
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
 			return this.http.post(USER_API_URL+'add_tag_to_story', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	addNewTopic(topic_name): Observable<any>{
+    	
+ 			const formData = new FormData();
+      formData.append('topic_name', topic_name);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'add_new_topic', formData, {headers})
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -154,6 +184,17 @@ export class StoryService {
 			};
 
 			return this.http.get(USER_API_URL+'get_tags/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+		getTopics(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_topics/', httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

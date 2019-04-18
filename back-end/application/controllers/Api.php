@@ -671,6 +671,33 @@ class Api extends REST_Controller {
 
     }
 
+
+    public function get_question_info_get()
+    {
+
+      $question_slug = $this->uri->segment(3);
+
+      $question = $this->common_model->get_question_data( array('slug' => $question_slug));
+
+      if ( !empty($question) ) {
+
+        // Set the response and exit
+        $this->response(  
+          array(
+            'status' => TRUE,
+            'data' => $question[0],
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code          
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No questions were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function get_story_comments_get($story_id)
     {
       
@@ -724,6 +751,5 @@ class Api extends REST_Controller {
         }
         return null;
     }
-    
 
 }
