@@ -10,10 +10,11 @@ import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '
 import {FormControl} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
-import { StoryService } from '../../services/story.service'
+import { ForumService } from '../../services/forum.service'
 
 import { environment } from '../../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const API_URL  =  environment.baseUrl+'/api/';
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
 @Component({
@@ -26,24 +27,78 @@ export class ForumListComponent implements OnInit {
 	public stories: Array<object>;
 	public featuredStories: Array<object>;
 	public addQuestionForm: FormGroup;
+	public addAnswerForm: FormGroup;
 
 
-	separatorKeysCodes: number[] = [ENTER, COMMA];
-	filteredTopics: Observable<string[]>;
-  	topics: any = [];
-  	allTopics: any = [];
+	public separatorKeysCodes: number[] = [ENTER, COMMA];
+	public filteredTopics: Observable<string[]>;
+  public topics: any = [];
+  public allTopics: any = [];
+  public allQuestions: Array<object>;
 
-	visible    = true;
-	removable  = true;
-	addOnBlur  = true;
-	selectable = true;  	
+	public visible    = true;
+	public removable  = true;
+	public addOnBlur  = true;
+	public selectable = true;
 
-  	@ViewChild('auto') matAutocomplete: MatAutocomplete;  
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;  
 	@ViewChild('closeQuestionModal') closeQuestionModal: ElementRef;
-  	@ViewChild('topicsInput') topicsInput: ElementRef<HTMLInputElement>;
+  @ViewChild('topicsInput') topicsInput: ElementRef<HTMLInputElement>;
+
+  	public editorAnswerOptions: Object = {
+  	// toolbarInline: true,  
+  	placeholderText: null,
+    // quickInsertButtons: ['image', 'table', 'ol', 'ul'],
+  	toolbarButtons: [
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
+	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
+	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
+  	],
+  	toolbarButtonsSM: [
+	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
+	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
+	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
+  	],
+  	heightMin: 100,
+  	charCounterCount: false,
+
+    // Set the image upload parameter.
+    imageUploadParam: 'description_image',
+
+    // Set the image upload URL.
+    imageUploadURL: API_URL+'story_description_image_upload',
+
+    // Additional upload params.
+    imageUploadParams: {id: 'my_editor'},
+
+    // Set request type.
+    imageUploadMethod: 'POST',
+
+    // Set max image size to 5MB.
+    imageMaxSize: 5 * 1024 * 1024,
+
+    // Allow to upload PNG and JPG.
+    imageAllowedTypes: ['jpeg', 'jpg', 'png'],
+    events:  {
+      'froalaEditor.initialized':  function () {
+        console.log('initialized');
+      },
+      'froalaEditor.image.beforeUpload':  function  (e,  editor,  images) {
+        
+        //Your code 
+      }, 
+      'froalaEditor.image.error':  function  (e,  editor, error, images) {
+        
+        console.log('error', error);
+      },
+
+    },
+    quickInsertTags: [], //to disable quick button
+		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
+	}
 
 
-  	constructor( private formBuilder: FormBuilder, private storyService : StoryService, private router: Router ) { }
+  	constructor( private formBuilder: FormBuilder, private forumService : ForumService, private router: Router ) { }
  
   	ngOnInit() {
 
@@ -53,7 +108,14 @@ export class ForumListComponent implements OnInit {
 	  		topics: [''],
 	  	});
 
+	  	this.addAnswerForm = this.formBuilder.group({
+
+	  		subject: [''],
+	  		threadId: [''],
+	  	});
+
 	  	this.getTopics();
+	  	this.getQuestionsList();
 
   		this.filteredTopics = this.addQuestionForm.controls['topics'].valueChanges.pipe(
         	startWith(''),        
@@ -63,7 +125,7 @@ export class ForumListComponent implements OnInit {
 	
   	getTopics() {
 
-	    this.storyService.getTopics().subscribe((response) => {
+	    this.forumService.getTopics().subscribe((response) => {
 	            
 	      this.allTopics = response['data'];	      
 	    }, (error) => {
@@ -72,6 +134,75 @@ export class ForumListComponent implements OnInit {
 	      console.log('error', error);
 	    });
   	}
+
+  	getQuestionsList() {
+
+	    this.forumService.getQuestionsList().subscribe((response) => {
+				
+				var questions = [];
+				var i = 0;
+	     	response['data'].forEach((question) => {
+
+	     		questions[i] = question;
+					questions[i]['profile_pic'] = question['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+question['profile_pic'];
+	     		i++;
+	     	});
+
+	      // this.allQuestions = response['data'];
+	      this.allQuestions = questions;
+	     	console.log('this.allQuestions', this.allQuestions);
+	    }, (error) => {
+
+	      this.allQuestions = [];
+	      console.log('error', error);
+	    });
+  	}
+
+  saveAnswer(threadId, questionIndex) {
+
+  	var tempAnswer = this.allQuestions[questionIndex]['tempAnswer'];
+  	tempAnswer = tempAnswer.replace(/<[^>]*>/g, ''); // remove html tags
+  	tempAnswer = tempAnswer.replace(/\&nbsp;/g, ''); // remove &nbsp;
+
+    // stop here if form is invalid
+    if ( tempAnswer.trim() == "" ) {
+
+      console.log('Validation error.');
+      return;
+    } else {
+    	
+    	let answer = {
+    		'subject': this.allQuestions[questionIndex]['tempAnswer'],
+    		'slug': this.allQuestions[questionIndex]['slug'],
+    		'question_id': threadId,
+    	}
+
+      this.forumService.saveAnswer(answer).subscribe((response) => {
+
+      		console.log('response', response);
+      		console.log('Added question');
+      		// Close login modal
+  			this.closeQuestionModal.nativeElement.click();
+      	this.router.navigateByUrl('/forum/question/'+response['data']['slug']);
+      }, (error) => {
+
+        console.log(error);
+      });
+    }
+  }
+
+  changeLikeStatus(answerId, index) {
+
+    this.forumService.changeLikeStatus(answerId).subscribe((response) => {
+	
+    	console.log('response', response);
+    	this.allQuestions[index]['likes'] = parseInt(this.allQuestions[index]['likes']) + 1;
+    	this.allQuestions[index]['user_liked'] = 1;
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
 
 
   addQuestion() {
@@ -91,7 +222,7 @@ export class ForumListComponent implements OnInit {
     		'topics': topic_ids,
     	}
 
-      this.storyService.addQuestion(question).subscribe((response) => {
+      this.forumService.addQuestion(question).subscribe((response) => {
 
       		console.log('response', response);
       		console.log('Added question');
@@ -118,7 +249,7 @@ export class ForumListComponent implements OnInit {
 		  // Add new topic
 		  if ((value || '').trim()) {
 
-		    this.storyService.addNewTopic(value.trim()).subscribe((response) => {
+		    this.forumService.addNewTopic(value.trim()).subscribe((response) => {
 
 		    	this.topics.push({
 		    		'topic_id': response['data']['topic_id'], 

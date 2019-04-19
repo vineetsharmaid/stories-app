@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 import { ForumRoutes } from './forum.routing';
@@ -41,11 +42,12 @@ import {
     MatIconModule,
     MatChipsModule,
     MatCardModule,
+    InfiniteScrollModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   declarations: [
     ForumListComponent,
-    QuestionsComponent,
+    QuestionsComponent,    
   ],
   providers: [
   ]

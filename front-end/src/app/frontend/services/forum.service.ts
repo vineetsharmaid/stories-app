@@ -33,6 +33,36 @@ export class ForumService {
 	    );
 		}
 
+  	saveAnswer(answer): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('slug', answer.slug);
+			formData.append('subject', answer.subject);
+      formData.append('question_id', answer.question_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'save_answer', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	changeLikeStatus(answerId): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('answer_id', answerId);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'change_like_status', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	addNewTopic(topic_name): Observable<any>{
     	
  			const formData = new FormData();
@@ -53,6 +83,30 @@ export class ForumService {
 			};
 
 			return this.http.get(USER_API_URL+'get_topics/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+		getQuestionsList(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_questions_list/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+		getAnswers(threadId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_answers/'+threadId, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

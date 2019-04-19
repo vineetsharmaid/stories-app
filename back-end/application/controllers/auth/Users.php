@@ -115,6 +115,96 @@ class Users extends REST_Controller {
       }
     }
 
+
+    function save_answer_post() {
+
+      $answer = array(
+        'status' => 0,
+        'author_id' => $this->token_data->id,
+        'question_id' => $this->input->post('question_id'),
+        'subject'  => htmlEntities($this->input->post('subject'), ENT_QUOTES),
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->insert_entry('forum_answers', $answer) ) {
+
+            $answer_id = $this->db->insert_id();
+
+
+            if ( isset($this->token_data->id) ) {
+              
+              $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $this->input->post('question_id')), $this->token_data->id );
+            } else {
+
+              $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $this->input->post('question_id')) );
+            }
+
+            if ( !empty($answers) ) {
+
+
+              foreach ($answers as $answer) {
+                
+                $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+                // get in time ago format
+                $answer->answered_ago = $this->time_elapsed_string($answer->created);
+              }
+            }
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array( 'answer' => $answers, 'slug' => $this->input->post('slug'),  ),
+                'message' => 'answer_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save answer.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function change_like_status_post() {
+        
+        $data = array('answer_id' => $this->input->post('answer_id'), 'user_id' => $this->token_data->id);
+
+        if ($this->common_model->data_exists('answer_user_like', $data) == 0) {
+          if ( $this->common_model->insert_entry('answer_user_like', $data) ) {
+
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data'   => 'Liked the answer',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already liked by this user',
+                'error' => array('Already liked by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
+
     public function add_story_comment_post()
     {
       
@@ -268,16 +358,16 @@ class Users extends REST_Controller {
       
       $topic_ids = explode(',', $this->input->post('topics'));
       
-      if( $this->common_model->insert_entry('forum_threads', $question) ) {
+      if( $this->common_model->insert_entry('forum_questions', $question) ) {
 
-            $question['thread_id'] = $this->db->insert_id();
+            $question['question_id'] = $this->db->insert_id();
 
             if ( !empty($topic_ids) ) {
               foreach ($topic_ids as $topic_id) {
                 
                 $this->common_model->insert_entry(
                       'thread_topics', 
-                      array('thread_id' => $question['thread_id'], 'topic_id' => $topic_id)
+                      array('thread_id' => $question['question_id'], 'topic_id' => $topic_id)
                     );
               }
             }
@@ -895,5 +985,34 @@ class Users extends REST_Controller {
 
       return $text;
     }    
+
+    function time_elapsed_string($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    } 
 
 }

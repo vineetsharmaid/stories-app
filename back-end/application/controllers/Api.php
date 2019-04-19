@@ -78,7 +78,7 @@ class Api extends REST_Controller {
               
               $user = $this->common_model->get_data( 'users', array('user_email' => $post_data->email) );
               
-              $jwt_token = $this->_generate_jwt_token($user);
+              $jwt_token = $this->_generate_jwt_token($user[0]);
 
               $message = array(
                 'message' => 'email_exists', 
@@ -107,11 +107,23 @@ class Api extends REST_Controller {
                   'profile_pic'   => isset($post_data->photoUrl) ? $post_data->photoUrl : '',
                   'password'      => $password_hashed
               );
-              
+
+
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
-                  
-                $message = array('message' => 'Registered new user', 'data' => array( 'username' => $username ),'status' => 200);
+                
+                $user =  new stdClass();
+                $user->user_id   = $this->db->insert_id();
+                $user->username  = $user_data['username'];
+                $user->user_type = $user_data['user_type'];
+                
+                $jwt_token = $this->_generate_jwt_token($user);
+
+                $message = array(
+                    'message' => 'Registered new user', 
+                    'data'    => array( 'username' => $username ),
+                    'token'   => $jwt_token,
+                    'status'  => 200);
               }
           }
 
@@ -246,7 +258,7 @@ class Api extends REST_Controller {
             // verify $password
             if (password_verify($user_data['password'], $user[0]->password)) {
 
-                $jwt_token = $this->_generate_jwt_token($user);
+                $jwt_token = $this->_generate_jwt_token($user[0]);
 
                 $message = [
                     'message' => 'Logged In',
@@ -297,7 +309,7 @@ class Api extends REST_Controller {
               // verify $password
               if (password_verify($user_data['password'], $user[0]->password)) {
 
-                  $jwt_token = $this->_generate_jwt_token($user);
+                  $jwt_token = $this->_generate_jwt_token($user[0]);
 
                   $message = [
                       'message' => 'Logged In',
@@ -351,10 +363,9 @@ class Api extends REST_Controller {
       $jwt_key = $this->config->item('thekey');
 
       $date = new DateTime();
-
-      $token['id'] = $user[0]->user_id;  //From here
-      $token['username'] = $user[0]->username;
-      $token['user_type'] = $user[0]->user_type;
+      $token['id'] = $user->user_id;  //From here
+      $token['username'] = $user->username;
+      $token['user_type'] = $user->user_type;
       $token['iat'] = $date->getTimestamp();
       $token['exp'] = $date->getTimestamp() + 60*60*5; //To here is to generate token
       return JWT::encode($token,$jwt_key ); //This is the output token
@@ -681,6 +692,11 @@ class Api extends REST_Controller {
 
       if ( !empty($question) ) {
 
+        $question[0]->topics    = is_null($question[0]->topics) ? [] : explode(',', $question[0]->topics);
+        $question[0]->topic_ids = is_null($question[0]->topic_ids) ? [] : explode(',', $question[0]->topic_ids);
+        $question[0]->tempAnswer = ""; // for frontend purpose
+        $question[0]->showAnswerBox = false; // for frontend purpose
+
         // Set the response and exit
         $this->response(  
           array(
@@ -693,6 +709,94 @@ class Api extends REST_Controller {
         $this->response([
             'status' => FALSE,
             'message' => 'No questions were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function get_questions_list_get() {
+
+      if ( isset($this->token_data->id) ) {
+        
+        $questions = $this->common_model->get_questions_list( array('status' => 1), $this->token_data->id );
+      } else {
+
+        $questions = $this->common_model->get_questions_list( array('status' => 1) );
+      }
+
+      // echo $this->db->last_query();
+
+      if ( !empty($questions) ) {
+
+        foreach ($questions as $question) {
+          
+          $question->answer    = is_null($question->answer) ? null : html_entity_decode($question->answer);
+          $question->topics    = is_null($question->topics) ? [] : explode(',', $question->topics);
+          $question->topic_ids = is_null($question->topic_ids) ? [] : explode(',', $question->topic_ids);
+          
+          // get in time ago format
+          $question->answered_ago = $this->time_elapsed_string($question->answered_at);
+
+          $question->tempAnswer = ""; // for frontend purpose
+          $question->showAnswerBox = false; // for frontend purpose
+        }
+
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $questions,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No questions were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
+    public function get_answers_get($question_id) {
+
+
+      if ( isset($this->token_data->id) ) {
+        
+        $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $question_id), $this->token_data->id );
+      } else {
+
+        $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $question_id) );
+      }      
+
+      if ( !empty($answers) ) {
+
+
+        foreach ($answers as $answer) {
+          
+          $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+          $this->db->where('answer_id', $answer->answer_id);
+          $this->db->set('views', 'views+1', FALSE);
+          $this->db->update('forum_answers');
+
+          // get in time ago format
+          $answer->answered_ago = $this->time_elapsed_string($answer->created);
+        }
+
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $answers,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No answers were found'
         ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 
@@ -751,5 +855,34 @@ class Api extends REST_Controller {
         }
         return null;
     }
+
+    function time_elapsed_string($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }    
 
 }
