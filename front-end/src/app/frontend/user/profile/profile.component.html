@@ -21,7 +21,8 @@
             <div class="user_intro_box">
                 
                 <a href="" [routerLink]="['./story/new']" class="mr-2 mb-2">Add Story</a>
-                <a href="" [routerLink]="['./story/list']">Stories</a>
+                <a href="" [routerLink]="['./story/list']" class="mr-2 mb-2">Stories</a>
+                <a href="" [routerLink]="['/forum']">Forum</a>
 
                 <div class="user_profile_pic_wrap quick-edit">
                     <img *ngIf="userInfo.profile_pic?.length > 0" [src]="userInfo.profile_pic" alt="">

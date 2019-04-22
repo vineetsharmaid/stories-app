@@ -33,6 +33,22 @@ export class ForumService {
 	    );
 		}
 
+  	addComment(comment): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('content', comment.content);
+			formData.append('parent', comment.parent);
+      formData.append('answer_id', comment.answer_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'add_answer_comment', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	saveAnswer(answer): Observable<any>{
 			
 			const formData = new FormData();
@@ -44,6 +60,22 @@ export class ForumService {
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
 			return this.http.post(USER_API_URL+'save_answer', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	updateAnswer(answer): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('slug', answer.slug);
+			formData.append('subject', answer.subject);
+      formData.append('answer_id', answer.answer_id);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'update_answer', formData, {headers})
 	    .pipe(
 	      catchError(this.handleError)
 	    );
@@ -88,6 +120,18 @@ export class ForumService {
 	    );
 		}
 
+		getComments(answerId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_answer_comments/'+answerId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
 		getQuestionsList(): Observable<any>{
 
 			let httpOptions = {
@@ -107,6 +151,18 @@ export class ForumService {
 			};
 
 			return this.http.get(API_URL+'get_answers/'+threadId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+		getAnswerByUser(threadId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_answer_by_user/'+threadId, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

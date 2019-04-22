@@ -57,7 +57,7 @@ const routes: Routes =[
   imports: [
     CommonModule,
     BrowserModule,
-    RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' })
+    RouterModule.forRoot(routes, { scrollPositionRestoration: 'disabled' })
   ],
   exports: [
   ],

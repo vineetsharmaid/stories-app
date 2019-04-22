@@ -5,50 +5,89 @@
         <a href="" [routerLink]="['/forum']">Forum</a>
         <div class="right_questions_wrap">
           
-          <div class="full_que_wrap">
+          <div class="full_que_wrap" *ngIf="questionData?.topics?.length > 0;">
             <div class="que_header">
               <ul>
-                <li>Answer</li>                
+                <li>Answer</li>
                 <li *ngFor="let topic of questionData.topics; let indx = index;">
-                    <a href="#" [routerLink]="['/forum']"  [queryParams]="{topic: questionData.topic_ids[indx]}">{{topic}}</a>
+                  <a href="#" [routerLink]="['/forum']"  [queryParams]="{topic: questionData.topic_ids[indx]}">{{topic}}</a>
                 </li>
               </ul>
             </div>
             <a class="full_que">
               {{questionData.title}}
             </a>
-            <div *ngIf="allAnswers?.length > 0;">
-              <div *ngFor="let answer of allAnswers; let answerIndex = index;" class="mb-5">
-                <hr *ngIf="answerIndex > 0">
+            <span class="pull-right" *ngIf="allAnswers?.length > 0 && questionData?.hasAnswered == 0" (click)="questionData.showAnswerBox = true">
+              <i class="fa fa-edit"></i>
+              Answer
+            </span>
+            <div class="empty-answer m-5" *ngIf="allAnswers?.length == 0;">
+              <p class="text-center" (click)="questionData.showAnswerBox = true">
+                <i class="fa fa-edit fa-4x text-muted"></i>
+              </p>
+              <h4 class="text-center text-muted">
+              No Answers Yet
+              </h4>
+            </div>
+            <div class="answer-box pb-5 pt-5" *ngIf="questionData.showAnswerBox == true">
+              <form (ngSubmit)="saveAnswer(questionData.question_id)">
+                <input type="hidden" [value]="questionData.question_id">
+                <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="questionData.tempAnswer" name="tempAnswer">
+                </textarea>
+                
+                <button type="button" class="btn btn-sm btn-danger" (click)="questionData.showAnswerBox = false">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-success">Submit</button>
+              </form>
+            </div>
+
+            <!-- ALL ANSWERS -->
+            <div *ngIf="answerByUser">              
+                <hr>
                 <div class="answered_wrap">
                   <div class="ans_pic_wrap">
-                    <img *ngIf="answer.profile_pic.length > 0; else defaultDP" [src]="answer.profile_pic" alt="">
-
+                    <img *ngIf="answerByUser.profile_pic.length > 0; else defaultDP" [src]="answerByUser.profile_pic" alt="">
                     <ng-template #defaultDP>
-                        <img src="/assets/img/forum/user_pic.png" alt="">
+                    <img src="/assets/img/forum/user_pic.png" alt="">
                     </ng-template>
                   </div>
                   <div class="ans_info">
-                    <a href="#">{{answer.first_name}} {{answer.last_name}}</a>
-                    <span>Answered {{answer.answered_ago}}</span>
+                    <a href="#">{{answerByUser.first_name}} {{answerByUser.last_name}}</a>
+                    <span>Answered {{answerByUser.answered_ago}}</span>
                   </div>
+                </div>
+                <div *ngIf="answerByUser.isEditable" class="editable-answer">
+                  <span (click)="answerByUser.showAnswerEditBox = true"><i class="fa fa-edit"></i> Edit</span>
                 </div>
                 
                 <!-- ANSWER -->
-                <div class="ans_content" [innerHtml]="answer.answer"></div>
-
+                <div class="ans_content" *ngIf="answerByUser.showAnswerEditBox == false" [innerHtml]="answerByUser.answer"></div>
+                <!-- EDIT OWN ANSWER -->
+                <div class="answer-box" *ngIf="answerByUser.showAnswerEditBox == true">
+                  <form (ngSubmit)="updateAnswer(answerByUser.answer_id, answerIndex)">
+                    <input type="hidden" [value]="answerByUser.answer_id">
+                    <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="answerByUser.answer" name="answer">
+                    </textarea>
+                    
+                    <button type="button" class="btn btn-sm btn-danger" (click)="answerByUser.showAnswerEditBox = false">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Submit</button>
+                  </form>
+                </div>
                 <div class="right_inner_footer_bottom">
                   <ul class="fl">
-                    <li (click)="changeLikeStatus(answer.answer_id, answerIndex)">
-                        <img *ngIf="answer.user_liked == 0; else userLiked" src="/assets/img/like.png" alt=""> 
-                        <ng-template #userLiked>
-                            <span>
-                                <i class="fa fa-heart-o fa-2x" style="color: red;"></i>
-                            </span>
-                        </ng-template>
-                        {{answer.likes}}
+                    <li (click)="changeLikeStatus(answerByUser.answer_id, answerIndex)">
+                      <img *ngIf="answerByUser.user_liked == 0; else userLiked" src="/assets/img/like.png" alt="">
+                      <ng-template #userLiked>
+                      <span>
+                        <i class="fa fa-heart-o fa-2x" style="color: red;"></i>
+                      </span>
+                      </ng-template>
+                      {{answerByUser.likes}}
                     </li>
-                    <li><img src="/assets/img/forum/eye.png" alt="">{{answer.views}}</li>
+                    <li><img src="/assets/img/forum/eye.png" alt="">{{answerByUser.views}}</li>
+                    <li (click)="loadCommentsUserAnswer(answerByUser.answer_id, answerIndex)">
+                      <i class="fa fa-comments" aria-hidden="true"></i>
+                      {{answerByUser.comments_count}}
+                    </li>
                     <li class="bookmark"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
                       <div class="social_wrap">
                         <ul>
@@ -65,39 +104,218 @@
                 </ul>
                 <div class="clear"></div>
               </div>
-              <div class="comment_footer_wrap">
+              <!-- Comments section -->
+              <div class="single_page_comments comment-wrapper">
+                <div class="container">
+                  <div class="row" *ngIf="answerByUser?.comments?.length > 0; else noComments;">
+                    <ul class="media-list">
+                      <ng-template #commentsList let-comments>
+                      <li class="media" *ngFor="let comment of comments; let commentIndex = index">
+                        <a href="#" class="pull-left pr-3">
+                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+                          <ng-template #defaultImage>
+                          <!-- <img class="rounded-circle" src="/assets/img/default-user-image.jpg"> -->
+                          <div class="user-imageholder">
+                            <span class="name-letter">
+                              {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
+                            </span>
+                          </div>
+                          </ng-template>
+                        </a>
+                        <div class="media-body">
+                          <span class="text-muted pull-right">
+                            <small class="text-muted"> {{comment.created}}</small>
+                          </span>
+                          <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                          
+                          <p> {{comment.content}} </p>
+                          
+                          <p *ngIf="comment.approved == 0">
+                            <small class="text-muted">(Pending Approval)</small>
+                          </p>
+                          <ul *ngIf="comment?.children?.length > 0">
+                            <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
+                          </ul>
+                          
+                          <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
+                          <!-- sub comment input form -->
+                          <div class="comment_footer_wrap mt-4 mb-4" *ngIf="comment.parent == 0 && comment.addReply == 'true'">
+                            <div class="profile_icon_wrap">
+                              <img src="/assets/img/forum/user_pic.png" alt="">
+                            </div>
+                            <div class="enter_comment_wrap">
+                              <form [formGroup]="commentForm">
+                                <input type="text" formControlName="comment" placeholder="Add a comment...">
+                                <a class="comment_go" (click)="addCommentUserAnswer(answerByUser.answer_id, comment.comment_id,answerIndex, commentIndex)">
+                                  <img src="/assets/img/forum/go.png" alt="">
+                                </a>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      </ng-template>
+                      <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: answerByUser.comments }"></ng-container>
+                    </ul>
+                  </div>
+                  <ng-template #noComments>
+                  No comments yet!!
+                  </ng-template>
+                </div>
+              </div>
+              <div class="comment_footer_wrap" *ngIf="isLoggedIn == 'true'; else showLogin">
                 <div class="profile_icon_wrap">
                   <img src="/assets/img/forum/user_pic.png" alt="">
                 </div>
                 <div class="enter_comment_wrap">
-                  <input type="text" name="" placeholder="Add a comment...">
-                  <a href="" class="comment_go"><img src="/assets/img/forum/go.png" alt=""></a>
+                  <form [formGroup]="commentForm">
+                    <input type="hidden" formControlName="parent">
+                    <input type="text" formControlName="comment" placeholder="Add a comment...">
+                    <a class="comment_go" (click)="addCommentUserAnswer(answerByUser.answer_id, 0, answerIndex)">
+                      <img src="/assets/img/forum/go.png" alt="">
+                    </a>
+                  </form>
                 </div>
               </div>
+              <ng-template #showLogin>
+              <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
+              </ng-template>
+          </div>
+      
+
+
+
+            <!-- ALL ANSWERS -->
+            <div *ngIf="allAnswers?.length > 0;">
+              <div *ngFor="let answer of allAnswers; let answerIndex = index;" class="mb-5">
+                <hr *ngIf="answerIndex > 0">
+                <div class="answered_wrap">
+                  <div class="ans_pic_wrap">
+                    <img *ngIf="answer.profile_pic.length > 0; else defaultDP" [src]="answer.profile_pic" alt="">
+                    <ng-template #defaultDP>
+                    <img src="/assets/img/forum/user_pic.png" alt="">
+                    </ng-template>
+                  </div>
+                  <div class="ans_info">
+                    <a href="#">{{answer.first_name}} {{answer.last_name}}</a>
+                    <span>Answered {{answer.answered_ago}}</span>
+                  </div>
+                </div>
+                
+                <!-- ANSWER CONTENT-->
+                <div class="ans_content" *ngIf="answer.showAnswerEditBox == false" [innerHtml]="answer.answer"></div>
+                
+                <div class="right_inner_footer_bottom">
+                  <ul class="fl">
+                    <li (click)="changeLikeStatus(answer.answer_id, answerIndex)">
+                      <img *ngIf="answer.user_liked == 0; else userLiked" src="/assets/img/like.png" alt="">
+                      <ng-template #userLiked>
+                      <span>
+                        <i class="fa fa-heart-o fa-2x" style="color: red;"></i>
+                      </span>
+                      </ng-template>
+                      {{answer.likes}}
+                    </li>
+                    <li><img src="/assets/img/forum/eye.png" alt="">{{answer.views}}</li>
+                    <li (click)="loadComments(answer.answer_id, answerIndex)">
+                      <i class="fa fa-comments" aria-hidden="true"></i>
+                      {{answer.comments_count}}
+                    </li>
+                    <li class="bookmark"><div class="share_img_wrap"><img src="/assets/img/bookmark.png" alt="">
+                      <div class="social_wrap">
+                        <ul>
+                          <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
+                          <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
+                          <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                        </ul>
+                      </div>
+                    </div> 254
+                  </li>
+                </ul>
+                <ul class="fr">
+                  <li class="nomargin"><a href="#"><img class="nomargin" src="/assets/img/forum/menu.png" alt=""></a></li>
+                </ul>
+                <div class="clear"></div>
+              </div>
+              <!-- Comments section -->
+              <div class="single_page_comments comment-wrapper">
+                <div class="container">
+                  <div class="row" *ngIf="answer?.comments?.length > 0; else noComments;">
+                    <ul class="media-list">
+                      <ng-template #commentsList let-comments>
+                      <li class="media" *ngFor="let comment of comments; let commentIndex = index">
+                        <a href="#" class="pull-left pr-3">
+                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+                          <ng-template #defaultImage>
+                          <!-- <img class="rounded-circle" src="/assets/img/default-user-image.jpg"> -->
+                          <div class="user-imageholder">
+                            <span class="name-letter">
+                              {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
+                            </span>
+                          </div>
+                          </ng-template>
+                        </a>
+                        <div class="media-body">
+                          <span class="text-muted pull-right">
+                            <small class="text-muted"> {{comment.created}}</small>
+                          </span>
+                          <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                          
+                          <p> {{comment.content}} </p>
+                          
+                          <p *ngIf="comment.approved == 0">
+                            <small class="text-muted">(Pending Approval)</small>
+                          </p>
+                          <ul *ngIf="comment?.children?.length > 0">
+                            <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
+                          </ul>
+                          
+                          <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
+                          <!-- sub comment input form -->
+                          <div class="comment_footer_wrap mt-4 mb-4" *ngIf="comment.parent == 0 && comment.addReply == 'true'">
+                            <div class="profile_icon_wrap">
+                              <img src="/assets/img/forum/user_pic.png" alt="">
+                            </div>
+                            <div class="enter_comment_wrap">
+                              <form [formGroup]="commentForm">
+                                <input type="text" formControlName="comment" placeholder="Add a comment...">
+                                <a class="comment_go" (click)="addComment(answer.answer_id, comment.comment_id,answerIndex, commentIndex)">
+                                  <img src="/assets/img/forum/go.png" alt="">
+                                </a>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                      </ng-template>
+                      <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: answer.comments }"></ng-container>
+                    </ul>
+                  </div>
+                  <ng-template #noComments>
+                  No comments yet!!
+                  </ng-template>
+                </div>
+              </div>
+              <div class="comment_footer_wrap" *ngIf="isLoggedIn == 'true'; else showLogin">
+                <div class="profile_icon_wrap">
+                  <img src="/assets/img/forum/user_pic.png" alt="">
+                </div>
+                <div class="enter_comment_wrap">
+                  <form [formGroup]="commentForm">
+                    <input type="hidden" formControlName="parent">
+                    <input type="text" formControlName="comment" placeholder="Add a comment...">
+                    <a class="comment_go" (click)="addComment(answer.answer_id, 0, answerIndex)">
+                      <img src="/assets/img/forum/go.png" alt="">
+                    </a>
+                  </form>
+                </div>
+              </div>
+              <ng-template #showLogin>
+              <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
+              </ng-template>
             </div>
           </div>
-
           
-          <div class="empty-answer m-5" *ngIf="allAnswers?.length == 0;">
-            <p class="text-center" (click)="questionData.showAnswerBox = true">
-              <i class="fa fa-edit fa-4x text-muted"></i>
-            </p>
-            <h4 class="text-center text-muted">
-              No Answers Yet
-            </h4>
-          </div>
-        
-
-          <div class="answer-box" *ngIf="questionData.showAnswerBox == true">
-              <form (ngSubmit)="saveAnswer(questionData.question_id)">
-                  <input type="hidden" [value]="questionData.question_id">
-                  <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="questionData.tempAnswer" name="tempAnswer">
-                  </textarea>
-                  
-                  <button type="button" class="btn btn-sm btn-danger" (click)="questionData.showAnswerBox = false">Cancel</button>
-                  <button type="submit" class="btn btn-sm btn-success">Submit</button>
-              </form>
-          </div>
           
         </div>
       </div>

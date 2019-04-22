@@ -131,17 +131,17 @@ class Users extends REST_Controller {
 
             $answer_id = $this->db->insert_id();
 
+            $answers = $this->common_model->get_answer_by_user( 
+              array( 
+                'forum_answers.question_id' => $this->input->post('question_id'),
+                'forum_answers.answer_id' => $answer_id
+              ), 
+              $this->token_data->id 
+            );
 
-            if ( isset($this->token_data->id) ) {
-              
-              $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $this->input->post('question_id')), $this->token_data->id );
-            } else {
-
-              $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $this->input->post('question_id')) );
-            }
+            // echo $this->db->last_query();
 
             if ( !empty($answers) ) {
-
 
               foreach ($answers as $answer) {
                 
@@ -169,12 +169,97 @@ class Users extends REST_Controller {
       }
     }
 
+
+    function update_answer_post() {
+
+      $answer = array(        
+        'subject'  => htmlEntities($this->input->post('subject'), ENT_QUOTES),
+      );
+      
+      $where = array('answer_id' => $this->input->post('answer_id'));
+
+      // get anwer to verify author
+      $check_answer = $this->common_model->get_data( 'forum_answers', $where );
+
+      // verify author is logged in user
+      if ( $check_answer[0]->author_id ==  $this->token_data->id) {
+        // update if author has acess to edit
+        if( $this->common_model->update_entry('forum_answers', $answer, $where) ) {
+
+              // Set the response and exit
+              $this->response([
+                  'status' => TRUE,
+                  'data' => array( 'answer' => $answer ),
+                  'message' => 'answer_saved',
+              ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+              // Set the response and exit
+              $this->response([
+                  'status' => FALSE,
+                  'message' => 'database_error',
+                  'error' => array('Something went wrong, unable to update answer.'),
+              ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+        }
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'not_authorized',
+            'error' => array('Something went wrong, unable to update answer.'),
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function get_answer_by_user_get($question_id) {
+
+
+      $answers = $this->common_model->get_answer_by_user( 
+        array( 
+          'forum_answers.question_id' => $question_id, 
+          'forum_answers.author_id'   => $this->token_data->id
+        ), $this->token_data->id );
+      
+      if ( !empty($answers) ) {
+
+
+        foreach ($answers as $answer) {
+          
+          $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+          if ( isset($this->token_data->id) && $answer->author_id == $this->token_data->id ) {
+            
+            $answer->isEditable = true;
+          }
+
+          // get in time ago format
+          $answer->answered_ago = $this->time_elapsed_string($answer->created);
+        }
+
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $answers[0],
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No answers were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }    
+
     public function change_like_status_post() {
         
         $data = array('answer_id' => $this->input->post('answer_id'), 'user_id' => $this->token_data->id);
 
-        if ($this->common_model->data_exists('answer_user_like', $data) == 0) {
-          if ( $this->common_model->insert_entry('answer_user_like', $data) ) {
+        if ($this->common_model->data_exists('forum_answer_user_likes', $data) == 0) {
+          if ( $this->common_model->insert_entry('forum_answer_user_likes', $data) ) {
 
               // Set the response and exit
               $this->response(  
@@ -219,6 +304,38 @@ class Users extends REST_Controller {
       if( $this->common_model->insert_entry('comments', $comment) ) {
             
           $comment_data = $this->common_model->get_comment_by_id( $this->db->insert_id() );
+          
+          // Set the response and exit
+          $this->response(  
+            array( 'status' => TRUE, 'data' => $comment_data,'message' => 'comment added to story', ), 
+            REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to add comment',
+              'error' => array('Unable to add comment'),
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function add_answer_comment_post()
+    {
+      
+      $comment = array(
+        'content'   => $this->input->post('content'),
+        'answer_id'  => $this->input->post('answer_id'),
+        'parent'    => $this->input->post('parent'),
+        'user_id'   => $this->token_data->id,
+        'approved'  => COMMENT_STATUS_DRAFT,
+      );
+
+      if( $this->common_model->insert_entry('forum_answer_comments', $comment) ) {
+            
+          $comment_data = $this->common_model->get_answer_comment_by_id( $this->db->insert_id() );
           
           // Set the response and exit
           $this->response(  

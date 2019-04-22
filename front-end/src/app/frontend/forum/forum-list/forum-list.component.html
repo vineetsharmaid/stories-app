@@ -92,6 +92,10 @@
                         <!-- ANSWER -->
                         <div class="ans_content" *ngIf="question.answer?.length > 0" [innerHtml]="question.answer">
                         </div>
+                        
+                        <a href=""  [routerLink]="['/forum/question/', question.slug]" *ngIf="question.answer?.length > 249">
+                            Read more
+                        </a>
 
                         <div class="right_inner_footer_bottom" *ngIf="question.answer?.length > 0">
                             <ul class="fl">

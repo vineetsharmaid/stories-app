@@ -219,12 +219,45 @@ class Common_model extends CI_Model {
       return $comments;
     }
 
+    public function get_answer_comments($parent, $answer_id)
+    {
+      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->from('forum_answer_comments');
+      $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+      $this->db->where( array('forum_answer_comments.parent' => $parent, 'forum_answer_comments.answer_id' => $answer_id,'forum_answer_comments.approved' => 1) );
+      $comments = $this->db->get()->result();
+
+      return $comments;
+    }
+
+    public function get_answer_comments_for_user($parent, $answer_id, $user_id)
+    {
+      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->from('forum_answer_comments');
+      $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+      $this->db->where( "`forum_answer_comments.parent` = ".$parent." AND `forum_answer_comments.answer_id` = ".$answer_id." AND (`forum_answer_comments`.`approved` = 1 OR `forum_answer_comments`.`user_id` = ".$user_id." )" );
+      $comments = $this->db->get()->result();
+
+      return $comments;
+    }
+    
     public function get_comment_by_id($comment_id)
     {
       $this->db->select('comments.*, users.first_name, users.last_name, users.username, users.profile_pic, users.user_type');
       $this->db->from('comments');
       $this->db->join('users', 'users.user_id = comments.user_id');
       $this->db->where( array('comments.comment_id' => $comment_id) );
+      $comments = $this->db->get()->row();
+
+      return $comments;
+    }
+
+    public function get_answer_comment_by_id($comment_id)
+    {
+      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.profile_pic, users.user_type');
+      $this->db->from('forum_answer_comments');
+      $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+      $this->db->where( array('forum_answer_comments.comment_id' => $comment_id) );
       $comments = $this->db->get()->row();
 
       return $comments;
@@ -242,9 +275,11 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_question_data($where)
+    public function get_question_data($where, $user_id="")
     {
 
+      if ( $user_id=="" ) {
+        
         $this->db->select('forum_questions.*, 
           GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
           GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids');
@@ -256,6 +291,23 @@ class Common_model extends CI_Model {
         $this->db->where($where);
         $this->db->group_by('forum_questions.question_id');
         return $this->db->get()->result();
+      } else {
+
+        $this->db->select('forum_questions.*, 
+          GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
+          GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids,
+          count(distinct forum_answers.author_id) as hasAnswered');
+        $this->db->from('forum_questions');
+        // get topics tagged with question
+        $this->db->join('thread_topics', 'thread_topics.thread_id = forum_questions.question_id', 'left');
+        // get names of topics
+        $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');        
+        // get answer by loggedin user
+        $this->db->join('forum_answers', 'forum_answers.question_id = forum_questions.question_id AND forum_answers.author_id = '.$user_id, 'left');
+        $this->db->where($where);
+        $this->db->group_by('forum_questions.question_id');
+        return $this->db->get()->result();
+      }
 
         // return $this->get_data('forum_questions', $where);
     }
@@ -269,7 +321,7 @@ class Common_model extends CI_Model {
           users.first_name, users.last_name, users.username, users.profile_pic, 
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
-          count(distinct answer_user_like.user_id) as likes,          
+          count(distinct forum_answer_user_likes.user_id) as likes,          
           GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
           GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids');
         $this->db->from('forum_questions');
@@ -280,7 +332,7 @@ class Common_model extends CI_Model {
         // get names of topics
         $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');
         // get number of likes on answer
-        $this->db->join('answer_user_like', 'answer_user_like.answer_id = forum_answers.answer_id', 'left');        
+        $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');        
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->group_by('forum_questions.question_id');
@@ -291,7 +343,7 @@ class Common_model extends CI_Model {
           users.first_name, users.last_name, users.username, users.profile_pic, 
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
-          count(distinct answer_user_like.user_id) as likes,
+          count(distinct forum_answer_user_likes.user_id) as likes,
           count(distinct current_user_like.user_id) as user_liked,
           GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
           GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids');
@@ -303,9 +355,9 @@ class Common_model extends CI_Model {
         // get names of topics
         $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');
         // get number of likes on answer
-        $this->db->join('answer_user_like', 'answer_user_like.answer_id = forum_answers.answer_id', 'left');
+        $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
         // check if user liked an answer
-        $this->db->join('answer_user_like as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->group_by('forum_questions.question_id');
@@ -321,32 +373,72 @@ class Common_model extends CI_Model {
         
         $this->db->select('forum_answers.*, 
           users.first_name, users.last_name, users.username, users.profile_pic,
-          count(distinct answer_user_like.user_id) as likes');
+          count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct forum_answer_comments.comment_id) as comments_count');
         $this->db->from('forum_answers');
         // get number of likes on answer
-        $this->db->join('answer_user_like', 'answer_user_like.answer_id = forum_answers.answer_id', 'left');        
+        $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // get number of comments
+        $this->db->join('forum_answer_comments', 
+          'forum_answer_comments.answer_id = forum_answers.answer_id AND 
+          forum_answer_comments.approved = 1
+          ', 'left');        
         // get answer author information      
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->where($where);
         $this->db->group_by('forum_answers.answer_id');
+        $this->db->order_by('likes', 'DESC');
         return $this->db->get()->result();
       } else {
 
+        // do not show answer by logged in user
+        // (get_answer_by_user) this function should be used to fetch answer by logged in user
+        $where['forum_answers.author_id !='] = $user_id;
+
         $this->db->select('forum_answers.*, 
           users.first_name, users.last_name, users.username, users.profile_pic,
-          count(distinct answer_user_like.user_id) as likes,
-          count(distinct current_user_like.user_id) as user_liked,');
+          count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct current_user_like.user_id) as user_liked,
+          count(distinct forum_answer_comments.comment_id) as comments_count');
         $this->db->from('forum_answers');
         // get number of likes on answer
-        $this->db->join('answer_user_like', 'answer_user_like.answer_id = forum_answers.answer_id', 'left');
+        $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
         // check if user liked an answer
-        $this->db->join('answer_user_like as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        // get number of comments
+        $this->db->join('forum_answer_comments', '(forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.approved = 1) OR 
+          (forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.user_id = '.$user_id.')', 'left');
         // get answer author information      
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->where($where);
         $this->db->group_by('forum_answers.answer_id');
+        $this->db->order_by('likes', 'DESC');
         return $this->db->get()->result();
       }
+    }
+
+    public function get_answer_by_user($where="", $user_id="")
+    {
+
+        $this->db->select('forum_answers.*, 
+          users.first_name, users.last_name, users.username, users.profile_pic,
+          count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct current_user_like.user_id) as user_liked,
+          count(distinct forum_answer_comments.comment_id) as comments_count');
+        $this->db->from('forum_answers');
+        // get number of likes on answer
+        $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // check if user liked an answer
+        $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        // get number of comments
+        $this->db->join('forum_answer_comments', '(forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.approved = 1) OR 
+          (forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.user_id = '.$user_id.')', 'left');
+        // get answer author information      
+        $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
+        $this->db->where($where);
+        $this->db->group_by('forum_answers.answer_id');
+        $this->db->order_by('likes', 'DESC');
+        return $this->db->get()->result();      
     }
 
 

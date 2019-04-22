@@ -582,8 +582,6 @@ class Api extends REST_Controller {
         array( 'status'  => USER_STATUS_ACTIVE, 'user_id' => $author_id ) //where
       );
 
-      // echo $this->db->last_query();
-
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($users) ) {
           
@@ -688,14 +686,18 @@ class Api extends REST_Controller {
 
       $question_slug = $this->uri->segment(3);
 
-      $question = $this->common_model->get_question_data( array('slug' => $question_slug));
+      if ( isset($this->token_data->id) ) {
+        
+        $question = $this->common_model->get_question_data( array('slug' => $question_slug), $this->token_data->id);
+      } else {
+
+        $question = $this->common_model->get_question_data( array('slug' => $question_slug));
+      }
 
       if ( !empty($question) ) {
 
         $question[0]->topics    = is_null($question[0]->topics) ? [] : explode(',', $question[0]->topics);
         $question[0]->topic_ids = is_null($question[0]->topic_ids) ? [] : explode(',', $question[0]->topic_ids);
-        $question[0]->tempAnswer = ""; // for frontend purpose
-        $question[0]->showAnswerBox = false; // for frontend purpose
 
         // Set the response and exit
         $this->response(  
@@ -723,8 +725,6 @@ class Api extends REST_Controller {
 
         $questions = $this->common_model->get_questions_list( array('status' => 1) );
       }
-
-      // echo $this->db->last_query();
 
       if ( !empty($questions) ) {
 
@@ -768,7 +768,7 @@ class Api extends REST_Controller {
       } else {
 
         $answers = $this->common_model->get_answers( array('forum_answers.question_id' => $question_id) );
-      }      
+      }
 
       if ( !empty($answers) ) {
 
@@ -776,6 +776,11 @@ class Api extends REST_Controller {
         foreach ($answers as $answer) {
           
           $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+          if ( isset($this->token_data->id) && $answer->author_id == $this->token_data->id ) {
+            
+            $answer->isEditable = true;
+          }
 
           $this->db->where('answer_id', $answer->answer_id);
           $this->db->set('views', 'views+1', FALSE);
@@ -822,6 +827,49 @@ class Api extends REST_Controller {
           } else {
 
             $comment->children = $this->common_model->get_story_comments($comment->comment_id, $story_id);
+          }
+      
+        }
+
+        // Set the response and exit
+        $this->response(  
+          array(
+            'status' => TRUE,
+            'data'   => $comments,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code      
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No comments were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+
+    public function get_answer_comments_get($answer_id)
+    {
+      
+      if ( isset($this->token_data) ) {
+        
+        $comments = $this->common_model->get_answer_comments_for_user(0, $answer_id, $this->token_data->id);
+      } else {
+
+        $comments = $this->common_model->get_answer_comments(0, $answer_id);
+      }
+      
+      if ( !empty($comments) ) {
+        
+        foreach ($comments as $comment) {
+          if ( isset($this->token_data) ) {
+            
+            $comment->children = $this->common_model->get_answer_comments_for_user($comment->comment_id, $answer_id, $this->token_data->id);
+
+          } else {
+
+            $comment->children = $this->common_model->get_answer_comments($comment->comment_id, $answer_id);
           }
       
         }

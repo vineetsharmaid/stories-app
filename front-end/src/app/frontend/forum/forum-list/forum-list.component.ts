@@ -145,6 +145,8 @@ export class ForumListComponent implements OnInit {
 
 	     		questions[i] = question;
 					questions[i]['profile_pic'] = question['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+question['profile_pic'];
+
+					questions[i]['answer'] = question['answer'] == null ? question['answer'] : question['answer'].replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,250)+'...';
 	     		i++;
 	     	});
 
