@@ -41,10 +41,10 @@ export class QuestionsComponent implements OnInit {
     charCounterCount: false,
 
     // Set the image upload parameter.
-    imageUploadParam: 'description_image',
+    imageUploadParam: 'answer_image',
 
     // Set the image upload URL.
-    imageUploadURL: API_URL+'story_description_image_upload',
+    imageUploadURL: API_URL+'forum_answer_image_upload',
 
     // Additional upload params.
     imageUploadParams: {id: 'my_editor'},
@@ -112,7 +112,6 @@ export class QuestionsComponent implements OnInit {
 
         this.forumService.addComment(comment).subscribe((response) => {
 
-            console.log('response', response);
             var comment = response['data'];
             comment['profile_pic'] = comment['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
 
@@ -125,13 +124,15 @@ export class QuestionsComponent implements OnInit {
                 this.allAnswers[answerIndex]['comments'] = [];
               }
               
-              this.allAnswers[answerIndex]['comments'].push(comment);
+              this.allAnswers[answerIndex]['comments'].push(comment);              
+              this.allAnswers[answerIndex]['comments_count']++;
 
             } else { // Child comments
 
               this.allAnswers[answerIndex]['comments'][commentIndex].children.push(comment);
               // hide comment box
               this.allAnswers[answerIndex]['comments'][commentIndex].addReply = false;
+              this.allAnswers[answerIndex]['comments_count']++;
             }
             
             // reset form
@@ -180,12 +181,14 @@ export class QuestionsComponent implements OnInit {
               }
               
               this.answerByUser['comments'].push(comment);
+              this.answerByUser['comments_count']++;
 
             } else { // Child comments
 
               this.answerByUser['comments'][commentIndex].children.push(comment);
               // hide comment box
               this.answerByUser['comments'][commentIndex].addReply = false;
+              this.answerByUser['comments_count']++;
             }
             
             // reset form
@@ -277,6 +280,7 @@ export class QuestionsComponent implements OnInit {
         });
 
         this.allAnswers[index]['comments'] = comments;
+        this.allAnswers[index]['showComments'] = true;
         console.log("this.allAnswers[index]['comments']", this.allAnswers[index]['comments']);
       }, (error) => {
 
@@ -301,6 +305,7 @@ export class QuestionsComponent implements OnInit {
         });
 
         this.answerByUser['comments'] = comments;
+        this.answerByUser['showComments'] = true;
       }, (error) => {
 
         this.answerByUser['comments'] = [];

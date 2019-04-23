@@ -41,7 +41,7 @@
             </div>
 
             <!-- ALL ANSWERS -->
-            <div *ngIf="answerByUser">              
+            <div *ngIf="answerByUser" class="pb-5 answer-box">
                 <hr>
                 <div class="answered_wrap">
                   <div class="ans_pic_wrap">
@@ -105,7 +105,7 @@
                 <div class="clear"></div>
               </div>
               <!-- Comments section -->
-              <div class="single_page_comments comment-wrapper">
+              <div class="single_page_comments comment-wrapper" *ngIf="answerByUser?.showComments == true">
                 <div class="container">
                   <div class="row" *ngIf="answerByUser?.comments?.length > 0; else noComments;">
                     <ul class="media-list">
@@ -187,7 +187,7 @@
 
             <!-- ALL ANSWERS -->
             <div *ngIf="allAnswers?.length > 0;">
-              <div *ngFor="let answer of allAnswers; let answerIndex = index;" class="mb-5">
+              <div *ngFor="let answer of allAnswers; let answerIndex = index;" class="pb-5 answer-box">
                 <hr *ngIf="answerIndex > 0">
                 <div class="answered_wrap">
                   <div class="ans_pic_wrap">
@@ -238,7 +238,7 @@
                 <div class="clear"></div>
               </div>
               <!-- Comments section -->
-              <div class="single_page_comments comment-wrapper">
+              <div class="single_page_comments comment-wrapper" *ngIf="answer?.showComments == true">
                 <div class="container">
                   <div class="row" *ngIf="answer?.comments?.length > 0; else noComments;">
                     <ul class="media-list">

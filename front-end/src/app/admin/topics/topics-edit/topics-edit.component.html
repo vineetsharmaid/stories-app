@@ -1,0 +1,48 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header card-header-danger">
+						<h4 class="card-title">Edit Topic</h4>
+						<!-- <p class="card-category"> List of users.</p> -->
+						<button class="btn btn-sm btn-success pull-right" [routerLink]="['/admin/category']">
+						List
+						</button>
+					</div>
+					<div class="card-body">
+						<form (ngSubmit)="editTopic()">
+							<div class="row">
+								<div class="col-md-3"></div>
+								<div class=" col-md-6">
+									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input type="search" placeholder="Start typing" aria-label="topic" [(ngModel)]="searchTopic" matInput [matAutocomplete]="auto" (ngModelChange)="topicSearchChanged($event)" name="searchTopic">
+										<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+										<mat-option *ngFor="let topic of filteredTopics" [value]="topic">
+										{{topic.name}}
+										</mat-option>
+										</mat-autocomplete>
+										</mat-form-field>
+									</div>
+									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input matInput type="text" placeholder="Icon class (Ex. fa-user )" [(ngModel)]="iconClass" name="iconClass">
+										</mat-form-field>
+										<a href="https://fontawesome.com/v4.7.0/icons/" target="_blank">View Icons</a>
+									</div>
+									
+									<button mat-raised-button type="submit" class="btn btn-danger pull-right">Save</button>
+								</div>
+								<div class="col-md-3"></div>
+								<div class="clearfix"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -346,6 +346,44 @@ class Admin extends REST_Controller {
 
     }
 
+    public function get_topics_get()
+    {
+ 
+        $tag_id = $this->uri->segment(4);
+
+        // If the id parameter doesn't exist return all the tags
+        if ($tag_id === NULL) {
+
+          $tags = $this->common_model->get_topics();
+        } else {
+          
+          // Find and return a single record.
+          $tag_id = (int) $tag_id;
+
+          $tags = $this->common_model->get_topic($tag_id);
+        }
+
+        // Check if the tags data store contains tags (in case the database result returns NULL)
+        if ( !empty($tags) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $tags,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No tags were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
     public function add_tag_post() {
       
       $tag_data = array( 
@@ -368,6 +406,62 @@ class Admin extends REST_Controller {
           $this->response([
               'status' => FALSE,
               'message' => 'Unable to add tag'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function add_topic_post() {
+      
+      $topic_data = array( 
+        'status' => 1, 
+        'name' => ucfirst( $this->input->post('name') ),
+        'icon_class' => $this->input->post('class'),
+        'created_by' => $this->token_data->id
+      );
+
+      if( $this->common_model->insert_entry( 'topics', $topic_data ) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'topic_added_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to add topic'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function edit_topic_post() {
+      
+      $topic_data = array( 
+        'status' => 1,
+        'name' => ucfirst( $this->input->post('name') ),
+        'icon_class' => $this->input->post('class')
+      );
+
+      $where = array( 'topic_id' => $this->input->post('topic_id') );
+
+      if( $this->common_model->update_entry( 'topics', $topic_data, $where ) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'topic_updated_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to update topic'
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
     }
@@ -478,6 +572,85 @@ class Admin extends REST_Controller {
     public function delete_comment_post()
     { 
         $this->common_model->delete_entry(  'comments', array('comment_id' => $this->input->post('comment_id')) );
+
+        if ($this->db->affected_rows())
+        {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Comment deleted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+          // generate an error... or use the log_message() function to log your error
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'Unable to delete comment'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
+    public function get_forum_comments_get($status)
+    { 
+     
+        $comments = $this->admin_model->get_forum_comments( array('approved' => $status) );
+
+        // Check if the story data store contains story (in case the database result returns NULL)
+        if ( !empty($comments) ) {
+
+            foreach ($comments as $comment) {
+              
+              $comment->answer = html_entity_decode($comment->answer);
+            }
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $comments,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'No comments were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
+    public function update_forum_comment_status_post()
+    { 
+        $this->common_model->update_entry( 
+            'forum_answer_comments', 
+            array('approved' => $this->input->post('status')), // set data
+            array('comment_id' => $this->input->post('comment_id')) // where
+          );
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update comment status'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Comment status updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+
+    public function delete_forum_comment_post()
+    { 
+        $this->common_model->delete_entry(  'forum_answer_comments', array('comment_id' => $this->input->post('comment_id')) );
 
         if ($this->db->affected_rows())
         {

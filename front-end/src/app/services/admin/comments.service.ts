@@ -30,6 +30,15 @@ export class CommentsService {
 		return this.http.get(ADMIN_API_URL+'get_comments/'+status, httpOptions);
 	}
 
+  	getForumComments(status): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+		
+		return this.http.get(ADMIN_API_URL+'get_forum_comments/'+status, httpOptions);
+	}
+
 	updateCommentStatus(commentId, status): Observable<any>{
 
  		const formData = new FormData();
@@ -41,6 +50,17 @@ export class CommentsService {
 		return this.http.post(ADMIN_API_URL+'update_comment_status/', formData, {headers});
 	}
 
+	updateForumCommentStatus(commentId, status): Observable<any>{
+
+ 		const formData = new FormData();
+      	formData.append('comment_id', commentId);
+      	formData.append('status', status);
+			
+		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+		
+		return this.http.post(ADMIN_API_URL+'update_forum_comment_status/', formData, {headers});
+	}
+
 	deleteComment(commentId): Observable<any>{
 
  		const formData = new FormData();
@@ -49,6 +69,16 @@ export class CommentsService {
 		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 		
 		return this.http.post(ADMIN_API_URL+'delete_comment/', formData, {headers});
+	}
+
+	deleteForumComment(commentId): Observable<any>{
+
+ 		const formData = new FormData();
+      	formData.append('comment_id', commentId);
+			
+		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+		
+		return this.http.post(ADMIN_API_URL+'delete_forum_comment/', formData, {headers});
 	}
 
 	/** POST: get story by story id to the database */

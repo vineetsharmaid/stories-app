@@ -374,7 +374,7 @@ class Api extends REST_Controller {
 
     public function story_description_image_upload_post() { 
 
-      $config['upload_path']          = './assets/uploads/';
+      $config['upload_path']          = './assets/uploads/stories/';
       $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048;
       // $config['max_width']            = 1024;
@@ -402,7 +402,45 @@ class Api extends REST_Controller {
             // Set the response and exit
           $this->response(  
             array(
-              'link'  => base_url().'assets/uploads/'.$upload_data['raw_name'].$upload_data['file_ext'],
+              'link'  => base_url().'assets/uploads/stories/'.$upload_data['raw_name'].$upload_data['file_ext'],
+            ), REST_Controller::HTTP_OK
+          ); // OK (200) being the HTTP response code
+          
+      }
+
+    }
+
+    public function forum_answer_image_upload_post() { 
+
+      $config['upload_path']          = './assets/uploads/forum/';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
+      $config['max_size']             = 2048;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
+
+      $this->load->library('upload', $config);
+
+      if ( ! $this->upload->do_upload('answer_image'))
+      {
+          $error = array('error' => $this->upload->display_errors());
+
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'not_uploaded',
+              'error'   => $error,
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+            // Set the response and exit
+          $this->response(  
+            array(
+              'link'  => base_url().'assets/uploads/forum/'.$upload_data['raw_name'].$upload_data['file_ext'],
             ), REST_Controller::HTTP_OK
           ); // OK (200) being the HTTP response code
           
@@ -547,6 +585,34 @@ class Api extends REST_Controller {
 
     }
 
+    public function search_topic_get($search_tag)
+    {
+
+      $topics = $this->common_model->get_searched_topics( 
+        array( 'topics.status'  => TAG_STATUS_PUBLISHED ), //where
+        $search_tag // like
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($topics) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $topics,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No topics were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function get_tag_get($tag_id) {
 
       $tags = $this->common_model->get_data( 'tags',
@@ -574,6 +640,59 @@ class Api extends REST_Controller {
       }
 
     }
+
+    public function get_topic_get($topic_id) {
+
+      $topics = $this->common_model->get_data( 'topics',
+        array( 'topics.status'  => TAG_STATUS_PUBLISHED, 'topic_id' => $topic_id ) //where
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($topics) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $topics[0],
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No topics were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
+    public function get_sidebar_topics_get()
+    {
+        $topics = $this->common_model->get_sidebar_topics();
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($topics) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => $topics,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No topics were found',
+                'error' => array('No topics were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }   
 
 
     public function get_author_get($author_id) {
@@ -716,15 +835,33 @@ class Api extends REST_Controller {
 
     }
 
-    public function get_questions_list_get() {
+    public function get_questions_list_post($limit, $offset) {
+
+      $where = array( 'forum_questions.status'  => STORY_STATUS_PUBLISHED );
+
+      if ( $this->input->post('search_topic') != "" ) {
+        
+        $where['thread_topics.topic_id'] = $this->input->post('search_topic');
+      }
+
+      if ( $this->input->post('search_question') != "" ) {
+        
+        $like  = array('forum_questions.title' => $this->input->post('search_question'));
+      } else {
+
+        $like  = "";
+      }
+
 
       if ( isset($this->token_data->id) ) {
         
-        $questions = $this->common_model->get_questions_list( array('status' => 1), $this->token_data->id );
+        $questions = $this->common_model->get_questions_list( $where, $this->token_data->id, $limit, $offset, $like );
       } else {
 
-        $questions = $this->common_model->get_questions_list( array('status' => 1) );
+        $questions = $this->common_model->get_questions_list( $where, "", $limit, $offset, $like );
       }
+
+      // echo $this->db->last_query();
 
       if ( !empty($questions) ) {
 

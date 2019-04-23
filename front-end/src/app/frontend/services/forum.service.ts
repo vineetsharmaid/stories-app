@@ -120,6 +120,20 @@ export class ForumService {
 	    );
 		}
 
+
+		getSidebarTopics(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_sidebar_topics/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+
 		getComments(answerId): Observable<any>{
 
 			let httpOptions = {
@@ -132,13 +146,17 @@ export class ForumService {
 	    );
 		}
 
-		getQuestionsList(): Observable<any>{
+		getQuestionsList(searchData, limit, offset): Observable<any>{
 
 			let httpOptions = {
-			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 
-			return this.http.get(API_URL+'get_questions_list/', httpOptions)
+			const formData = new FormData();			
+      formData.append('search_question', searchData['search_question']);
+      formData.append('search_topic', searchData['search_topic']);
+
+			return this.http.post(API_URL+'get_questions_list/'+limit+'/'+offset, formData,httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

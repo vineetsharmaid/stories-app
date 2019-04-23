@@ -11,8 +11,10 @@ import { NotificationsComponent } from '../../admin/notifications/notifications.
 import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
 import { TagsComponent } from '../../admin/tags/tags.component';
+import { TopicsComponent } from '../../admin/topics/topics.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
+import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
@@ -53,6 +55,15 @@ export const AdminLayoutRoutes: Routes = [
             }
         ] 
     },{
+        path: 'topics',
+        component: TopicsComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/topics/topics.module#TopicsModule'
+            }
+        ] 
+    },{
         path: 'stories',
         component: StoriesComponent,
         children: [
@@ -68,6 +79,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/comments/comments.module#CommentsModule'
+            }
+        ] 
+    },{
+        path: 'forum-comments',
+        component: ForumCommentsComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/forum-comments/forum-comments.module#ForumCommentsModule'
             }
         ] 
     },

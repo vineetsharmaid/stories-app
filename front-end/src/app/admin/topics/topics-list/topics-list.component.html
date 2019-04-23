@@ -1,0 +1,72 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Topic List</h4>
+            <!-- <p class="card-category"> List of users.</p> -->
+            <button class="btn btn-sm btn-success pull-right" [routerLink]="['./add']">
+               Add New
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="20%">Name </th>
+                  <th width="10%">Icon </th>
+                  <th width="20%">Questions </th>
+                  <th width="20%">Created By </th>
+                  <th width="10%">Created </th>
+                  <th width="10%">Action </th>
+                </thead>
+                <tbody *ngIf="topics?.length > 0">
+                  <tr *ngFor="let topic of topics">
+                    <td>                      
+                      <a href="#" class="user_name"> {{topic.name | titlecase}} </a>
+                    </td>
+
+                    <td>                      
+                      <span *ngIf="topic.icon_class?.length > 0; else noIcon" class="topic-icon">
+                        <i class="fa fa-2x" [ngClass]="topic.icon_class"></i>
+                      </span>
+
+                      <ng-template #noIcon>
+                        -
+                      </ng-template>
+                    </td>
+                    
+                    <td>{{topic.questions}}</td>
+                    
+                    <td>{{topic.first_name}} {{topic.last_name}}</td>
+
+                    <td>{{topic.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-info" routerLink="./edit/{{topic.topic_id}}">
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="topics?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No topic found.
+                      <br>
+                      <button class="btn btn-sm btn-success" [routerLink]="['./add']">
+                         Add New
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

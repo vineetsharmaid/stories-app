@@ -73,6 +73,19 @@ class Admin_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_forum_comments($where='') {
+        
+
+        $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, forum_answers.subject as answer, forum_questions.title as question, forum_questions.slug, forum_questions.question_id');
+        $this->db->from('forum_answer_comments');
+        $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+        $this->db->join('forum_answers', 'forum_answers.answer_id = forum_answer_comments.answer_id');
+        $this->db->join('forum_questions', 'forum_questions.question_id = forum_answers.question_id');
+        $this->db->where( $where );
+        $this->db->group_by( 'forum_answer_comments.comment_id' );
+        return $this->db->get()->result();
+    }
+
     public function get_story($where='') {
         
 

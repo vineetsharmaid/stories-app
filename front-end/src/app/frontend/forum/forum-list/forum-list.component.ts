@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable }         from 'rxjs';
 import { map, startWith }     from 'rxjs/operators';
 import 'rxjs/add/operator/filter';
@@ -34,7 +34,11 @@ export class ForumListComponent implements OnInit {
 	public filteredTopics: Observable<string[]>;
   public topics: any = [];
   public allTopics: any = [];
+  public searchedTopics: any;
+  public searchedQuestion: any;
+  public sidebarTopics: Array<object>;
   public allQuestions: Array<object>;
+  public limitOffset: number = 0;
 
 	public visible    = true;
 	public removable  = true;
@@ -63,10 +67,10 @@ export class ForumListComponent implements OnInit {
   	charCounterCount: false,
 
     // Set the image upload parameter.
-    imageUploadParam: 'description_image',
+    imageUploadParam: 'answer_image',
 
     // Set the image upload URL.
-    imageUploadURL: API_URL+'story_description_image_upload',
+    imageUploadURL: API_URL+'forum_answer_image_upload',
 
     // Additional upload params.
     imageUploadParams: {id: 'my_editor'},
@@ -98,7 +102,10 @@ export class ForumListComponent implements OnInit {
 	}
 
 
-  	constructor( private formBuilder: FormBuilder, private forumService : ForumService, private router: Router ) { }
+  	constructor( private formBuilder: FormBuilder, 
+      private forumService : ForumService, 
+      private activatedRoute : ActivatedRoute, 
+      private router: Router ) { }
  
   	ngOnInit() {
 
@@ -114,15 +121,32 @@ export class ForumListComponent implements OnInit {
 	  		threadId: [''],
 	  	});
 
+
+      this.activatedRoute.queryParams.subscribe(queryParams => {
+        
+        if ( typeof queryParams['q'] !== 'undefined' && queryParams['q'] != '' ) {
+          
+          this.searchedQuestion = queryParams['q']
+        }
+
+        if ( typeof queryParams['topic'] !== 'undefined' && queryParams['topic'] != '' ) {
+          
+          this.searchedTopics = queryParams['topic'];
+        }
+  	  	
+        this.limitOffset = 0;
+        this.getQuestionsList(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+      });
+
 	  	this.getTopics();
-	  	this.getQuestionsList();
+      this.getSidebarTopics();
 
   		this.filteredTopics = this.addQuestionForm.controls['topics'].valueChanges.pipe(
         	startWith(''),        
         	map((topic: string | null) => topic ? this._filterTopics(topic) : [])
     	);
   	}
-	
+
   	getTopics() {
 
 	    this.forumService.getTopics().subscribe((response) => {
@@ -135,9 +159,34 @@ export class ForumListComponent implements OnInit {
 	    });
   	}
 
-  	getQuestionsList() {
+    getSidebarTopics() {
 
-	    this.forumService.getQuestionsList().subscribe((response) => {
+      this.forumService.getSidebarTopics().subscribe((response) => {
+              
+        this.sidebarTopics = response['data'];        
+      }, (error) => {
+
+        this.sidebarTopics = [];
+        console.log('error', error);
+      });
+    }
+
+    onScroll() {
+
+      console.log('scrolled!!');
+      this.limitOffset += DEFAULT_LISTING_COUNT;
+      this.getQuestionsList(DEFAULT_LISTING_COUNT , this.limitOffset, true);
+    }
+
+  	getQuestionsList(limit, offset, isOnScroll) {
+
+
+      var searchData = { 
+        'search_question': typeof this.searchedQuestion == 'undefined' ? "" : this.searchedQuestion,
+        'search_topic': typeof this.searchedTopics == 'undefined' ? "" : this.searchedTopics,
+      };
+
+	    this.forumService.getQuestionsList(searchData, limit, offset).subscribe((response) => {
 				
 				var questions = [];
 				var i = 0;
@@ -146,16 +195,34 @@ export class ForumListComponent implements OnInit {
 	     		questions[i] = question;
 					questions[i]['profile_pic'] = question['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+question['profile_pic'];
 
-					questions[i]['answer'] = question['answer'] == null ? question['answer'] : question['answer'].replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,250)+'...';
+          if ( question['answer'] == null ) {
+            
+            questions[i]['answer'] = question['answer'];
+          } else {
+
+					  questions[i]['answer'] = question['answer'].replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,250);
+            questions[i]['answer'] = questions[i]['answer'].length > 249 ?  questions[i]['answer']+'...' : questions[i]['answer'];
+          }
 	     		i++;
 	     	});
 
 	      // this.allQuestions = response['data'];
-	      this.allQuestions = questions;
+	      
+        if ( isOnScroll == true ) {
+          
+          Array.prototype.push.apply(this.allQuestions, questions);
+        } else {
+
+          this.allQuestions = questions;
+        }
+
 	     	console.log('this.allQuestions', this.allQuestions);
 	    }, (error) => {
 
-	      this.allQuestions = [];
+        if ( isOnScroll == false ) {            
+          
+	        this.allQuestions = [];
+        }
 	      console.log('error', error);
 	    });
   	}

@@ -18,7 +18,7 @@
 .profile_icon_wrap{ width: 50px; height: 50px; margin-right: 20px}
 .what_is_your_que_wrap h5{color:rgba(0, 0, 0, .3); font-weight: bold;}
 .que_header ul li{ display: inline-block;margin-right: 10px; }
-.full_que_wrap{padding: 10px 0; border-top: 1px solid rgba(0, 0, 0, .2); border-bottom: 1px solid rgba(0, 0, 0, .2); margin-top: 20px}
+.full_que_wrap{padding: 10px 0; border-top: 1px solid rgba(0, 0, 0, .2); margin-top: 20px}
 .full_que{font-size: 20px; color: rgba(0, 0, 0, .7); font-weight: bold;}
 .full_que_wrap:hover .full_que{ color: #f1663b}
 .answered_wrap{display: flex; align-items: center; margin: 20px 0}
@@ -64,7 +64,7 @@ input.title-field {
 }
 
 /*****Comments section*******/
-.single_page_comments.comment-wrapper { padding: 20px 0; }
+.single_page_comments.comment-wrapper { padding: 20px 0; height: 40vh; overflow-x: hidden; overflow-y: scroll; margin-bottom: 20px;}
 .single_page_comments.comment-wrapper li.media ul { margin-top: 30px; }
 .comment-wrapper .media-list .media { border-bottom: 1px solid #efefef; margin-bottom: 15px; padding-bottom: 15px; }
 .comment-wrapper .media-list li.media:last-child { border-bottom: none !important; }

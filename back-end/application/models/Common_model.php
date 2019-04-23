@@ -98,6 +98,24 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_searched_topics($where='', $filter_value='')
+    {
+
+        $this->db->select('*');
+        $this->db->from('topics');
+        if ( $where != '' ) {
+          
+          $this->db->where($where);
+        }
+
+        if ( $filter_value != '' ) {
+          
+          $this->db->like('name', $filter_value, 'after');     // Produces: WHERE `name` LIKE 'filter_value%' ESCAPE '!'
+        }
+
+        return $this->db->get()->result();
+    }
+
 
     public function get_searched_authors($where='', $filter_value='')
     {
@@ -275,6 +293,18 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_topics($where='', $like='')
+    {
+         
+        $this->db->select('topics.*, count(thread_topics.thread_id) as questions, users.first_name, users.last_name, users.username');
+        $this->db->from('topics');
+        $this->db->join('thread_topics', 'thread_topics.topic_id = topics.topic_id', 'left');
+        $this->db->join('users', 'users.user_id = topics.created_by', 'left');
+        $this->db->group_by('topics.topic_id');
+        $this->db->order_by('questions', 'desc');
+        return $this->db->get()->result();
+    }
+
     public function get_question_data($where, $user_id="")
     {
 
@@ -312,7 +342,7 @@ class Common_model extends CI_Model {
         // return $this->get_data('forum_questions', $where);
     }
     
-    public function get_questions_list($where="", $user_id="")
+    public function get_questions_list($where="", $user_id="", $limit="", $offset="", $like="")
     {
 
       if ( $user_id == "" ) {
@@ -335,7 +365,19 @@ class Common_model extends CI_Model {
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');        
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
+        $this->db->where( $where );
         $this->db->group_by('forum_questions.question_id');
+        if ( $offset != '' && $limit != '' ) {
+          
+          $this->db->limit($limit, $offset);
+        }
+
+
+        if ( $like != '' ) {
+          
+          $this->db->like($like);
+        }
+        
         return $this->db->get()->result();
       } else {
 
@@ -360,7 +402,18 @@ class Common_model extends CI_Model {
         $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
+        $this->db->where( $where );
         $this->db->group_by('forum_questions.question_id');
+        if ( $offset != '' && $limit != '' ) {
+          
+          $this->db->limit($limit, $offset);
+        }
+
+        if ( $like != '' ) {
+          
+          $this->db->like($like);
+        }
+
         return $this->db->get()->result();
       }
 
@@ -439,6 +492,19 @@ class Common_model extends CI_Model {
         $this->db->group_by('forum_answers.answer_id');
         $this->db->order_by('likes', 'DESC');
         return $this->db->get()->result();      
+    }
+
+    public function get_sidebar_topics()
+    {
+      $this->db->select('topics.*, count(forum_questions.question_id) as questions');
+      $this->db->from('topics');
+      $this->db->join('thread_topics', 'thread_topics.topic_id = topics.topic_id', 'left');
+      $this->db->join('forum_questions', 'forum_questions.question_id = thread_topics.thread_id');
+      $this->db->where( array('topics.icon_class !=' => "") );
+      $this->db->group_by('topics.topic_id');
+      $this->db->limit(12);
+      $this->db->order_by('questions', 'DESC');
+      return $this->db->get()->result();
     }
 
 

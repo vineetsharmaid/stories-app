@@ -65,3 +65,4 @@ input.title-field {
 
 .not_answered ul li { list-style: none; display: inline-block; cursor: pointer; }
 .not_answered p { color: rgba(0, 0, 0, .3); font-weight: bold; }
+span.topic-icon { font-size: 21px; width: 25px; display: inline-block; color: #f1663b; }
