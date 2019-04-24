@@ -7,7 +7,7 @@ import { ProfileLayoutRoutes } from './profile-layout.routing';
 
 import { ProfileComponent } from '../../frontend/user/profile/profile.component';
 import { StoryComponent } from '../../frontend/user/story/story.component';
-
+import { ForumComponent } from '../../frontend/user/forum/forum.component';
 
 import { UserService } from "../../frontend/services/user.service";
 import { 
@@ -24,6 +24,7 @@ import {
   declarations: [
     ProfileComponent,
     StoryComponent,
+    ForumComponent,
   ],
   providers: [
     UserService,

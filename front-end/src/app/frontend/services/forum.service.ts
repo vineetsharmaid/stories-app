@@ -174,6 +174,30 @@ export class ForumService {
 	    );
 		}
 
+		getUserQuestions(limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_questions_list/'+limit+'/'+offset, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+		getUserAnswers(limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_answers_list/'+limit+'/'+offset, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+		
 		getAnswerByUser(threadId): Observable<any>{
 
 			let httpOptions = {

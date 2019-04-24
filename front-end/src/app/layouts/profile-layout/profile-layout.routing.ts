@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ProfileComponent } from '../../frontend/user/profile/profile.component';
 import { StoryComponent } from '../../frontend/user/story/story.component';
+import { ForumComponent } from '../../frontend/user/forum/forum.component';
 
 
 import { 
@@ -20,6 +21,15 @@ export const ProfileLayoutRoutes: Routes = [
 	        {
 	      path: '',
 	      loadChildren: '../../frontend/user/story/story.module#StoryModule'
+	  	}],
+    	canActivate: [AuthGuard]
+	}, {
+	    path: 'forum',
+	    component: ForumComponent,
+	    children: [
+	        {
+	      path: '',
+	      loadChildren: '../../frontend/user/forum/forum.module#ForumModule'
 	  	}],
     	canActivate: [AuthGuard]
 	},

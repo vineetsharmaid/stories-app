@@ -1,0 +1,86 @@
+<div class="container user_info_wrap">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>Forum</h2>
+		</div>
+		<div class="col-sm-12 mb-5">
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item">
+					<a [routerLink]="['/user/forum/list/questions']" class="nav-link" [ngClass]="{'active': viewType == 'questions'}" data-toggle="tab" href="#questions">
+						Questions
+						<!-- <span class="stories-count draft">{{allQuestions?.length}}</span> -->
+					</a>
+				</li>
+				<li class="nav-item">
+					<a [routerLink]="['/user/forum/list/answers']" class="nav-link" [ngClass]="{'active': viewType == 'answers'}" data-toggle="tab" href="#answers">
+						Answers
+						<!-- <span class="stories-count draft">{{allAnswers?.length}}</span> -->
+					</a>
+				</li>
+			</ul>
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div id="questions" class="container tab-pane fade" role="tabpanel" [ngClass]="{'active show': viewType == 'questions'}"><br>
+					<div class="row" *ngIf="allQuestions?.length > 0; else noQuestions" infiniteScroll
+            [infiniteScrollDistance]="1"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onQuestionScroll()">
+						<div class="col-md-4 mb-5" *ngFor="let question of allQuestions; let indx = index">
+							<mat-card class="stories-card">
+							<mat-card-header>
+							<!-- <div mat-card-avatar class="example-header-image"></div> -->
+							<mat-card-title>{{question.title}}</mat-card-title>
+							<mat-card-subtitle>{{question.created | date: 'mediumDate'}}</mat-card-subtitle>
+							</mat-card-header>							
+							<hr class="m-0">
+							<!-- <mat-card-content>
+							<p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
+							</mat-card-content> -->
+							<mat-card-actions>
+							<button mat-button [routerLink]="['/forum/question/', question.slug]">View</button>
+							<!-- <button mat-button (click)="deleteStory(story.story_id, indx)">DELETE</button> -->
+							</mat-card-actions>
+							</mat-card>
+						</div>
+					</div>
+
+					<ng-template #noQuestions>
+						<div class="row">
+							<div class="col-md-12">
+								<p>You have not asked a questions yet.</p>
+							</div>
+						</div>
+					</ng-template>
+
+				</div>
+				
+				<div id="answers" class="container tab-pane fade" role="tabpanel" [ngClass]="{'active show': viewType == 'answers'}"><br>
+					<div class="row" *ngIf="allAnswers?.length > 0" infiniteScroll
+            [infiniteScrollDistance]="1"
+            [infiniteScrollThrottle]="50"
+            (scrolled)="onAnswerScroll()">
+						<div class="col-md-4 mb-5" *ngFor="let answer of allAnswers">
+							<mat-card class="stories-card">
+							<mat-card-header>
+							<!-- <div mat-card-avatar class="example-header-image"></div> -->
+							<mat-card-title>{{answer.title}}</mat-card-title>
+							<mat-card-subtitle>{{answer.created | date: 'mediumDate'}}</mat-card-subtitle>
+							</mat-card-header>
+							<hr class="m-0 mb-4">
+							<!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+							<mat-card-content>
+							<p *ngIf="answer.answer?.length > 0" [innerHtml]="answer.answer"></p>
+							</mat-card-content>
+							
+							<mat-card-actions>
+								<a mat-button [routerLink]="['/forum/question/', answer.slug]">View</a>
+							</mat-card-actions>
+							</mat-card>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

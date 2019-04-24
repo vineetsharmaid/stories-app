@@ -213,6 +213,7 @@ export class QuestionsComponent implements OnInit {
           this.getAnswerByUser(this.questionData['question_id']);
         }
         this.getAnswers(this.questionData['question_id']);
+        console.log('here');
   		}, (error) => {
 
   			console.log('error', error);

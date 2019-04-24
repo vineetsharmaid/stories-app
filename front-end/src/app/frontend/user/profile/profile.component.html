@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-8 nopadding quick-edit">
             
-            <img src="/assets/img/user/intro.jpg" alt="" *ngIf="userInfo.cover_pic == ''">
+            <img src="assets/img/user/intro.jpg" alt="" *ngIf="userInfo.cover_pic == ''">
             <img [src]="userInfo.cover_pic" alt="" *ngIf="userInfo.cover_pic != ''">
 
             <button class="btn btn-sm btn-white edit" (click)="triggerUpload()">
@@ -26,7 +26,7 @@
 
                 <div class="user_profile_pic_wrap quick-edit">
                     <img *ngIf="userInfo.profile_pic?.length > 0" [src]="userInfo.profile_pic" alt="">
-                    <img *ngIf="userInfo.profile_pic?.length == 0" src="/assets/img/user/user.jpg" alt="">
+                    <img *ngIf="userInfo.profile_pic?.length == 0" src="assets/img/user/user.jpg" alt="">
 
 
                     <button class="btn btn-sm btn-white edit" (click)="triggerProfilePicUpload()">
@@ -177,15 +177,15 @@
                     </div>
                     <div class="right_inner_footer_bottom">
                         <ul>
-                            <li><img src="/assets/img/like.png" alt=""> 1,003</li>
+                            <li><img src="assets/img/like.png" alt=""> 1,003</li>
                             <li class="bookmark">
                                 <div class="share_img_wrap">
-                                    <img src="/assets/img/bookmark.png" alt="">
+                                    <img src="assets/img/bookmark.png" alt="">
                                     <div class="social_wrap">
                                         <ul>
-                                            <li><a href="#"><img src="/assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="/assets/img/linkedIn.png" alt=""></a></li>
+                                            <li><a href="#"><img src="assets/img/facebook.png" alt=""></a></li>
+                                            <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
+                                            <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
                                         </ul>
                                     </div>
                                 </div> 14 min rea

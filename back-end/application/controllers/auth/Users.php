@@ -506,6 +506,67 @@ class Users extends REST_Controller {
       }
     }
 
+    public function get_user_questions_list_get($limit, $offset)
+    {
+      
+      $questions = $this->user_model->get_user_questions_list( array('users.user_id' => $this->token_data->id), $limit, $offset );
+
+      if ( !empty($questions) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $questions,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No questions were found',
+                'error' => array('No questions were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function get_user_answers_list_get($limit, $offset)
+    {
+      
+      $answers = $this->user_model->get_user_answers_list( array('forum_answers.author_id' => $this->token_data->id), $limit, $offset );
+
+      if ( !empty($answers) ) {
+
+
+          foreach ($answers as $answer) {
+            
+            $answer->answer    = is_null($answer->answer) ? null : html_entity_decode($answer->answer);
+            $answer->topics    = is_null($answer->topics) ? [] : explode(',', $answer->topics);
+            $answer->topic_ids = is_null($answer->topic_ids) ? [] : explode(',', $answer->topic_ids);
+            
+            // get in time ago format
+            $answer->answered_ago = $this->time_elapsed_string($answer->answered_at);
+
+            $answer->tempAnswer = ""; // for frontend purpose
+            $answer->showAnswerBox = false; // for frontend purpose
+          }
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $answers,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No user were found',
+                'error' => array('No user were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
 
     public function image_upload_post() { 
       

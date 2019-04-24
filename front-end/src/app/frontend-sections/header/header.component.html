@@ -1,7 +1,7 @@
 <!-- Header -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <!-- Logo -->
-  <a class="navbar-brand" [routerLink]="['/']"><img src="/assets/img/logo.png" alt=""></a>
+  <a class="navbar-brand" [routerLink]="['/']"><img src="assets/img/logo.png" alt=""></a>
   <!-- Logo -->
   <!-- Header Navigation -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@
           <a class="dropdown-item" href="#">Our Founding Team</a>
         </div>
       </li>
-      <li class="nav-item nik_logo"><a class="nav-link" href="#"><img src="/assets/img/custom_logo.png" alt=""></a></li>
+      <li class="nav-item nik_logo"><a class="nav-link" href="#"><img src="assets/img/custom_logo.png" alt=""></a></li>
       <li class="nav-item"><a class="nav-link" href="#" [routerLink]="['/stories']">Stories</a></li>
       <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
     </ul>
@@ -28,7 +28,7 @@
   <!-- Header Navigation -->
   <!-- Header right section for Search and Login -->
   <div class="header_right_wrap">
-    <a href="#" class="search_wrap"><img src="/assets/img/search.png" alt=""></a>
+    <a href="#" class="search_wrap"><img src="assets/img/search.png" alt=""></a>
 
     <div class="header_login_wrap" *ngIf="!loggedIn">
     
@@ -67,8 +67,8 @@
       <div class="modal-body" [hidden]="showHideLogin || showForgotPassword">
         <h3 class="modal-title">Welcome back</h3>
         <div class="login_social_wrap">
-          <a class="login_facebook alink" (click)="signInWithFB()"> <img src="/assets/img/fb.png" alt=""> Login with Facebook</a>
-          <a class="login_twt alink" #googleLoginBtn> <img src="/assets/img/twt.png" alt=""> Login with Google</a>
+          <a class="login_facebook alink" (click)="signInWithFB()"> <img src="assets/img/fb.png" alt=""> Login with Facebook</a>
+          <a class="login_twt alink" #googleLoginBtn> <img src="assets/img/twt.png" alt=""> Login with Google</a>
           <p class="login_divider">OR</p>
         </div>
         <div class="emailExists mb-2" *ngIf="accountAlreadyExists">
@@ -109,8 +109,8 @@
       <div class="modal-body" [hidden]="!showHideLogin || showForgotPassword">
         <h3 class="modal-title">Welcome, sign up to join</h3>
         <div class="login_social_wrap" [hidden]="showHideSignupForm">
-          <a (click)="signInWithFB()" class="login_facebook alink"> <img src="/assets/img/fb.png" alt=""> Continue with Facebook</a>
-          <a #googleLoginBtn2 class="login_twt alink"> <img src="/assets/img/twt.png" alt=""> Continue with Google</a>
+          <a (click)="signInWithFB()" class="login_facebook alink"> <img src="assets/img/fb.png" alt=""> Continue with Facebook</a>
+          <a #googleLoginBtn2 class="login_twt alink"> <img src="assets/img/twt.png" alt=""> Continue with Google</a>
         </div>
         
         <span [hidden]="showHideSignupForm">
