@@ -1,6 +1,6 @@
 /*Content Blocks Style*/
 .content_block_wrap{padding: 30px;}
-.content_box{padding: 20px;height: 250px; background-color: #15181b; position: relative;}
+.content_box{padding: 20px;height: 250px; background-color: #15181b; position: relative;} 
 .cb1{background: url('/assets/img/cb1_back.jpg') no-repeat; background-size: cover; background-position: center;}
 .cb2{background: url('/assets/img/cb2.jpg') no-repeat; background-size: cover; background-position: center;}
 .cb3{background: url('/assets/img/cb3.jpg') no-repeat; background-size: cover; background-position: center;}
@@ -101,3 +101,14 @@
 .social_wrap ul li img{margin: 0}
 .right_inner_footer_bottom li.fl{color: #333}
 /*Share style*/
+
+
+
+/*25-04-2019*/
+.big_img_wrap{position: relative;height: 800px; overflow: hidden;}
+.big_img_wrap img, .main_story_img_wrap img{width: 100%;height: 100%;position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%); object-fit: cover;-webkit-object-fit: cover;-moz-object-fit: cover;-o-object-fit: cover;}
+.st_content_top{padding: 20px}
+.main_story_img_wrap{height: 600px; overflow: hidden;}
+.story_text_block{padding: 20px}
+.section_2 .col-md-9{padding-left: 15px}
+/*25-04-2019*/
