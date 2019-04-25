@@ -56,11 +56,34 @@
     </ul>
   </div>
     <ul class="nav">
-        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+        <!-- <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
             <a class="nav-link" [routerLink]="[menuItem.path]">
                 <i class="material-icons">{{menuItem.icon}}</i>
                 <p>{{menuItem.title}}</p>
             </a>
+        </li> -->
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item ">
+
+            <a class="nav-link" [routerLink]="[menuItem.path]" *ngIf="menuItem.children?.length == 0">
+                <i class="material-icons">{{menuItem.icon}}</i>
+                <p>{{menuItem.title}}</p>
+            </a>
+            <a class="nav-link" data-toggle="collapse" href="#{{menuItem.title}}" aria-expanded="true" *ngIf="menuItem.children?.length > 0">
+                <i class="material-icons">{{menuItem.icon}}</i>
+                <p> {{menuItem.title}}
+                    <b class="caret"></b>
+                </p>
+            </a>
+            <div class="collapse" id="{{menuItem.title}}" style="" *ngIf="menuItem.children?.length > 0">
+              <ul class="nav">
+                <li routerLinkActive="active" class="nav-item " *ngFor="let childMenu of menuItem.children">
+                  <a class="nav-link" [routerLink]="[childMenu.path]">
+                    <span class="sidebar-mini"> {{childMenu.letter}} </span>
+                    <span class="sidebar-normal"> {{childMenu.title}} </span>
+                  </a>
+                </li>                               
+              </ul>
+            </div>
         </li>
         <li routerLinkActive="active" class="nav-item">
             <a class="nav-link" (click)="logout()">

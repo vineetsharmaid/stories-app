@@ -2,14 +2,18 @@
 <div *ngIf="displayStoryError == true">
     We couldn’t find this page.
 </div>
-<div class="single_story_page_title text-left single_story_page_title_col" *ngIf="displayStory == true" [ngStyle]="{ 'background-image': 'url(' + storyData.preview_image + ')'}">
+
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+</div>
+<div class="single_story_page_title text-left single_story_page_title_col" *ngIf="displayStory == true && dataLoading == false" [ngStyle]="{ 'background-image': 'url(' + storyData.preview_image + ')'}">
     <div class="container">
         <div class="singleStory_head">
             <div class="row text-center">
                 <div class="col-md-12">
                     <div class="story_tag_wrap">
                         <a href="#" class="dark_tag">Russia</a>
-                        <a *ngFor="let tag of storyData.tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                        <a *ngFor="let tag of storyData.tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                     </div>
                     <h1>{{storyData.title}}</h1>
                     <div class="right_inner_footer_bottom top20">
@@ -41,7 +45,7 @@
                 <div class="story_tag_wrap">
                     <a href="#" class="dark_tag">Russia</a>
                     
-                    <a *ngFor="let tag of storyData.tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                    <a *ngFor="let tag of storyData.tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                     
                 </div>
                 <h1>{{storyData.title}}</h1>

@@ -30,21 +30,6 @@ export function provideConfig() {
 ***********Social Media Login Ends***************/
 
 
-
-
-
-/*************Default Params Starts***************/
-
- 
-export function DefaultParams() {
-  
-  var params = {'apiBaseUrl': 'http://localhost/stories-app/api/welcome/'};
-  return params;
-}
-
-/*************Default Params Ends***************/
-
-
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { FrontendSectionsModule } from './frontend-sections/frontend-sections.module';

@@ -59,7 +59,7 @@
                         <div class="right_inner_footer_top">
                             <a href="#" class="coubt">Russia</a>
                             <!-- <a href="#" class="coubt2">Indigenous</a> -->
-                            <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                            <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                         </div>
                         <div class="right_inner_footer_bottom">
                             <ul>
@@ -107,7 +107,7 @@
                                     <div class="story_tag_wrap">
                                         <a href="#" class="dark_tag">Russia</a>
                                         <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                        <a *ngFor="let tag of featuredStories[1].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                                        <a *ngFor="let tag of featuredStories[1].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                                     </div>
                                     <h3>{{featuredStories[1].preview_title}}</h3>
                                 </div>
@@ -135,7 +135,7 @@
                                     <div class="story_tag_wrap">
                                         <a href="#" class="dark_tag">Russia</a>
                                         <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                        <a *ngFor="let tag of featuredStories[2].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                                        <a *ngFor="let tag of featuredStories[2].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                                     </div>
                                     <h3>{{featuredStories[2].preview_title}}</h3>
                                 </div>
@@ -161,7 +161,7 @@
                                     <div class="story_tag_wrap">
                                         <a href="#" class="dark_tag">Russia</a>
                                         <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                        <a *ngFor="let tag of featuredStories[3].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
+                                        <a *ngFor="let tag of featuredStories[3].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                                     </div>
                                     <h3>{{featuredStories[3].preview_title}}</h3>
                                 </div>

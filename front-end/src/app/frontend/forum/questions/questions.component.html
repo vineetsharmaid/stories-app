@@ -41,7 +41,7 @@
             </div>
 
             <!-- ALL ANSWERS -->
-            <div *ngIf="answerByUser" class="pb-5 answer-box">
+            <div *ngIf="(answerByUser | json) != '{}'" class="pb-5 answer-box">
                 <hr>
                 <div class="answered_wrap">
                   <div class="ans_pic_wrap">

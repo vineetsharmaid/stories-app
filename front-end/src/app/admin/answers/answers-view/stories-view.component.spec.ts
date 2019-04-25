@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryAddComponent } from './category-add.component';
+import { StoriesViewComponent } from './stories-view.component';
 
-describe('CategoryAddComponent', () => {
-  let component: CategoryAddComponent;
-  let fixture: ComponentFixture<CategoryAddComponent>;
+describe('StoriesViewComponent', () => {
+  let component: StoriesViewComponent;
+  let fixture: ComponentFixture<StoriesViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoryAddComponent ]
+      declarations: [ StoriesViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CategoryAddComponent);
+    fixture = TestBed.createComponent(StoriesViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

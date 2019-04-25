@@ -4,7 +4,10 @@ import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { Observable, timer } from 'rxjs';
 import { map, switchMap  } from 'rxjs/operators';
 
-const API_URL = 'http://localhost/stories-app/back-end/api';
+
+import { environment } from '../../../../environments/environment';
+
+const API_URL  =  environment.baseUrl+'/api/';
 
 @Injectable({
   providedIn: 'root'
