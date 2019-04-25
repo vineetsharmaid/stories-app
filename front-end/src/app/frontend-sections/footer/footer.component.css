@@ -1,5 +1,5 @@
 /*Footer style*/
-footer.footer{background: #000; padding: 100px 0}
+footer.footer{background: #000; padding: 60px 0}
 .subscribe_wrap{text-align: center;}
 .subscribe_wrap h3{color: rgba(254, 254, 254, .5);}
 .subscribe_wrap form{display: flex; width: 100%; margin-top: 40px; justify-content: center;}
@@ -14,3 +14,28 @@ footer.footer{background: #000; padding: 100px 0}
 .footer_link_wrap ul li a{color: rgba(254, 254, 254, .2); font-size: 16px; transition: all .5s; padding: 0 !important; text-transform: none;}
 .footer_link_wrap ul li a:hover{color: rgba(254, 254, 254, .4);}
 /*Footer style*/
+
+
+
+.user_intro_box .team_social_list, .main_social_wrap .team_social_list{position: relative;left: 0; top: 0;transform: none;visibility: visible;opacity: 1; margin-top: 30px}
+.user_intro_box .team_social_list li a, .main_social_wrap .team_social_list li a{border: 1px solid #f1663b;background: #f1663b;}
+.user_intro_box .team_social_list li a:hover, .main_social_wrap .team_social_list li a:hover{border: 1px solid #f1663b;background: #000;}
+.team_social_list li a {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    border: 1px solid #fff;
+    transform: rotate(45deg);
+    position: relative;
+    transition: all .5s;
+}
+.team_social_list li {
+    display: inline-block;
+    margin: 0 15px;
+}
+.team_social_list li a img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}

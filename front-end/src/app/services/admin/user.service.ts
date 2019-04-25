@@ -8,8 +8,10 @@ const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
 
-const API_URL  =  'http://localhost/stories-app/back-end/api/';
-const ADMIN_API_URL  =  'http://localhost/stories-app/back-end/auth/admin/';
+import { environment } from '../../../environments/environment';
+
+const API_URL  =  environment.baseUrl+'/api/';
+const ADMIN_API_URL  =  environment.baseUrl+'/auth/admin/';
 
 @Injectable({
   providedIn: 'root'
