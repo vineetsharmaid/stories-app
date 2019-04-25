@@ -13,6 +13,7 @@ import { CategoriesComponent } from '../../admin/categories/categories.component
 import { TagsComponent } from '../../admin/tags/tags.component';
 import { TopicsComponent } from '../../admin/topics/topics.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
+import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
 import { 
@@ -70,6 +71,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/stories/stories.module#StoriesModule'
+            }
+        ] 
+    },{
+        path: 'questions',
+        component: QuestionsComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/questions/questions.module#QuestionsModule'
             }
         ] 
     },{

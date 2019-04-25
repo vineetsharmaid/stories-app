@@ -1,0 +1,46 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body" style="min-height: 200px;" *ngIf="story">
+						<button class="btn btn-sm btn-success pull-right" (click)="back()">Back</button>
+						<button class="btn btn-sm btn-danger pull-right" *ngIf="reviewStatus == 1" data-toggle="modal" data-target="#confirm-status-change" (click)="setStatus = 0">Unpublish</button>
+						<button class="btn btn-sm btn-success pull-right" *ngIf="reviewStatus == 0 || reviewStatus == 2" data-toggle="modal" data-target="#confirm-status-change" (click)="setStatus = 1">Publish</button>
+						<div class="clearfix"></div>
+						<hr>
+						<h3>{{story.title}}</h3>
+						<div [innerHTML]="story.description"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="confirm-status-change">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Modal Heading</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body">
+				<p *ngIf="setStatus == 0">Confirm to unpublish this story.</p>
+				<p *ngIf="setStatus == 1">Confirm to publish this story.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-dismiss="modal" (click)="changeStatus(setStatus)">Confirm</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+			
+		</div>
+	</div>
+</div>

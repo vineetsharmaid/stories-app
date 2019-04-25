@@ -493,6 +493,87 @@ class Admin extends REST_Controller {
 
     }
 
+    public function get_questions_post() {
+
+      $where = array( 'forum_questions.status'  => $this->input->post('status') );
+      $questions = $this->admin_model->get_questions($where);
+
+      if ( !empty($questions) ) {
+
+        foreach ($questions as $question) {
+          
+          $question->topics    = is_null($question->topics) ? [] : explode(',', $question->topics);
+          $question->topic_ids = is_null($question->topic_ids) ? [] : explode(',', $question->topic_ids);
+        }
+
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $questions,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No questions were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function update_question_status_post() {
+
+        $this->common_model->update_entry( 
+            'forum_questions', 
+            array('status' => $this->input->post('status')), // set data
+            array('question_id' => $this->input->post('question_id')) // where
+          );
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update question status'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Question status updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+
+    public function delete_question_post() {
+
+        $this->common_model->delete_entry(  'forum_questions', array('question_id' => $this->input->post('question_id')) );
+
+        if ($this->db->affected_rows())
+        {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Question deleted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+          // generate an error... or use the log_message() function to log your error
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'Unable to delete question'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
+
     public function get_story_get($story_id)
     { 
      

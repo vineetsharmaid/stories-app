@@ -18,6 +18,7 @@ export class StoryDetailsComponent implements OnInit {
   public comments: Array<object>;
   public commentsForm: FormGroup;
 	public displayStory: boolean = false;
+  public dataLoading: boolean = true;
 	public displayStoryError: boolean = false;
   public showCommentBox: boolean = false;
   public isLoggedIn: string = 'false';
@@ -53,6 +54,7 @@ export class StoryDetailsComponent implements OnInit {
         this.storyData['profile_pic'] = APP_URL+'/assets/uploads/users/'+this.storyData['profile_pic'];
       	
       	this.displayStory = true;
+        this.dataLoading  = false;
 
       console.log('getStories this.storyData', this.storyData);
       
@@ -60,6 +62,7 @@ export class StoryDetailsComponent implements OnInit {
 
     	this.storyData = {};
     	this.displayStoryError = true;
+      this.dataLoading  = false;
     	console.log('getstories error', error);
     });
   }

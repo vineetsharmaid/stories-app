@@ -211,6 +211,9 @@ export class QuestionsComponent implements OnInit {
         if( this.questionData['hasAnswered'] == 1) {
 
           this.getAnswerByUser(this.questionData['question_id']);
+        } else {
+
+          this.answerByUser = [];
         }
         this.getAnswers(this.questionData['question_id']);
         console.log('here');
