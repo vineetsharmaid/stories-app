@@ -16,6 +16,8 @@
 
 
 /*Section 2 Style*/
+.home_heading_top { font-size: 40px; }
+.work_together_section .inner_divider { width: 100%; max-width: 150px; }
 .section_2{padding: 30px;}
 .big_img_wrap{padding: 20px; border-left: 1px solid #c5c5c5; border-right: 1px solid #c5c5c5; position: relative;}
 .img_attribution a{color: #a1a1a1;}

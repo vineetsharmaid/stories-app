@@ -3,10 +3,10 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { QuestionsRoutes } from './questions.routing';
-import { QuestionsPendingComponent } from './questions-pending/questions-pending.component';
-import { QuestionsPublishedComponent } from './questions-published/questions-published.component';
-import { StoriesViewComponent } from './questions-view/stories-view.component';
+import { AnswersRoutes } from './answers.routing';
+import { AnswersPendingComponent } from './answers-pending/answers-pending.component';
+import { AnswersPublishedComponent } from './answers-published/answers-published.component';
+// import { StoriesViewComponent } from './questions-view/stories-view.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -27,7 +27,7 @@ import {
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(QuestionsRoutes),
+    RouterModule.forChild(AnswersRoutes),
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -41,13 +41,13 @@ import {
     MatCheckboxModule,   
   ],
   declarations: [
-    QuestionsPendingComponent,
-    QuestionsPublishedComponent,
-    StoriesViewComponent,
+    AnswersPendingComponent,
+    AnswersPublishedComponent,
+    // StoriesViewComponent,
   ],
   providers: [
     AuthGuard
   ]
 })
 
-export class QuestionsModule {}
+export class AnswersModule {}

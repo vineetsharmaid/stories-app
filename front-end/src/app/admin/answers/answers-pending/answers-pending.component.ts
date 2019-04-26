@@ -4,61 +4,66 @@ import { ForumService } from "../../../services/admin/forum.service";
 declare var $: any;
 
 @Component({
-  selector: 'app-admin-questions-pending',
-  templateUrl: './questions-pending.component.html',
-  styleUrls: ['./questions-pending.component.css']
+  selector: 'app-admin-answers-pending',
+  templateUrl: './answers-pending.component.html',
+  styleUrls: ['./answers-pending.component.css']
 })
-export class QuestionsPendingComponent implements OnInit {
+export class AnswersPendingComponent implements OnInit {
 
-	public questions: Array<Object>;
+	public answers: Array<Object>;
   	constructor(private forumService: ForumService) { }
 
   	ngOnInit() {
 
-  		this.getQuestions();
+  		this.getanswers();
   	}
 
-  	getQuestions() {
+  	getanswers() {
 	   	
 	   	// 0: value for status pending
-	    this.forumService.getQuestions(0).subscribe((response: Array<Object>) => {
+	    this.forumService.getAnswers(0).subscribe((response: Array<Object>) => {
 
-	      this.questions = response['data'];
-	      console.log('getQuestions this.questions', this.questions);
+	      var answers = response['data'];	      
+	      answers.forEach((answer) => {
+
+		      answer['answer'] = answer['answer'].replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,250);
+	        answer['answer'] = answer['answer'].length > 249 ?  answer['answer']+'...' : answer['answer'];
+
+	      });
 	      
+	      this.answers = answers;
 	    }, error => {
 
-	    	this.questions = [];
-	    	console.log('getQuestions error', error);
+	    	this.answers = [];
+	    	console.log('getanswers error', error);
 	    });
   	}
 
-  	publishQuestion(questionID, index) {
+  	publishAnswer(answerID, index) {
 	   	
 	   	// 1: value for status publish
-	    this.forumService.updateQuestionStatus(questionID, 1).subscribe((response: Array<Object>) => {
+	    this.forumService.updateAnswerstatus(answerID, 1).subscribe((response: Array<Object>) => {
 
-	      this.questions.splice(index, 1);
-	      console.log('publishQuestion this.questions', this.questions);
+	      this.answers.splice(index, 1);	      
 	      this.showNotification('top','center', 'success', 'Status updated succesfully');	      
 	    }, error => {
 
-	    	console.log('publishQuestion error', error);
+	    	console.log('publishAnswer error', error);
 	    	this.showNotification('top','center', 'danger', 'Unable to update status');
 	    });
   	}
 
-  	deleteQuestion(questionID, index) {
+  	deleteAnswer(answerID, index) {
 	   	
 	   	// 0: value for status pending
-	    this.forumService.deleteQuestion(questionID).subscribe((response: Array<Object>) => {
+	    this.forumService.deleteAnswer(answerID).subscribe((response: Array<Object>) => {
 
-	      this.questions.splice(index, 1);
-	      this.showNotification('top','center', 'success', 'Question deleted succesfully');
+	      this.answers.splice(index, 1);
+	      this.showNotification('top','center', 'success', 'Answer deleted succesfully');
 	    }, error => {
 
-	    	console.log('deleteQuestion error', error);
-	    	this.showNotification('top','center', 'danger', 'Unable to delete question');
+	    	console.log('deleteAnswer error', error);
+	    	this.showNotification('top','center', 'danger', 'Unable to delete answer');
 	    });
   	}
 

@@ -114,4 +114,18 @@ class Admin_model extends CI_Model {
         $this->db->group_by('forum_questions.question_id');
         return $this->db->get()->result();
     }
+
+    public function get_answers($where='')
+    {
+
+        $this->db->select('forum_answers.*, forum_questions.title,
+          users.first_name, users.last_name, users.username, users.profile_pic');
+        $this->db->from('forum_answers');        
+        // get answer author information
+        $this->db->join('forum_questions', 'forum_questions.question_id = forum_answers.question_id');
+        $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
+        $this->db->where($where);
+        $this->db->group_by('forum_answers.answer_id');        
+        return $this->db->get()->result();
+    }
 }

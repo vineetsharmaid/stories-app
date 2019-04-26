@@ -7,11 +7,11 @@ import { Subscription } from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
 
 @Component({
-  selector: 'app-admin-questions',
-  templateUrl: './questions.component.html',
-  styleUrls: ['./questions.component.scss']
+  selector: 'app-admin-answers',
+  templateUrl: './answers.component.html',
+  styleUrls: ['./answers.component.scss']
 })
-export class QuestionsComponent implements OnInit {
+export class AnswersComponent implements OnInit {
   private _router: Subscription;
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
