@@ -4,7 +4,6 @@ import { AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { Observable, timer } from 'rxjs';
 import { map, switchMap  } from 'rxjs/operators';
 
-
 import { environment } from '../../../../environments/environment';
 
 const API_URL  =  environment.baseUrl+'/api/';
