@@ -24,3 +24,5 @@
   width: 260px;
 }
 .cdk-overlay-container { z-index: 9999 !important; }
+
+.single_page_content ol{padding-left: 20px;}
