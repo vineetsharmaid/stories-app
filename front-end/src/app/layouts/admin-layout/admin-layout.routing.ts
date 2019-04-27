@@ -14,6 +14,7 @@ import { TagsComponent } from '../../admin/tags/tags.component';
 import { TopicsComponent } from '../../admin/topics/topics.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { QuestionsComponent } from '../../admin/questions/questions.component';
+import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
 import { 
@@ -80,6 +81,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/questions/questions.module#QuestionsModule'
+            }
+        ] 
+    },{
+        path: 'answers',
+        component: AnswersComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/answers/answers.module#AnswersModule'
             }
         ] 
     },{
