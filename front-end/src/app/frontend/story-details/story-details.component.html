@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 single_profile_wrap">
                 <div class="coFounder_top_img">
                     <img [src]="storyData.profile_pic" alt="">
                 </div>
@@ -35,7 +35,8 @@
                     <h1 class="singleStory_title">
                         {{storyData.first_name}} {{storyData.last_name}}
                     </h1>
-                <h3 class="singleStory_Subtitle">{{storyData.professional_info}}</h3></div>
+                <!-- <h3 class="singleStory_Subtitle">{{storyData.professional_info}}</h3> -->
+            </div>
             </div>
         </div>
     </div>
@@ -62,7 +63,7 @@
 </div>
 <!-- Single story page title -->
 <!-- Single story page section 2 -->
-<div class="container-fluid single_page_tagline_wrap" *ngIf="displayStory == true">
+<div class="container-fluid single_page_tagline_wrap single_page_content" *ngIf="displayStory == true">
     <div class="container">
         <div class="row">
             <div [innerHtml]="storyData.description"></div>
