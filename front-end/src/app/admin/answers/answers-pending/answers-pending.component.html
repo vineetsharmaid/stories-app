@@ -1,0 +1,68 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+
+        <button class="btn btn-md btn-danger mr-2" [routerLink]="['/admin/answers/pending']">Unpublished</button>
+        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/answers/published']">Published</button>
+
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Unpublished Answers</h4>
+            <!-- <p class="card-story"> List of users.</p> -->            
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="20%">Answer </th>
+                  <th width="20%">Question </th>
+                  <th width="20%">Author </th>
+                  <th width="10%">Created </th>
+                  <th width="10%">Action </th>
+                </thead>
+                <tbody *ngIf="answers?.length > 0">
+                  <tr *ngFor="let answer of answers; let indx = index">
+                    <td>
+                      <a href="#" class="user_name" routerLink="/forum/answer/{{answer.slug}}"></a>
+                      <p [innerHtml]="answer.answer"></p>
+                    </td>   
+                    <td>
+                      <p>{{answer.title | titlecase}}</p>
+                    </td>                    
+                    <td>
+                      <a href="#" class="user_name">
+                        {{ answer.first_name | titlecase }} {{answer.last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{answer.username}}
+                      </p>
+                    </td>
+                    <td>{{answer.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-success" (click)="publishAnswer(answer.answer_id, indx)">
+                        Publish
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="deleteAnswer(answer.answer_id, indx)">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="answers?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No abswer found.                      
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
