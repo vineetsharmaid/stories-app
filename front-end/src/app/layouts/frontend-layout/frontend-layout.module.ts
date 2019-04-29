@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {TimeAgoPipe} from 'time-ago-pipe';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ContentLoaderModule } from '@netbasal/content-loader';
 
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
 
@@ -47,6 +48,7 @@ import {
     MatChipsModule,
     MatCardModule,
     InfiniteScrollModule,
+    ContentLoaderModule,
   ],
   declarations: [
     HomeComponent,
