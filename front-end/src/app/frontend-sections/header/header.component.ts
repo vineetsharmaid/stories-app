@@ -271,7 +271,6 @@ export class HeaderComponent implements OnInit {
     localStorage.setItem('username', username);
     localStorage.setItem('jwtToken', jwtToken);
 
-    console.log('on login jwtToken', localStorage.getItem('jwtToken'))
 		this.loggedIn = true;
 
 		this.navigate('/user');

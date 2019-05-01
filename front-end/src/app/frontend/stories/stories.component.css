@@ -114,3 +114,7 @@
 .story_text_block{padding: 20px}
 .section_2 .col-md-9{padding-left: 15px}
 /*25-04-2019*/
+
+.btn-theme { border-color: #f1663b; background: #f1663b; text-transform: uppercase; letter-spacing: 2px; transition: all .5s; cursor: pointer; }
+.btn-theme:hover{ border-color: #333; background: #333; }
+

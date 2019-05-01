@@ -48,7 +48,8 @@
 
                         <div class="right_inner_footer">
                             <div class="right_inner_footer_top">
-                                <a href="#" class="coubt">Russia</a>
+                                <a href="#" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
+                                <a href="#" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
                                 <!-- <a href="#" class="coubt2">Indigenous</a> -->
                                 <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                             </div>
@@ -98,8 +99,8 @@
 	                                <div class="overlay_dark"></div>
 	                                <div class="story_text_block">
 	                                    <div class="story_tag_wrap">
-	                                        <span class="dark_tag">Russia</span>
-	                                        <!-- <span class="light_tag">Russia</span> -->
+	                                        <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
+                                            <span class="dark_tag" *ngIf="story.type == 2">Business</span> 
 	                                    </div>
 	                                    <h3>{{story.preview_title}}</h3>
 	                                    <p class="one_liner_content" [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
@@ -125,6 +126,12 @@
                         </div>
                 </div>
                 
+            </div>
+
+            <div class="row">
+                <a [routerLink]="['/search']" class="btn btn-theme mx-auto mt-5">
+                    Search Stories
+                </a>
             </div>
         </div>
     </div>

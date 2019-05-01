@@ -367,7 +367,7 @@ class Api extends REST_Controller {
       $token['username'] = $user->username;
       $token['user_type'] = $user->user_type;
       $token['iat'] = $date->getTimestamp();
-      $token['exp'] = $date->getTimestamp() + 60*60*5; //To here is to generate token
+      $token['exp'] = $date->getTimestamp() + 60*60*1; //To here is to generate token
       return JWT::encode($token,$jwt_key ); //This is the output token
     }
 
