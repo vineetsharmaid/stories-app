@@ -33,6 +33,18 @@ export class ForumService {
 			return this.http.post(ADMIN_API_URL+'get_questions', formData, httpOptions);
 		}
 
+  	getAnswers(status): Observable<any>{
+			
+				let httpOptions = {
+				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+				};
+
+			const formData = new FormData();		
+	    formData.append('status', status);
+
+			return this.http.post(ADMIN_API_URL+'get_answers', formData, httpOptions);
+		}
+
   	updateQuestionStatus(questionId, status): Observable<any>{
 			
 				let httpOptions = {
@@ -46,6 +58,19 @@ export class ForumService {
 			return this.http.post(ADMIN_API_URL+'update_question_status', formData, httpOptions);
 		}
 
+  	updateAnswerstatus(answerId, status): Observable<any>{
+			
+				let httpOptions = {
+				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+				};
+
+			const formData = new FormData();		
+	    formData.append('answer_id', answerId);
+	    formData.append('status', status);
+
+			return this.http.post(ADMIN_API_URL+'update_answer_status', formData, httpOptions);
+		}
+
   	deleteQuestion(questionId): Observable<any>{
 			
 				let httpOptions = {
@@ -56,6 +81,18 @@ export class ForumService {
 	    formData.append('question_id', questionId);
 
 			return this.http.post(ADMIN_API_URL+'delete_question', formData, httpOptions);
+		}
+
+  	deleteAnswer(answerId): Observable<any>{
+			
+				let httpOptions = {
+				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+				};
+
+			const formData = new FormData();		
+	    formData.append('answer_id', answerId);
+
+			return this.http.post(ADMIN_API_URL+'delete_answer', formData, httpOptions);
 		}
 
 		getTopic(topicId): Observable<any>{

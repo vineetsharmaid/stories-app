@@ -3,53 +3,57 @@
     <div class="row">
       <div class="col-md-12">
 
-        <button class="btn btn-md btn-current mr-2" [routerLink]="['/admin/questions/pending']">Unpublished</button>
-        <button class="btn btn-md btn-danger ml-2" [routerLink]="['/admin/questions/published']">Published</button>
+        <button class="btn btn-md btn-danger mr-2" [routerLink]="['/admin/answers/pending']">Unpublished</button>
+        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/answers/published']">Published</button>
 
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Published Questions</h4>
+            <h4 class="card-title">Unpublished Answers</h4>
             <!-- <p class="card-story"> List of users.</p> -->            
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table">
                 <thead class=" text-primary">
+                  <th width="20%">Answer </th>
                   <th width="20%">Question </th>
-                  <!-- <th width="30%">Sub Title </th> -->
                   <th width="20%">Author </th>
                   <th width="10%">Created </th>
                   <th width="10%">Action </th>
                 </thead>
-                <tbody *ngIf="questions?.length > 0">
-                  <tr *ngFor="let question of questions; let indx = index">
+                <tbody *ngIf="answers?.length > 0">
+                  <tr *ngFor="let answer of answers; let indx = index">
                     <td>
-                      <a href="#" class="user_name" routerLink="/forum/question/{{question.slug}}"> {{question.title | titlecase}} </a>
+                      <a href="#" class="user_name" routerLink="/forum/answer/{{answer.slug}}"></a>
+                      <p [innerHtml]="answer.answer"></p>
+                    </td>   
+                    <td>
+                      <p>{{answer.title | titlecase}}</p>
                     </td>                    
                     <td>
                       <a href="#" class="user_name">
-                        {{ question.first_name | titlecase }} {{question.last_name | titlecase }}
+                        {{ answer.first_name | titlecase }} {{answer.last_name | titlecase }}
                       </a>
                       <p class="user_name text-muted">
-                        @{{question.username}}
+                        @{{answer.username}}
                       </p>
                     </td>
-                    <td>{{question.created | date: 'mediumDate'}}</td>
+                    <td>{{answer.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-success" (click)="unPublishQuestion(question.question_id, indx)">
-                        Unpublish
+                      <button class="btn btn-sm btn-success" (click)="publishAnswer(answer.answer_id, indx)">
+                        Publish
                       </button>
-                      <button class="btn btn-sm btn-danger" (click)="deleteQuestion(question.question_id, indx)">
+                      <button class="btn btn-sm btn-danger" (click)="deleteAnswer(answer.answer_id, indx)">
                         Delete
                       </button>
                     </td>
                   </tr>
                 </tbody>
 
-                <tbody *ngIf="questions?.length == 0">
+                <tbody *ngIf="answers?.length == 0">
                   <tr>
                     <td colspan="6" class="empty-list">
-                      No question found.                      
+                      No abswer found.                      
                     </td>
                   </tr>
                 </tbody>

@@ -39,6 +39,7 @@ class Admin extends REST_Controller {
         $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
 
         $this->load->model('admin_model');
+        $this->load->helper('common_helper');
 
         if ( is_null($this->input->get_request_header('Authorization')) ) {
 
@@ -523,6 +524,39 @@ class Admin extends REST_Controller {
 
     }
 
+    public function get_answers_post() {
+
+      $where = array( 'forum_answers.status'  => $this->input->post('status') );
+      $answers = $this->admin_model->get_answers($where);
+
+      if ( !empty($answers) ) {
+
+        
+        foreach ($answers as $answer) {
+          
+          $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+          // get in time ago format
+          $answer->answered_ago = time_elapsed_string($answer->created);
+        }
+
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $answers,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No answers were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function update_question_status_post() {
 
         $this->common_model->update_entry( 
@@ -573,6 +607,55 @@ class Admin extends REST_Controller {
         }
     }
 
+    public function update_answer_status_post() {
+
+        $this->common_model->update_entry( 
+            'forum_answers', 
+            array('status' => $this->input->post('status')), // set data
+            array('answer_id' => $this->input->post('answer_id')) // where
+          );
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update answer status'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Answer status updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+
+    public function delete_answer_post() {
+
+        $this->common_model->delete_entry(  'forum_answers', array('answer_id' => $this->input->post('answer_id')) );
+
+        if ($this->db->affected_rows())
+        {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Answer deleted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+          // generate an error... or use the log_message() function to log your error
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'Unable to delete answer'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
 
     public function get_story_get($story_id)
     { 
