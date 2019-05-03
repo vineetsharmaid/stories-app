@@ -73,6 +73,24 @@ class Users extends REST_Controller {
         }       
     }
 
+    // extend token expiration time
+    public function verify_token_get()
+    {
+      $this->token_data->exp += 60*30; // 30 minutes
+      
+      $jwt_key = $this->config->item('thekey');
+
+      //This is the output token
+      $token = JWT::encode($this->token_data,$jwt_key );
+
+      // Set the response and exit
+      $this->response([
+          'status' => TRUE,
+          'data' => array('token' => $token),
+          'message' => 'token_verified',
+      ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+    }
+
 
     function save_story_post()
     {

@@ -8,7 +8,7 @@ const API_URL  =  environment.baseUrl+'/api/';
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
 import { ForumService } from '../../services/forum.service'
-
+import { SharedService } from "../../services/shared.service";
 
 @Component({
   selector: 'app-questions',
@@ -79,6 +79,7 @@ export class QuestionsComponent implements OnInit {
   	constructor( private router: Router, 
       private activatedRoute: ActivatedRoute, 
       private forumService: ForumService,
+      private sharedService: SharedService,
       private formBuilder: FormBuilder ) { }
  
   	ngOnInit() {
@@ -86,6 +87,7 @@ export class QuestionsComponent implements OnInit {
   		const slug = this.activatedRoute.snapshot.paramMap.get('slug');
 
       this.isLoggedIn = localStorage.getItem('isLoggedIn');
+      this.sharedService.currentMessage.subscribe(message => console.log('detail message', message) );
 
       this.commentForm = this.formBuilder.group({
 
@@ -213,7 +215,7 @@ export class QuestionsComponent implements OnInit {
           this.getAnswerByUser(this.questionData['question_id']);
         } else {
 
-          this.answerByUser = [];
+          this.answerByUser = {};
         }
         this.getAnswers(this.questionData['question_id']);
         console.log('here');
@@ -238,7 +240,7 @@ export class QuestionsComponent implements OnInit {
         this.answerByUser = answer;
       }, (error) => {
 
-        this.answerByUser = [];
+        this.answerByUser = {};
         console.log('error', error);
       });
     }
@@ -260,6 +262,7 @@ export class QuestionsComponent implements OnInit {
           i++;
          });
         this.allAnswers = answers;
+        console.log('answerByUser', this.answerByUser);
       }, (error) => {
 
         this.allAnswers = [];
@@ -404,6 +407,11 @@ export class QuestionsComponent implements OnInit {
 
       console.log(error);
     });
+  }
+
+  showLoginPopup() {
+
+    this.sharedService.changeMessage("show_login");
   }
 
 

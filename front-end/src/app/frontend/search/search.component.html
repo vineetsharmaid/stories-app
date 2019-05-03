@@ -69,8 +69,8 @@
                 <div class="overlay_dark"></div>
                 <div class="story_text_block">
                   <div class="story_tag_wrap">
-                    <span class="dark_tag">Russia</span>
-                    <!-- <span class="light_tag">Russia</span> -->
+                    <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
+                    <span class="dark_tag" *ngIf="story.type == 2">Business</span>
                   </div>
                   <h3>{{story.preview_title}}</h3>
                   <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p>

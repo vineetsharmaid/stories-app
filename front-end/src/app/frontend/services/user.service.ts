@@ -20,6 +20,18 @@ export class UserService {
 	
   	constructor(private http: HttpClient) { }
 
+  	verifyToken(): Observable<any>{
+    	
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'verify_token/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	registerUser(User): Observable<any>{
     	
     	// return  this.http.get(`${API_URL}`);

@@ -90,8 +90,8 @@
               </a>
               <div class="right_inner_footer_bottom" *ngIf="question.answer?.length > 0">
                 <ul class="fl">
-                  <li (click)="changeLikeStatus(question.answer_id, questionIndex)">
-                    <img *ngIf="question.user_liked == 0; else userLiked" src="assets/img/like.png" alt="">
+                  <li (click)="changeLikeStatus(question.answer_id, questionIndex)">                    
+                    <img *ngIf="question.user_liked == undefined || question.user_liked == 0; else userLiked" src="assets/img/like.png" alt="">
                     <ng-template #userLiked>
                     <span *ngIf="question.user_liked == 1">
                       <i class="fa fa-heart-o fa-2x" style="color: red;"></i>
