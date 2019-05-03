@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { DashboardService } from '../../services/admin/dashboard.service';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,7 +11,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  public dashboardData: object;
+
+  constructor(private activatedRoute: ActivatedRoute, private dashboardService: DashboardService) { }
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
       seq = 0;
@@ -70,10 +74,12 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
 
 
-       this.activatedRoute.data.subscribe((routeData) => {
+      this.getDashboardData();
+
+      this.activatedRoute.data.subscribe((routeData) => {
          
-         console.log('routeData dashboard', routeData);
-       });
+        console.log('routeData dashboard', routeData);
+      });
 
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
@@ -154,6 +160,20 @@ export class DashboardComponent implements OnInit {
 
       //start animation for the Emails Subscription Chart
       this.startAnimationForBarChart(websiteViewsChart);
+  }
+
+
+  getDashboardData() {
+
+    this.dashboardService.getDashboardData().subscribe((response) => {
+
+      console.log(response);
+      this.dashboardData = response['data'];
+    } , (error) => {
+
+      this.dashboardData = {};
+      console.log(error);
+    });
   }
 
 }

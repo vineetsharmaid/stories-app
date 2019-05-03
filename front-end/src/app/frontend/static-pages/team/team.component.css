@@ -1,0 +1,60 @@
+/*------------------------------Team PAge------------------------------*/
+
+.page_name_title_wrap{padding: 30px 0}
+
+.team_wrap{padding: 50px 0; background: #f7f7f7}
+
+.page_name_title_wrap h4{font-size: 36px; font-weight: 300; text-transform: uppercase; letter-spacing: 3px;} 
+
+.team_outer_wrap{align-items: center; margin-top: 30px; margin-bottom: 30px}
+
+.team_img_wrap{position: relative;}
+
+.team_img_wrap .overlay_dark{background: rgba(0, 0, 0, .7);}
+
+.team_social_list{position: absolute;top: 50%; left: 50%; transform: translate(-50%, -50%);  transition: .5s;transition-delay: .5s; visibility: hidden;opacity: 0}
+
+.team_social_list li{display: inline-block;margin: 0 15px}
+
+.team_social_list li a{display: inline-block;width: 45px; height: 45px; border: 1px solid #fff; transform: rotate(45deg); -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -o-transform: rotate(45deg); position: relative; transition: all .5s;}
+
+.team_social_list li a:hover{border: 1px solid #f1663b;background: #f1663b}
+
+.team_social_list li a img{ position: absolute;top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); -webkit-transform: translate(-50%, -50%) rotate(-45deg); -moz-transform: translate(-50%, -50%) rotate(-45deg); -o-transform: translate(-50%, -50%) rotate(-45deg);}
+
+.team_outer_wrap:hover .overlay_dark{opacity: 1}
+
+.team_outer_wrap:hover .team_social_list{opacity: 1; visibility: visible;}
+
+.team_right_content{padding: 20px; background: #fff; z-index: 99; position: relative;}
+
+.trc_left{ margin-left: -30px; border-left: 2px solid #f1663b}
+
+.trc_right{ margin-right: -30px; border-right: 2px solid #f1663b;}
+
+
+
+.team_right_content h3{font-weight: bold;}
+
+.team_right_content span{color: rgba(0, 0, 0, .8); margin-top: 4px; display: inline-block;}
+
+.team_right_content p{color: rgba(0, 0, 0, .8); font-size: 18px; line-height: 30px; margin-top: 10px}
+
+/*------------------------------Team PAge------------------------------*/
+
+
+
+.user_intro_box .team_social_list, .main_social_wrap .team_social_list{position: relative;left: 0; top: 0;transform: none;visibility: visible;opacity: 1; margin-top: 30px}
+
+.user_intro_box .team_social_list li a, .main_social_wrap .team_social_list li a{border: 1px solid #f1663b;background: #f1663b;}
+
+.user_intro_box .team_social_list li a:hover, .main_social_wrap .team_social_list li a:hover{border: 1px solid #f1663b;background: #000;}
+.header_right_wrap .team_social_list{margin-top: 0; margin-left: 20px; display: inline-block;}
+
+.header_right_wrap .team_social_list li{margin: 0 10px}
+
+.header_right_wrap .team_social_list li a{width: 36px; height: 36px}
+
+.header_right_wrap .team_social_list li a img{width: 16px;}
+.author_img_wrap .team_social_list{width: 100%}
+.author_img_wrap:hover .team_social_list{opacity: 1; visibility: visible;}

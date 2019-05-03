@@ -15,6 +15,12 @@ import { SearchComponent } from '../../frontend/search/search.component';
 import { StoriesComponent } from '../../frontend/stories/stories.component';
 import { StoryDetailsComponent } from '../../frontend/story-details/story-details.component';
 
+import { AboutComponent } from '../../frontend/static-pages/about/about.component';
+import { TeamComponent } from '../../frontend/static-pages/team/team.component';
+import { PrivacyPolicyComponent } from '../../frontend/static-pages/privacy-policy/privacy-policy.component';
+import { PartnerComponent } from '../../frontend/static-pages/partner/partner.component';
+import { ContactComponent } from '../../frontend/static-pages/contact/contact.component';
+
 import { UserService } from "../../frontend/services/user.service";
 
 import {
@@ -56,6 +62,11 @@ import {
     SearchComponent,
     StoriesComponent,
     StoryDetailsComponent,
+    AboutComponent,
+    TeamComponent,
+    PrivacyPolicyComponent,
+    PartnerComponent,
+    ContactComponent,
     TimeAgoPipe
   ],
   providers: [
