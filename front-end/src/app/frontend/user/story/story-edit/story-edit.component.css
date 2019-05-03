@@ -84,3 +84,7 @@
 }
 
 .featured-wrap { position: relative; height: 300px; border: 1px dashed #cacaca; }
+
+.priev_gap{padding: 20px 0}
+.height_50{height: 50px}
+.theme_btn{width: auto;}

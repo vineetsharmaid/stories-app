@@ -91,8 +91,9 @@
 <!-- Comments section -->
 <div class="container-fluid single_page_comments comment-wrapper" *ngIf="displayStory == true">
     <div class="container">
+    <div class="comments_heading"><h3>Comments</h3></div>
         <div class="row" *ngIf="comments?.length > 0; else noComments;">
-            <ul class="media-list col-md-8">
+            <ul class="media-list col-md-12">
                 <ng-template #commentsList let-comments>
                 <li class="media" *ngFor="let comment of comments; let indx = index">
                     <a href="#" class="pull-left pr-3">
@@ -110,7 +111,7 @@
                         <span class="text-muted pull-right">
                             <small class="text-muted">{{comment.created | timeAgo}}</small>
                         </span>
-                        <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                        <strong class="theme_color">{{comment.first_name}} {{comment.last_name}}</strong>
                         
                         <p> {{comment.content}} </p>
                         
@@ -127,8 +128,8 @@
                             <div class="form-group">
                                 <textarea class="form-control" formControlName="comment"></textarea>
                             </div>
-                            <button class="btn btn-sm btn-success">Add</button>
-                            <button class="btn btn-sm btn-danger" (click)="comment.addReply = 'false'">Cancel</button>
+                            <button class="theme_btn">Add Comment</button>
+                            <button class="theme_btn" (click)="comment.addReply = 'false'">Cancel</button>
                         </form>
                     </div>
                 </li>
@@ -140,20 +141,20 @@
         No comments yet!!
         </ng-template>
         <div class="row" *ngIf="isLoggedIn == 'true'; else showLogin">
-            <div class="col-md-8" *ngIf="showCommentBox == 'true'; else showCommentButton">
+            <div class="col-md-4" *ngIf="showCommentBox == 'true'; else showCommentButton">
                 <form [formGroup]="commentsForm" (ngSubmit)="addComment()">
                     <input type="hidden" formControlName="parent">
                     <div class="form-group">
                         <textarea class="form-control" formControlName="comment"></textarea>
                     </div>
-                    <button class="btn btn-sm btn-success">Add</button>
-                    <button class="btn btn-sm btn-danger" (click)="showCommentBox = 'false'">Cancel</button>
+                    <button class="theme_btn">Add</button>
+                    <button class="theme_btn" (click)="showCommentBox = 'false'">Cancel</button>
                 </form>
             </div>
             
             <ng-template #showCommentButton>
-            <div class="col-md-8">
-                <button class="btn btn-sm btn-success" (click)="showCommentBox = 'true'">Add</button>
+            <div class="col-md-4">
+                <button class="theme_btn" (click)="showCommentBox = 'true'">Add Comment</button>
             </div>
             </ng-template>
             

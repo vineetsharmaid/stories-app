@@ -61,7 +61,7 @@
                     </div>
                     <div class="clearfix"></div>
 
-                    <button class="btn btn-sm btn-danger cancel" (click)="enableNameEdit = false">
+                    <button class="theme_btn cancel" (click)="enableNameEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -85,7 +85,7 @@
                 <div class="form-group quick-edit mb-4" *ngIf="enableProfessionalInfoEdit == true">
                     <textarea #professionalInfo [(ngModel)]="professionalInfoValue" name="professionalInfo" class="form-control">{{userInfo.professional_info}}</textarea>
                     
-                    <button class="btn btn-sm btn-danger cancel" (click)="enableProfessionalInfoEdit = false">
+                    <button class="theme_btn cancel" (click)="enableProfessionalInfoEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -111,7 +111,7 @@
                 <div class="form-group quick-edit" *ngIf="enableShortInfoEdit == true">
                     <textarea #shortInfo [(ngModel)]="shortInfoValue" name="shortInfo" class="form-control">{{userInfo.short_info}}</textarea>
                     
-                    <button class="btn btn-sm btn-danger cancel" (click)="enableShortInfoEdit = false">
+                    <button class="theme_btn cancel" (click)="enableShortInfoEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -138,7 +138,7 @@
                 <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
                     <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo['website']}}</textarea> -->
                     <input #website [(ngModel)]="websiteValue" name="website" class="form-control" placeholder="www.yourwebsite.com">
-                    <button class="btn btn-sm btn-danger cancel" (click)="enableWebsiteEdit = false">
+                    <button class="theme_btn cancel" (click)="enableWebsiteEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -161,9 +161,11 @@
 
         <div class="col-md-4" *ngFor="let story of stories">
             <div class="full_story_box">
-                    <a href="#" [routerLink]="['/story/', story.slug]">
-                        <img [src]="story.preview_image" [alt]="story.preview_title">
-                    </a>
+                    <div class="image_wraper_out">
+                        <a href="#" [routerLink]="['/story/', story.slug]">
+                            <img [src]="story.preview_image" [alt]="story.preview_title">
+                        </a>
+                    </div>
                 <div class="right_inner_footer not_absolute">
                     <div class="right_inner_footer_top">
                         <a href="#" class="coubt">Russia</a>

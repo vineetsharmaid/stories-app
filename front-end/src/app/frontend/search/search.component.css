@@ -73,7 +73,8 @@
 /*Section 4 Style*/
 .main_story_wrap{padding:35px 50px; background:#f1f6ff}
 .story_outer_wrap{padding: 5px; background: #fff;-webkit-box-shadow: 0px 0px 38px 0px rgba(0,0,0,0.29);-moz-box-shadow: 0px 0px 38px 0px rgba(0,0,0,0.29);box-shadow: 0px 0px 38px 0px rgba(0,0,0,0.29); margin: 15px 0}
-.main_story_img_wrap{position: relative;}
+.main_story_img_wrap{position: relative; height: 500px; overflow: hidden;}
+.main_story_img_wrap img{width: 100%;height: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);object-fit: cover;-webkit-object-fit: cover;-moz-object-fit: cover;-o-object-fit: cover;}
 .main_story_img_wrap .overlay_dark{opacity: .5}
 .story_outer_wrap:hover .overlay_dark{opacity: .8}
 .story_outer_wrap .right_inner_footer_bottom{padding:15px 10px; color: #333}
