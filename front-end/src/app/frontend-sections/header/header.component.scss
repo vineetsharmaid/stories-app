@@ -50,3 +50,10 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center;}
 
 
 .dropdown-menu .dropdown-item, .dropdown-menu li > a{justify-content: center;}
+.header_right_wrap .team_social_list{margin-top: 0; margin-left: 20px; display: inline-block;}
+.header_right_wrap .team_social_list li{margin: 0 10px}
+.header_right_wrap .team_social_list li a{width: 36px; height: 36px}
+.header_right_wrap .team_social_list li a img{width: 16px;}
+.user_intro_box .team_social_list li a, .main_social_wrap .team_social_list li a{border: 1px solid #f1663b;background: #f1663b;}
+.team_social_list li{display: inline-block;margin: 0 15px}
+.header_right_wrap .team_social_list li a { width: 36px; height: 36px; }
