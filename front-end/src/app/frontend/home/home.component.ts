@@ -80,5 +80,18 @@ export class HomeComponent implements OnInit {
     });
 	}
 
+  like(storyId, index) {
+
+    this.storiesService.likeStory(storyId).subscribe((response: Array<Object>) => {
+
+      this.stories[index]['liked'] = true;
+      this.stories[index]['likes'] = parseInt(this.stories[index]['likes']) + 1;
+    }, error => {
+      
+      console.log('getstories error', error);
+    });    
+  }
+
+
 
 }

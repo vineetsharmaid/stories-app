@@ -429,7 +429,8 @@ export class StoryEditComponent implements OnInit {
 
       this.storyService.submitForReview(draftStory).subscribe((response) => {
 
-        this.toggleView();
+        // this.toggleView();
+        this.router.navigate(['/user/story/list/drafts']);
       }, (error) => {
 
         console.log(error);

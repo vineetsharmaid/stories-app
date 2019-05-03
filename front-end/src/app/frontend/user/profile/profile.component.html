@@ -61,7 +61,7 @@
                     </div>
                     <div class="clearfix"></div>
 
-                    <button class="theme_btn cancel" (click)="enableNameEdit = false">
+                    <button class="btn btn-sm theme_btn cancel" (click)="enableNameEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -85,7 +85,7 @@
                 <div class="form-group quick-edit mb-4" *ngIf="enableProfessionalInfoEdit == true">
                     <textarea #professionalInfo [(ngModel)]="professionalInfoValue" name="professionalInfo" class="form-control">{{userInfo.professional_info}}</textarea>
                     
-                    <button class="theme_btn cancel" (click)="enableProfessionalInfoEdit = false">
+                    <button class="btn btn-sm theme_btn cancel" (click)="enableProfessionalInfoEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -111,7 +111,7 @@
                 <div class="form-group quick-edit" *ngIf="enableShortInfoEdit == true">
                     <textarea #shortInfo [(ngModel)]="shortInfoValue" name="shortInfo" class="form-control">{{userInfo.short_info}}</textarea>
                     
-                    <button class="theme_btn cancel" (click)="enableShortInfoEdit = false">
+                    <button class="btn btn-sm theme_btn cancel" (click)="enableShortInfoEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 
@@ -138,7 +138,7 @@
                 <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
                     <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo['website']}}</textarea> -->
                     <input #website [(ngModel)]="websiteValue" name="website" class="form-control" placeholder="www.yourwebsite.com">
-                    <button class="theme_btn cancel" (click)="enableWebsiteEdit = false">
+                    <button class="btn btn-sm theme_btn cancel" (click)="enableWebsiteEdit = false">
                         <i class="fa fa-close"></i>
                     </button>
 

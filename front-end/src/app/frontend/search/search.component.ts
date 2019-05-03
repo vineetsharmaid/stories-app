@@ -49,6 +49,20 @@ export class SearchComponent implements OnInit {
   	}
 
 
+
+	  like(storyId, index) {
+
+	    this.storiesService.likeStory(storyId).subscribe((response: Array<Object>) => {
+
+	      this.stories[index]['liked'] = true;
+	      this.stories[index]['likes'] = parseInt(this.stories[index]['likes']) + 1;
+	    }, error => {
+	      
+	      console.log('getstories error', error);
+	    });    
+	  }
+
+
   	trackQueryParams() {
 
   		this.activatedRoute.queryParams.subscribe(queryParams => {
@@ -108,7 +122,7 @@ export class SearchComponent implements OnInit {
   	}
 
   	onScroll() {
-	    console.log('scrolled!!');
+	    
 	    this.limitOffset += DEFAULT_LISTING_COUNT;
 	    this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, true);
 	}
@@ -146,9 +160,6 @@ export class SearchComponent implements OnInit {
 		      		this.stories = stories;
 		      	}
 	      	}
-
-	      console.log('getStories this.stories', this.stories);
-	      console.log('getStories stories', stories);
 	      
 	    }, error => {
 

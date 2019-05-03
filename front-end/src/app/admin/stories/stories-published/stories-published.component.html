@@ -17,10 +17,10 @@
                 <thead class=" text-primary">
                   <th width="20%">Preview Title </th>
                   <th width="25%">Sub Title </th>
-                  <th width="20%">Author </th>
+                  <th width="10%">Author </th>
                   <th width="15%">Last Updated </th>
                   <th width="10%">Featured </th>
-                  <th width="10%">Action </th>
+                  <th width="20%">Action </th>
                 </thead>
                 <tbody *ngIf="stories?.length > 0">
                   <tr *ngFor="let story of stories; let i = index">
@@ -46,8 +46,11 @@
                       </mat-checkbox>
                     </td>
                     <td>
-                      <button class="btn btn-sm btn-success" routerLink="/admin/stories/view/{{story.story_id}}">
+                      <a class="btn btn-sm btn-success" target="_blank" [routerLink]="['/story/', story.slug]">
                         View
+                      </a>
+                      <button class="btn btn-sm btn-success" (click)="changeStatus(0, story.story_id, i)">
+                        Unpublish
                       </button>
                     </td>
                   </tr>

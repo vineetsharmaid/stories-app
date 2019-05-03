@@ -55,7 +55,11 @@
                             </div>
                             <div class="right_inner_footer_bottom">
                                 <ul>
-                                    <li><img src="assets/img/like.png" alt=""> 149</li>
+                                    <li (click)="likeFeatured(featuredStories[0].story_id)">
+                                        <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[0].liked > 0">
+                                        <img src="assets/img/like.png" alt="" *ngIf="featuredStories[0].liked == 0"> 
+                                        {{featuredStories[0].likes}}
+                                    </li>
                                     <li class="bookmark"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
                                         <div class="social_wrap">
                                             <ul>
@@ -91,7 +95,7 @@
         <div class="col-md-12">
             <div class="row" *ngIf="stories?.length > 0">
 
-                <div class="col-md-4" *ngFor="let story of stories">
+                <div class="col-md-4" *ngFor="let story of stories; let indx = index">
                         <div class="story_outer_wrap">
                     		<a [routerLink]="['/story/', story.slug]">
 	                            <div class="main_story_img_wrap">
@@ -109,7 +113,11 @@
                     		</a>
                             <div class="right_inner_footer_bottom">
                                 <ul>
-                                    <li class="fl"><img src="assets/img/like.png" alt=""> 149</li>
+                                    <li class="fl" (click)="like(story.story_id, indx)">
+                                        <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
+                                        <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0"> 
+                                        {{story.likes}}
+                                    </li>
                                     <li class="bookmark fr"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
                                         <div class="social_wrap">
                                             <ul>

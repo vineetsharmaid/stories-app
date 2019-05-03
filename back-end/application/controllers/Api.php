@@ -451,7 +451,14 @@ class Api extends REST_Controller {
     public function get_stories_get($limit="", $offset="")
     {
 
-      $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED), $limit, $offset);
+      if (isset($this->token_data)) { 
+
+        $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED), $limit, $offset, $order="", $like="", $this->token_data->id );
+      } else {
+
+        $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED), $limit, $offset, $order="", $like="", 0);
+      }
+
 
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($stories) ) {
@@ -476,7 +483,14 @@ class Api extends REST_Controller {
     public function get_featured_stories_get($limit, $offset)
     {
 
-      $featured_stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.featured' => 1), $limit, $offset, $order = 'random' );
+      if (isset($this->token_data)) { 
+
+        $featured_stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.featured' => 1), $limit, $offset, $order = 'random', $like="", $this->token_data->id );
+      } else {
+
+        $featured_stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.featured' => 1), $limit, $offset, $order = 'random', $like="", 0 );
+      }
+
 
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($featured_stories) ) {
@@ -531,7 +545,14 @@ class Api extends REST_Controller {
         $like  = "";
       }
 
-      $stories = $this->common_model->get_stories( $where, $limit, $offset, ''/*order*/,  $like );
+
+      if (isset($this->token_data)) { 
+
+        $stories = $this->common_model->get_stories( $where, $limit, $offset, ''/*order*/,  $like, $this->token_data->id );
+      } else {
+
+        $stories = $this->common_model->get_stories( $where, $limit, $offset, ''/*order*/,  $like, 0 );
+      }
 
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($stories) ) {

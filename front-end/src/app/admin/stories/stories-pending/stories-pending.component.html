@@ -17,14 +17,14 @@
                 <thead class=" text-primary">
                   <th width="20%">Preview Title </th>
                   <th width="30%">Sub Title </th>
-                  <th width="20%">Author </th>
+                  <th width="10%">Author </th>
                   <th width="10%">Last Updated </th>
-                  <th width="10%">Action </th>
+                  <th width="20%">Action </th>
                 </thead>
                 <tbody *ngIf="stories?.length > 0">
-                  <tr *ngFor="let story of stories">
+                  <tr *ngFor="let story of stories; let indx = index">
                     <td>
-                      <a href="#" class="user_name"> {{story.preview_title | titlecase}} </a>
+                      <a href="#" target="_blank" [routerLink]="['/story/', story.slug]" class="user_name"> {{story.preview_title | titlecase}} </a>
                     </td>
                     <td>                    
                      {{ story.preview_subtitle }}
@@ -39,8 +39,11 @@
                     </td>
                     <td>{{story.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-success" routerLink="/admin/stories/view/{{story.story_id}}">
+                      <a class="btn btn-sm btn-success" target="_blank" [routerLink]="['/story/', story.slug]">
                         View
+                      </a>
+                      <button class="btn btn-sm btn-success" (click)="changeStatus(1, story.story_id, indx)">
+                        Publish
                       </button>
                     </td>
                   </tr>

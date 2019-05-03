@@ -36,7 +36,11 @@
                     <h1>{{storyData.title}}</h1>
                     <div class="right_inner_footer_bottom top20">
                         <ul>
-                            <li><img src="assets/img/like_white.png" alt=""> FASCINATING</li>
+                            <li (click)="like()">
+                                <img src="assets/img/liked.png" alt="" *ngIf="storyData.liked">
+                                <img src="assets/img/like_white.png" alt="" *ngIf="!storyData.liked">
+                                FASCINATING
+                            </li>
                             <li class="bookmark"><img src="assets/img/bookmark.png" alt=""> 14 min rea</li>
                         </ul>
                     </div>

@@ -53,7 +53,7 @@ class Admin_model extends CI_Model {
     public function get_stories($where='') {
         
 
-        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.author_id, stories.featured, users.first_name, users.last_name, users.username');
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, users.first_name, users.last_name, users.username');
         $this->db->from('stories');
         $this->db->join('users', 'users.user_id = stories.author_id');
         $this->db->where( $where );

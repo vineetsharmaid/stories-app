@@ -129,12 +129,9 @@ export class StoryDetailsComponent implements OnInit {
 
   like() {
 
-  	console.log('here', this.storyData['story_id']);
-
     this.storiesService.likeStory(this.storyData['story_id']).subscribe((response: Array<Object>) => {
 
-      console.log('response likeStory', response);
-      
+      this.storyData['liked'] = true;
     }, error => {
     	
     	console.log('getstories error', error);

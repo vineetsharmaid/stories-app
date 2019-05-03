@@ -76,7 +76,32 @@ export class StoriesComponent implements OnInit {
 	    	this.featuredStories = [];
 	    	console.log('getfeaturedStories error', error);
 	    });
-	}  	
+	}
+
+
+  like(storyId, index) {
+
+    this.storiesService.likeStory(storyId).subscribe((response: Array<Object>) => {
+
+      this.stories[index]['liked'] = true;
+      this.stories[index]['likes'] = parseInt(this.stories[index]['likes']) + 1;
+    }, error => {
+      
+      console.log('getstories error', error);
+    });    
+  }
+
+  likeFeatured(storyId) {
+
+    this.storiesService.likeStory(storyId).subscribe((response: Array<Object>) => {
+
+      this.featuredStories[0]['liked'] = true;
+      this.featuredStories[0]['likes'] = parseInt(this.featuredStories[0]['likes']) + 1;
+    }, error => {
+      
+      console.log('getstories error', error);
+    });
+  }
 
 
 }

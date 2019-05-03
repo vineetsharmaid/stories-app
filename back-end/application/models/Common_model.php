@@ -153,13 +153,15 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
-    public function get_stories($where='', $limit='', $offset='', $order='', $like='') {
+    public function get_stories($where='', $limit='', $offset='', $order='', $like='', $user_id=0) {
         
 
-        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.preview_image, stories.slug, stories.created, stories.story_id, stories.author_id, stories.type, users.first_name, users.last_name, users.username');
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.preview_image, stories.slug, stories.created, stories.story_id, stories.author_id, stories.type, users.first_name, users.last_name, users.username, count(distinct story_user_likes.user_id) as likes, count(distinct user_liked.story_id) as liked');
         $this->db->from('stories');
         $this->db->join('users', 'users.user_id = stories.author_id');
         $this->db->join('story_tags', 'story_tags.story_id = stories.story_id', 'left');
+        $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id', 'left');
+        $this->db->join('story_user_likes as user_liked', 'user_liked.story_id = stories.story_id AND user_liked.user_id = '.$user_id, 'left');
         $this->db->where( $where );
         $this->db->group_by( 'stories.story_id' );
 
