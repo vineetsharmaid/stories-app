@@ -1,35 +1,26 @@
-<!-- Section 1 (Content Blocks) -->
-<!-- <div class="container-fluid content_block_wrap">
-    <div class="row">
-        <div class="col-md-4">
-            <a href="#" [routerLink]="['/search']" [queryParams]="{type:'1'}">
-                <div class="content_box cb1">
-                    <h3>Workplace Stories</h3>
-                    <p>Travel somewhere new for 5 minutes every day</p>
-                </div>
-            </a>
-        </div> 
-        <div class="col-md-4">
-            <a href="#" [routerLink]="['/search']" [queryParams]="{type:'2'}">
-                <div class="content_box cb2">
-                    <h3>Business Stories</h3>
-                    <p>Explore the world by country and spectacular place</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a href="#">
-                <div class="content_box cb3">
-                    <p>Join our community of readers today to <br> discover a world of inspiring stories</p>
-                    <span class="box_btn">SIGN UP</span>
-                </div>
-            </a>
-        </div>
-    </div>
-</div> -->
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+    <content-loader>
+      <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" speed="10"/>
+      <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" speed="10"/>
+      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" speed="10"/>
+      <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" speed="10"/>
+      <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" speed="10"/>
+      <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" speed="10"/>
+      <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" speed="10"/>
+      <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" speed="10"/>
+      <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" speed="10"/>
+      <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" speed="10"/>
+      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" speed="10"/>
+      <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" speed="10"/>
+      <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" speed="10"/>
+      <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" speed="10"/>
+    </content-loader>
+</div>
+
 <!-- Section 1 (Content Blocks) -->
 <!-- Section 2 -->
-<div class="container-fluid section_2" *ngIf="featuredStories?.length > 0">
+<div class="container-fluid section_2" *ngIf="featuredStories?.length > 0 && dataLoading == false">
 
     <div class="work_together_section text-center">
          <h3 class="home_heading_top">Empowering The Asian Community With A Voice</h3>
@@ -63,8 +54,8 @@
                     </div>
                     <div class="right_inner_footer">
                         <div class="right_inner_footer_top">
-                            <a href="#" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
-                            <a href="#" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
+                            <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
+                            <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
                             <!-- <a href="#" class="coubt2">Indigenous</a> -->
                             <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                         </div>
@@ -91,14 +82,14 @@
 </div>
 <!-- Section 2 -->
 <!-- Section 3 (Featured Stories) -->
-<div class="container-fluid feature_story_title_wrap" *ngIf="featuredStories?.length > 1">
+<div class="container-fluid feature_story_title_wrap" *ngIf="featuredStories?.length > 1 && dataLoading == false">
 <div class="row1">
     <div class="col-md-12">
         <h2>Featured Stories</h2>
     </div>
 </div>
 </div>
-<div class="container-fluid feature_story_wrap">
+<div *ngIf="dataLoading == false" class="container-fluid feature_story_wrap">
 <div class="row" *ngIf="featuredStories?.length > 1">
     <div class="col-md-12">
         <div class="row">
@@ -193,14 +184,14 @@
 </div>
 <!-- Section 3 (Featured Stories) -->
 <!-- Section 4 (Stories) -->
-<div class="container-fluid feature_story_title_wrap stories_title">
+<div *ngIf="dataLoading == false" class="container-fluid feature_story_title_wrap stories_title">
 <div class="row1">
     <div class="col-md-12">
         <h2>Stories</h2>
     </div>
 </div>
 </div>
-<div class="container-fluid main_story_wrap stories_wrap_main_stories_page">
+<div *ngIf="dataLoading == false" class="container-fluid main_story_wrap stories_wrap_main_stories_page">
 <div class="row">
     <div class="col-md-12">
         <div class="row" *ngIf="stories?.length > 0">

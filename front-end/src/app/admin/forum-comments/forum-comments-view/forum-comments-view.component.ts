@@ -22,6 +22,7 @@ export class ForumCommentsViewComponent implements OnInit {
 	public story: object;
 	public reviewStatus: number;
 	public previousUrl: any;
+	public setStatus: any;
   	constructor(private formBuilder: FormBuilder, 
   		private storiesService: StoriesService, 
   		private router: Router,

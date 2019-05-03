@@ -28,6 +28,7 @@ export class ForumListComponent implements OnInit {
 	public featuredStories: Array<object>;
 	public addQuestionForm: FormGroup;
 	public addAnswerForm: FormGroup;
+  public dataLoading: boolean = true;
 
 
 	public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -109,6 +110,9 @@ export class ForumListComponent implements OnInit {
  
   	ngOnInit() {
 
+	  	this.getTopics();
+      this.getSidebarTopics();
+
 	  	this.addQuestionForm = this.formBuilder.group({
 
 	  		title: ['', Validators.required],
@@ -137,9 +141,6 @@ export class ForumListComponent implements OnInit {
         this.limitOffset = 0;
         this.getQuestionsList(DEFAULT_LISTING_COUNT , this.limitOffset, false);
       });
-
-	  	this.getTopics();
-      this.getSidebarTopics();
 
   		this.filteredTopics = this.addQuestionForm.controls['topics'].valueChanges.pipe(
         	startWith(''),        
@@ -216,13 +217,16 @@ export class ForumListComponent implements OnInit {
           this.allQuestions = questions;
         }
 
-	     	console.log('this.allQuestions', this.allQuestions);
+        // hide loader
+	     	this.dataLoading = false;
 	    }, (error) => {
 
         if ( isOnScroll == false ) {            
           
 	        this.allQuestions = [];
         }
+        // hide loader
+        this.dataLoading = false;
 	      console.log('error', error);
 	    });
   	}

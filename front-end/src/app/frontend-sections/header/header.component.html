@@ -9,20 +9,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
-      <li class="nav-item active"><a class="nav-link" (click)="navigate()">Home Page</a></li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          About Us
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Origins/Our Story</a>
-          <a class="dropdown-item" href="#">Our Purpose & Gamification</a>
-          <a class="dropdown-item" href="#">Our Founding Team</a>
-        </div>
-      </li>
+      <li class="nav-item active"><a class="nav-link" (click)="navigate('/')">Home</a></li>
+      <li class="nav-item"><a class="nav-link" (click)="navigate('/stories')">Stories</a></li>
+      <li class="nav-item"><a class="nav-link" (click)="navigate('/about')">About Us</a></li>
       <li class="nav-item nik_logo"><a class="nav-link" href="#"><img src="assets/img/custom_logo.png" alt=""></a></li>
-      <li class="nav-item"><a class="nav-link" href="#" [routerLink]="['/stories']">Stories</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+      <li><a class="nav-link" (click)="navigate('/forum')">Community Discussions</a></li>
+      <li class="nav-item"><a class="nav-link" (click)="navigate('/contact-us')">Contact Us</a></li>
     </ul>
   </div>
   <!-- Header Navigation -->
@@ -40,6 +32,13 @@
     <div class="header_login_wrap" *ngIf="loggedIn">
       <a href="#" (click)="signOut()">Logout</a>
     </div>
+    <div class="main_social_wrap">
+      <ul class="team_social_list">
+        <li><a href=""><img src="assets/img/fb.png" alt=""></a></li>
+        <li><a href=""><img src="assets/img/insta.png" alt=""></a></li>
+        <li><a href=""><img src="assets/img/linkedIn.png" alt=""></a></li>
+      </ul>
+    </div>    
   </div>
   <!-- Header right section for Search and Login -->
 </nav>
@@ -61,7 +60,7 @@
   </span>
 
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content" style="box-shadow: none;">
 
       <!----------- STARTS USER LOGIN FORM ------------>
       <div class="modal-body" [hidden]="showHideLogin || showForgotPassword">

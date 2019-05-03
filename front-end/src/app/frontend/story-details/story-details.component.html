@@ -29,7 +29,8 @@
             <div class="row text-center">
                 <div class="col-md-12">
                     <div class="story_tag_wrap">
-                        <a href="#" class="dark_tag">Russia</a>
+                        <a href="#" [routerLink]="['/search']" [queryParams]="{type: storyData.type}"  class="dark_tag" *ngIf="storyData.type == 1">Workplace</a>
+                        <a href="#" [routerLink]="['/search']" [queryParams]="{type: storyData.type}"  class="dark_tag" *ngIf="storyData.type == 2">Business</a>
                         <a *ngFor="let tag of storyData.tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
                     </div>
                     <h1>{{storyData.title}}</h1>

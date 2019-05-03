@@ -15,13 +15,14 @@ export class HomeComponent implements OnInit {
 
 	public stories: Array<object>;
 	public featuredStories: Array<object>;
+  public dataLoading: boolean = true;
 
   constructor( private storiesService : StoriesService ) { }
  
   ngOnInit() {
 
-  	this.getStories();
   	this.getFeaturedStories();
+  	this.getStories();
   }
 
 
@@ -41,13 +42,13 @@ export class HomeComponent implements OnInit {
 
       	})
       	
-      	this.stories = stories;
-
-      console.log('getStories this.stories', this.stories);
+      this.stories = stories;
+      this.dataLoading = false;
       
     }, error => {
 
     	this.stories = [];
+      this.dataLoading = false;
     	console.log('getstories error', error);
     });
 	}

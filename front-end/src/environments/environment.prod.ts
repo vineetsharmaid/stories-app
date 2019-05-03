@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://fakerestapi.azurewebsites.net/api',
+  baseUrl: 'http://soastaging.com/back-end',
   defaultListingCount: 8,
 };

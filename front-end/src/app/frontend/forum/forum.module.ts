@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ContentLoaderModule } from '@netbasal/content-loader';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 import { ForumRoutes } from './forum.routing';
@@ -43,6 +44,7 @@ import {
     MatChipsModule,
     MatCardModule,
     InfiniteScrollModule,
+    ContentLoaderModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
   ],
   declarations: [

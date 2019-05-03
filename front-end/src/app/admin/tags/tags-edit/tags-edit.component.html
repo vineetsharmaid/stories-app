@@ -33,7 +33,7 @@
 										</mat-form-field>
 									</div>
 									
-									<div class="form-group" *ngIf="category.child; else chooseParent">
+									<div class="form-group" *ngIf="category['child']; else chooseParent">
 										<label>Parent</label>
 										<input matInput placeholder="This is a parent category itself." class="disabled-input" disabled>
 									</div>
