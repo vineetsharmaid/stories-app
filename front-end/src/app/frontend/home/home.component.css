@@ -114,3 +114,10 @@
 .story_text_block{padding: 20px}
 .section_2 .col-md-9{padding-left: 15px}
 /*25-04-2019*/
+
+
+
+
+@media only screen and (max-width: 767px){
+.main_story_img_wrap{height: 270px}
+}

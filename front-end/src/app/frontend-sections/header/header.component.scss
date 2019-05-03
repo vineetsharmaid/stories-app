@@ -1,22 +1,3 @@
-/*Header style*/
-.navbar{padding: 15px 50px 10px 50px}
-nav.navbar { box-shadow: none; }
-ul.navbar-nav {width: 100%;justify-content: center; align-items: center;}
-.dropdown{position: static;}
-.navbar-expand-lg .navbar-nav .dropdown-menu{width: 100%; text-align: center; margin-top: -15px; border: none;}
-.navbar-brand{padding: 0; margin: 0; width: 350px}
-.nav-link {display: inline-block;padding:50px 20px !important;font-size: 13px;text-transform: uppercase; letter-spacing: 3px; transition: all .4s;}
-.nik_logo .nav-link{padding:20px !important}
-.nav-link:hover{font-weight: 600}
-.navbar-brand img {max-width: 250px; width: auto;}
-.header_login_wrap{margin-left: 30px}
-.header_login_wrap a{color: #000; font-size: 13px; padding: 0 4px}
-.header_right_wrap {width: 350px;text-align: right;display: flex; justify-content: flex-end; align-items: center;}
-.navbar-nav li{width:100%; text-align:center}
-.navbar-nav{max-width:800px; margin:auto}
-/*Header style*/
-
-
 /*Popup Style*/
 .header_popup{background: rgba(21,24,27,.96);}
 .modal-dialog {position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%) !important;width: 100%; margin: 0; max-width: 400px}
@@ -52,8 +33,178 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center;}
 .dropdown-menu .dropdown-item, .dropdown-menu li > a{justify-content: center;}
 .header_right_wrap .team_social_list{margin-top: 0; margin-left: 20px; display: inline-block;}
 .header_right_wrap .team_social_list li{margin: 0 10px}
-.header_right_wrap .team_social_list li a{width: 36px; height: 36px}
-.header_right_wrap .team_social_list li a img{width: 16px;}
+.header_right_wrap .team_social_list li a{width: 36px; height: 36px;position: relative;transition: all .5s; display:inline-block;transform: rotate(45deg);  -webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);-o-transform: rotate(45deg);}
+.header_right_wrap .team_social_list li a img{width: 16px;position: absolute;    top: 50%;left: 50%;transform: translate(-50%, -50%) rotate(-45deg); -webkit-transform: translate(-50%, -50%) rotate(-45deg);-moz-transform: translate(-50%, -50%) rotate(-45deg);-o-transform: translate(-50%, -50%) rotate(-45deg);}
 .user_intro_box .team_social_list li a, .main_social_wrap .team_social_list li a{border: 1px solid #f1663b;background: #f1663b;}
 .team_social_list li{display: inline-block;margin: 0 15px}
 .header_right_wrap .team_social_list li a { width: 36px; height: 36px; }
+
+.user_intro_box .team_social_list li a:hover, .main_social_wrap .team_social_list li a:hover {
+    border: 1px solid #f1663b;
+    background: #000;
+}
+
+
+
+
+
+
+
+
+
+.navbar{padding: 15px 50px}
+ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding-left: 62px}
+.dropdown{position: static;}
+.navbar-expand-lg .navbar-nav .dropdown-menu{width: 100%; text-align: center; margin-top: -15px; border: none;}
+.navbar-brand{padding: 0; margin: 0; width: 350px}
+.nav-link {display: inline-block;padding:30px 20px !important;font-size: 13px;text-transform: uppercase; letter-spacing: 3px; transition: all .4s; cursor:pointer}
+.nik_logo .nav-link{padding:0 20px !important;}
+.nav-link:hover{color: #000 !important}
+.navbar-brand img {max-width: 250px; width: auto;}
+.header_login_wrap{margin-left: 30px}
+.header_login_wrap a{color: #000; font-size: 13px; padding: 0 4px}
+.header_right_wrap {width: 350px;text-align: right;display: flex; -webkit-display: flex; -moz-display: flex; -o-display: flex; justify-content: flex-end; align-items: center;}
+
+
+
+
+
+
+
+
+
+
+/*------------------------------Responsive------------------------------*/
+@media only screen and (max-width: 1800px) {
+.nav-link{letter-spacing: 0px; padding: 50px 10px !important; font-size: 12px;}
+ul.navbar-nav{padding-left: 25px;}
+}
+@media only screen and (max-width: 1500px) {
+ul.navbar-nav{padding-left: 0;}
+.nav-item.nik_logo{display: none;}
+.nav-link{padding: 10px !important}
+.navbar-brand{width: auto;}
+.author_page .stories_wrap_full .right_inner_footer_bottom li{margin-bottom: 10px}
+}
+@media only screen and (max-width: 1100px) {
+.navbar{padding: 15px}
+.header_right_wrap{width: 300px;}
+.header_login_wrap, .header_right_wrap .team_social_list{margin-left: 15px;}
+.header_right_wrap .team_social_list li a{width: 28px; height: 28px}
+.header_right_wrap .team_social_list li a img {width: 13px;}
+.user_intro_box p {font-size: 16px;line-height: 26px;}
+}
+@media only screen and (max-width: 991px) {
+.index_banner_outer{height: 500px;}
+.right_inner{max-width: 800px;padding-bottom: 100px;}
+.home_heading_top {font-size: 30px;}
+.nav-link{padding: 10px !important;}
+.img_attribution{left: 0;}
+.story_content_wrap{padding: 20px;}
+.story_content_wrap h3{font-size: 30px;}
+.story_content_wrap p{font-size: 15px;line-height: 22px;margin-top: 80px;}
+.main_story_wrap{padding: 30px;}
+.subscribe_wrap h3{font-size: 27px;}
+.subscribe_wrap form{margin-top: 30px;}
+.subscribe_wrap form input {width: 160px; font-size: 12px;}
+.footer_link_wrap{margin-top: 40px;}
+.footer_link_wrap h4{font-size: 18px;}
+.footer_link_wrap ul li a{font-size: 14px;}
+a.search_wrap {position: absolute;right: 90px; top: 42px}
+.header_login_wrap{margin-bottom: 15px;}
+.header_right_wrap {width: 100%;display: block;text-align: center;}
+.author_page .navbar-light .navbar-toggler{border-color: #fff; background: #fff}
+.author_page .bg-light {background-color: #fff !important;}
+.author_page .navbar-light .navbar-nav .nav-link, .author_page .header_login_wrap a{color: #000;}
+/*.author_info_wrap { background-size:1300px auto; background-position: top 190px center;}*/
+.navbar-brand img{max-width: 90px}
+.events_tagline_wrap{padding: 40px 0}
+.events_date, .events_btmSec{display: block; margin-top: 15px}
+.btm-left.events_panel, .top-left.events_panel, .btm-right.events_panel{margin-bottom: 0}
+.CoFounder_section {background-position: right -160px center;}
+h1.CoFounder_heading{font-size: 34px}
+.full_que{font-size: 16px}
+.ans_content{font-size: 14px; line-height: 26px}
+.aside-termCondition .simply-put {position: relative;left: 0; width: 90%}
+.author_page .big_img_wrap, .user_profile_img_top_wrap{height: 300px;}
+.dropdown-menu{display: none;}
+a#navbarDropdown {width: 100%;text-align: center;}
+.subscribe_wrap form input[type="submit"]{font-size: 15px}
+.theme_btn{letter-spacing: 0; font-size: 15px}
+}
+
+@media only screen and (max-width: 767px) {
+.index_banner_outer{height: 250px;}
+.home_heading_top {font-size: 25px;}
+.right_inner h3{font-size: 25px;}
+.inner_divider{width: 25%;}
+.sb_img_big_wrap {height: 285px;}
+.feature_content_outer{flex: 100%;max-width: 100%;}
+.story_box{margin-top: 30px;}
+.story_outer_wrap h3{font-size: 22px;}
+.subscribe_wrap h3{font-size: 25px;}
+.subscribe_wrap form{display: block !important;}
+.subscribe_wrap form input {width: 100% !important;}
+.footer_link_wrap{display: block;}
+.footer_links_outer{width: 50%; float: left; min-height: 170px; }
+.footer_social_wrap{width: 100%; float: left;}
+.main_social_wrap .team_social_list{margin-top: 0;}
+.header_right_wrap {width: 100%;display: block;text-align: center;}
+.right_inner p {font-size: 14px;line-height: 20px;}
+.feature_story_wrap {padding: 20px;}
+.about_page_wrap h4 {font-size: 24px;}
+.about_page_wrap h1 {font-size: 80px;line-height: 120px;margin-bottom: 20px;}
+.user_intro_box {padding: 20px 0px;}
+.about_page_wrap .user_intro_box h3 {font-size: 24px;margin-bottom: 30px;}
+.user_intro_box p.about_tagline {font-size: 15px;line-height: 25px;}
+.single_page_content p {font-size: 15px;line-height: 25px;}
+.single_page_content {margin-top: 20px;}
+.author_big_name {font-size: 80px;}
+.author_info_wrap {padding: 300px 0px 60px; background-size:1000px auto;background-color: #333; background-position: top center;}
+.author_box {display: block;}
+.author_big_name {font-size: 44px;}
+.author_position {display: block;}
+.author_position span{ margin: 0 10px;}
+.winner_icon_wrap img {width: 80px;}
+.author_page .stories_wrap_full { padding: 20px;}
+.events_tagline_wrap {padding: 20px;}
+.single_page_tagline_wrap h4 {font-size: 20px;line-height: 30px;}
+.aside-termCondition p {font-size: 15px;line-height: 28px;}
+a.dropdown-item {font-size: 12px;}
+.add_story_form textarea{height: 130px; resize: none;}
+.author_img_wrap{margin: 30px auto}
+.single_story_page_title{padding: 60px 0}
+.single_story_page_title h1{font-size: 40px}
+.size18, .what_is_your_que_wrap h5{font-size: 15px}
+.btm-left.events_panel, .top-left.events_panel, .btm-right.events_panel{margin: 0; margin-top: 20px}
+.CoFounder_section {background-position: right -356px center;}
+h1.CoFounder_heading{font-size: 28px}
+.enter_comment_wrap input{height: 38px}
+.right_inner_footer_bottom ul li img{height: 20px}
+.right_inner_footer_bottom li{font-size: 12px}
+.subscribe_wrap form input{margin: 5px 0}
+h2.singleStory_title{font-size: 20px}
+.coFounder_top_img{width: 130px; height: 130px}
+.trc_left{margin-left: 0;border: none; border-top: 2px solid #f1663b;}
+.trc_right{margin-right: 0;border: none; border-top: 2px solid #f1663b;}
+.order-12{order: 1}
+.order-1{order: 2}
+.nopadding{padding: 0 15px !important}
+.story_continue_btn {float: none !important;width: 100%;margin-top: 15px;}
+.story_filter_wrap{display: block; text-align: center;}
+.story_filter_wrap .my_select{margin: 15px auto;display: block;}
+.big_img_wrap {height: 300px}
+.page_section_divide{margin: 30px 0}
+.comment_outer_wrap{padding: 0 15px}
+.comment_outer_wrap .send_img_outer textarea{padding: 10px; height: 45px}
+.comment_outer_wrap .form-group{margin: 0}
+.new_user_img{width: auto;margin-right: 15px}
+.send_img_outer img {width: 20px; right: 15px}
+.chat_time{position: relative; color: rgba(0, 0, 0, .3);}
+.author_page .big_img_wrap{height: 200px;}
+.right_line{border: none;}
+.review_box{border: none; border-bottom: 1px solid #000}
+.review_full_wrap .col-md-4:last-child .review_box{ border-bottom:none}
+.points_container{margin: 15px 0}
+.points_title_heading{font-size: 16px}
+}
