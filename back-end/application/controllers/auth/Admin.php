@@ -468,6 +468,41 @@ class Admin extends REST_Controller {
     }
 
 
+    public function get_dashboard_data_get()
+    { 
+
+        $users   = $this->common_model->data_exists( 'users' );
+        $stories = $this->common_model->data_exists( 'stories' );
+        $forum_answers = $this->common_model->data_exists( 'forum_answers' );
+        $forum_questions = $this->common_model->data_exists( 'forum_questions' );
+
+        $dashboard_data = array('users' => $users, 
+          'stories' => $stories,
+          'forum_answers' => $forum_answers,
+          'forum_questions' => $forum_questions
+        );
+
+        // Check if the dashboard_data data store contains dashboard_data (in case the database result returns NULL)
+        if ( !empty($dashboard_data) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $dashboard_data,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
     public function get_stories_by_review_status_get($review_status)
     { 
 

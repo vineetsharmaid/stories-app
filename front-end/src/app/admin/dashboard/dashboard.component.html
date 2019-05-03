@@ -9,7 +9,7 @@
                       </div>
                       <p class="card-category">Total Users</p>
                       <h3 class="card-title">
-                        49/50
+                        {{dashboardData.users}}
                       </h3>
                   </div>
                   <div class="card-footer">
@@ -27,7 +27,9 @@
                           <i class="material-icons">library_books</i>
                       </div>
                       <p class="card-category">Total Stories</p>
-                      <h3 class="card-title">$34,245</h3>
+                      <h3 class="card-title">
+                        {{dashboardData.stories}}
+                      </h3>
                   </div>
                   <div class="card-footer">
                       <div class="stats">
@@ -41,14 +43,17 @@
               <div class="card card-stats">
                   <div class="card-header card-header-danger card-header-icon">
                       <div class="card-icon">
-                          <i class="material-icons">info_outline</i>
+                          <i class="material-icons">live_help</i>
                       </div>
-                      <p class="card-category">Fixed Issues</p>
-                      <h3 class="card-title">75</h3>
+                      <p class="card-category">Total Questions</p>
+                      <h3 class="card-title">
+                        {{dashboardData.forum_questions}}
+                      </h3>
                   </div>
                   <div class="card-footer">
                       <div class="stats">
-                          <i class="material-icons">local_offer</i> Tracked from Github
+                          <i class="material-icons">visibility</i> 
+                          <a href="#" [routerLink]="['/admin/questions']">View Questions</a>
                       </div>
                   </div>
               </div>
@@ -57,20 +62,23 @@
               <div class="card card-stats">
                   <div class="card-header card-header-info card-header-icon">
                       <div class="card-icon">
-                          <i class="fa fa-twitter"></i>
+                          <i class="material-icons">question_answer</i>                          
                       </div>
-                      <p class="card-category">Followers</p>
-                      <h3 class="card-title">+245</h3>
+                      <p class="card-category">Total Answers</p>
+                      <h3 class="card-title">
+                        {{dashboardData.forum_answers}}
+                      </h3>
                   </div>
                   <div class="card-footer">
                       <div class="stats">
-                          <i class="material-icons">update</i> Just Updated
+                          <i class="material-icons">visibility</i> 
+                          <a href="#" [routerLink]="['/admin/answers']">View Answers</a>
                       </div>
                   </div>
               </div>
           </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
           <div class="col-md-4">
               <div class="card card-chart">
                   <div class="card-header card-header-success">
@@ -120,8 +128,8 @@
                   </div>
               </div>
           </div>
-      </div>
-      <div class="row">
+      </div> -->
+      <!-- <div class="row">
           <div class="col-lg-6 col-md-12">
               <div class="card">
                   <div class="card-header card-header-tabs card-header-primary">
@@ -411,6 +419,6 @@
                   </div>
               </div>
           </div>
-      </div>
+      </div> -->
   </div>
 </div>

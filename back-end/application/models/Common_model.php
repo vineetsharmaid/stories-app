@@ -28,9 +28,15 @@ class Common_model extends CI_Model {
         }
     }
 
-    public function data_exists($table, $where)
+    public function data_exists($table, $where="")
     {
-    		return $this->db->get_where( $table, $where )->num_rows();
+        if ( $where == "" ) {
+            
+          return $this->db->get_where( $table )->num_rows();
+        } else {
+
+    		  return $this->db->get_where( $table, $where )->num_rows();
+        }
     }
 
     public function get_users()
