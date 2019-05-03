@@ -38,7 +38,8 @@
 .nomargin{margin: 0}
 .nopadding{padding: 0}
 .user_profile_pic_wrap{width: 200px; height: 200px; border-radius: 200px; overflow:hidden; margin: auto; position: relative; margin-bottom: 20px}
-.user_profile_pic_wrap img{min-height: 100%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.image_wraper_out{width: 100%; height: 400px; overflow:hidden;position: relative;}
+.user_profile_pic_wrap img, .image_wraper_out img{width: 100%;height: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);object-fit: cover;}
 .user_intro_box{text-align: center;padding: 20px 50px}
 .user_intro_box p{font-size: 18px; line-height: 30px}
 .user_intro_box span{font-size: 20px; margin:10px; display: inline-block; text-transform: uppercase; letter-spacing: 2px}
