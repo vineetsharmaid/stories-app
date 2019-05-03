@@ -15,6 +15,7 @@ export class AdminLoginComponent implements OnInit {
 	submitted: boolean = false;
   hideErrors: boolean = false;
 	loginErrors: Array<string>;
+  loading: any;
   constructor(private formBuilder: FormBuilder,
     	private router: Router,
     	private userService: UserService) { }

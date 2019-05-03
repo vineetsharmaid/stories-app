@@ -31,8 +31,35 @@
               </div>
             </div>
           </a>
+
+          <!-- CONTENT LOADER STARTS -->
+          <ng-template #contentLoader>
+            <div *ngIf="dataLoading == true" class="mt-4" style="min-height: 20vh;">              
+                <content-loader>
+                  <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" speed="10"/>
+                  <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" speed="10"/>
+                  <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" speed="10"/>
+                  <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" speed="10"/>
+                  <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" speed="10"/>
+                  <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" speed="10"/>
+                  <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" speed="10"/>
+                  <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" speed="10"/>
+                  <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" speed="10"/>
+                  <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" speed="10"/>
+                </content-loader>
+            </div>
+          </ng-template>
+
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <!-- CONTENT LOADER ENDS -->
           
-          <div *ngIf="allQuestions?.length > 0"  infiniteScroll
+          <div *ngIf="allQuestions?.length > 0 && dataLoading == false"  infiniteScroll
             [infiniteScrollDistance]="2"
             [infiniteScrollThrottle]="50"
             (scrolled)="onScroll()">

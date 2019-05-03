@@ -24,21 +24,27 @@ export class HeaderComponent implements OnInit {
   public auth2: any;
 
 	public  submitted:boolean = false;
-	private loggedIn: boolean = false;
-	private loginLoading: boolean = false;
+	public loggedIn: boolean = false;
+	public loginLoading: boolean = false;
 	public  loginSubmitted:boolean = false;
-	private registerLoading: boolean = false;
-  private forgotPassLoading: boolean = false;
+	public registerLoading: boolean = false;
+  public forgotPassLoading: boolean = false;
   public  passwordEmailSent: boolean = false;
   public  forgotPassSubmitted:boolean = false;
-	private accountAlreadyExists: boolean = false;
+	public accountAlreadyExists: boolean = false;
 	
 	public  loginForm: FormGroup;
   public  registerForm: FormGroup;
   public  forgotPassForm: FormGroup;
-	private loginErrors: Array<string>;
-  private forgotPassErrors: Array<string>;
+	public loginErrors: Array<string>;
+  public forgotPassErrors: Array<string>;
   public  passwordEmailSuccess: string;
+
+  public loading: any;
+  public showHideLogin: any;
+  public showForgotPassword: any;
+  public showHideSignupForm: any;
+  
 
 	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
   @ViewChild('closeLoginModal') closeLoginModal: ElementRef;

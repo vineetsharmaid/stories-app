@@ -22,6 +22,7 @@ export class QuestionsComponent implements OnInit {
   public allAnswers: Array<Object>;
   public answerByUser: Object;
   public isLoggedIn: string = 'false';
+  public dataLoading: boolean = true;
 
   public editorAnswerOptions: Object = {
     // toolbarInline: true,  
@@ -217,8 +218,9 @@ export class QuestionsComponent implements OnInit {
 
           this.answerByUser = {};
         }
+        
         this.getAnswers(this.questionData['question_id']);
-        console.log('here');
+        
   		}, (error) => {
 
   			console.log('error', error);
@@ -262,10 +264,13 @@ export class QuestionsComponent implements OnInit {
           i++;
          });
         this.allAnswers = answers;
-        console.log('answerByUser', this.answerByUser);
+        // hide loader
+        this.dataLoading = false;
       }, (error) => {
 
         this.allAnswers = [];
+        // hide loader
+        this.dataLoading = false;
         console.log('error', error);
       });
     }

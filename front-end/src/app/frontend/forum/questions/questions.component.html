@@ -3,13 +3,42 @@
     <div class="row">
       <div class="col-md-12">
         <a href="" [routerLink]="['/forum']">Forum</a>
+
         <div class="right_questions_wrap">
+
+          <!-- CONTENT LOADER STARTS -->
+          <ng-template #contentLoader>
+            <div *ngIf="dataLoading == true" class="mt-4" style="min-height: 20vh;">              
+                <content-loader>
+                  <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" speed="10"/>
+                  <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" speed="10"/>
+                  <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" speed="10"/>
+                  <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" speed="10"/>
+                  <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" speed="10"/>
+                  <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" speed="10"/>
+                  <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" speed="10"/>
+                  <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" speed="10"/>
+                  <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" speed="10"/>
+                  <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" speed="10"/>
+                  <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" speed="10"/>
+                </content-loader>
+            </div>
+          </ng-template>
+
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <ng-template *ngIf="dataLoading == true" [ngTemplateOutlet]="contentLoader"></ng-template> 
+          <!-- CONTENT LOADER ENDS -->            
           
-          <div class="full_que_wrap" *ngIf="questionData?.topics?.length > 0;">
+          
+          <div class="full_que_wrap" *ngIf="questionData['topics']?.length > 0 && dataLoading == false;">
             <div class="que_header">
               <ul>
                 <li>Answer</li>
-                <li *ngFor="let topic of questionData.topics; let indx = index;">
+                <li *ngFor="let topic of questionData['topics']; let indx = index;">
                   <a href="#" [routerLink]="['/forum']"  [queryParams]="{topic: questionData.topic_ids[indx]}">{{topic}}</a>
                 </li>
               </ul>
@@ -21,6 +50,9 @@
               <i class="fa fa-edit"></i>
               Answer
             </span>
+
+
+            <!-- NO ANSWER YET -->
             <div class="empty-answer m-5" *ngIf="allAnswers?.length == 0 && answerByUser?.length == 0;">
               <p class="text-center" (click)="questionData.showAnswerBox = true">
                 <i class="fa fa-edit fa-4x text-muted"></i>
@@ -29,6 +61,8 @@
               No Answers Yet
               </h4>
             </div>
+
+            <!-- ANSWER ADD BOX FOR LOGGEDIN USER -->
             <div class="answer-box pb-5 pt-5" *ngIf="questionData.showAnswerBox == true">
               <form (ngSubmit)="saveAnswer(questionData.question_id)">
                 <input type="hidden" [value]="questionData.question_id">
@@ -40,7 +74,7 @@
               </form>
             </div>
 
-            <!-- ALL ANSWERS -->
+            <!-- ANSWER BY LOGGEDIN USER -->
             <div *ngIf="(answerByUser | json) != '{}'" class="pb-5 answer-box">
                 <hr>
                 <div class="answered_wrap">
