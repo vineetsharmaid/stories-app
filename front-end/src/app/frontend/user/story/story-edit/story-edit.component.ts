@@ -47,7 +47,9 @@ export class StoryEditComponent implements OnInit {
 	public showPreview: boolean;
 	public previewSubmitted: boolean = false;
   public previewIsTouched: boolean = false;
-	public storyTitle;
+  public storyTitle;
+  public customValidationPrompt: boolean = false;
+	public customValidationMessages: Array<string> = [];
 	public editStoryForm: FormGroup;
 	public previewForm: FormGroup;
 	public selectedFile: ImageSnippet;
@@ -74,25 +76,25 @@ export class StoryEditComponent implements OnInit {
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;  
-
-
+  @ViewChild('confirmReviewSubmit') confirmReviewSubmit: ElementRef<HTMLInputElement>;
 
 	public editorStoryOptions: Object = {
-  	toolbarInline: true,  
-  	placeholderText: null,
+  	// toolbarInline: true,  
+    placeholderText: null,
     quickInsertButtons: ['image', 'table', 'ol', 'ul'],
-  	toolbarButtons: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
-	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
-	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
-  	],
-  	toolbarButtonsSM: [
-	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
-	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
-	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
-  	],
-  	heightMin: 400,
-  	charCounterCount: false,
+    toolbarButtons: [
+      'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
+      'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 'insertVideo', 
+      'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
+    ],
+    toolbarButtonsSM: [
+      'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
+      'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 'insertVideo', 
+      'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
+    ],
+    heightMin: 400,
+    charCounterMax: 400,
+  	charCounterCount: true,
 
     // Set the image upload parameter.
     imageUploadParam: 'description_image',
@@ -291,40 +293,43 @@ export class StoryEditComponent implements OnInit {
   get as() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
-  updateDraft() {
+  updateDraft(event) {
 
     var draftStory = {
       story_id: this.story['story_id'],
-			title: this.editStoryForm.get('title').value,
-			description: this.editStoryForm.get('description').value,
+      title: this.editStoryForm.get('title').value,
+      description: this.editStoryForm.get('description').value,
       previewTitle: this.previewForm.get('previewTitle').value,
       previewSubtitle: this.previewForm.get('previewSubtitle').value,
-			username: localStorage.getItem('username'),
-		};
+      username: localStorage.getItem('username'),
+    };
 
-		console.log('draftStory', draftStory);
+    console.log('draftStory', draftStory);
 
     // stop here if form is invalid
     if (this.editStoryForm.invalid) {
 
-    	console.log('Validation error.');
+      console.log('Validation error.');
       return;
     } else {
 
-    	this.storyService.updateDraft(draftStory).subscribe((response) => {
+      this.storyService.updateDraft(draftStory).subscribe((response) => {
 
-				console.log('Data saved to draft');
-    		console.log(response);
-    		
-    		this.storyId = response['data']['story'];
+        console.log('Data saved to draft');
+        console.log(response);
+        
+        this.storyId = response['data']['story'];
+        console.log('event', event);
+        if( typeof event == 'undefined' ) {
+          
+          this.toggleView();
+        }
+      }, (error) => {
 
-    		this.toggleView();
-    	}, (error) => {
+        console.log(error);
+      });
 
-    		console.log(error);
-    	});
-
-		}
+    }
   }
 
 
@@ -392,6 +397,31 @@ export class StoryEditComponent implements OnInit {
   submitPreview() {
 
     this.previewSubmitted = true;
+    
+    if( this.customValidationPrompt == false ) {
+      
+      var description = this.editStoryForm.get('description').value;
+      description = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").replace(/\&nbsp;/g, '');
+
+      if(this.editStoryForm.get('title').value == "") {
+        
+        console.log('title is empty');
+        this.customValidationPrompt = true;
+        this.customValidationMessages.push("Title of the story is required.");
+      }
+      if(description.length < 201) {
+
+        console.log('description short than 200');
+        this.customValidationPrompt = true;
+        this.customValidationMessages.push("Story is shorter than 200 Characters.");
+      }
+
+      if(this.customValidationPrompt == true) {
+
+        this.confirmReviewSubmit.nativeElement.click()      
+        return;
+      }
+    }
 
     if ( this.previewForm.get('previewTitle').value == "" ) {
       
@@ -403,7 +433,7 @@ export class StoryEditComponent implements OnInit {
 
     if ( this.previewForm.get('previewSubtitle').value == "" ) {
           
-        let description = this.editStoryForm.get('description').value;
+        // let description = this.editStoryForm.get('description').value;
         let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
         
         this.previewForm.patchValue({  

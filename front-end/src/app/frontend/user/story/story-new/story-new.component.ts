@@ -47,21 +47,22 @@ export class StoryNewComponent implements OnInit {
 	public storyId: number;
 
 	public editorStoryOptions: Object = {
-  	toolbarInline: true,  
+  	// toolbarInline: true,  
   	placeholderText: null,
     quickInsertButtons: ['image', 'table', 'ol', 'ul'],
   	toolbarButtons: [
 	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
-	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
+	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 'insertVideo',
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
   	toolbarButtonsSM: [
 	  	'bold', 'italic', 'underline', 'strikeThrough', 'formatOL', 'formatUL',
-	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 
+	  	'insertImage', 'insertLink', 'link', '-', 'paragraphFormat', 'insertVideo',
 	  	'align' , 'quote', 'undo', 'redo', 'paragraphStyle', 'insertHR', 'selectAll', 'clearFormatting'
   	],
   	heightMin: 400,
-  	charCounterCount: false,
+    charCounterMax: 400,
+  	charCounterCount: true,
 
     // Set the image upload parameter.
     imageUploadParam: 'description_image',

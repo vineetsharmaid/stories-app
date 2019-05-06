@@ -25,7 +25,7 @@
                 <tbody *ngIf="stories?.length > 0">
                   <tr *ngFor="let story of stories; let i = index">
                     <td>
-                      <a href="#" class="user_name"> {{story.preview_title | titlecase}} </a>
+                      <a href="#" target="_blank" [routerLink]="['/story/', story.slug]" class="user_name"> {{story.preview_title | titlecase}} </a>
                     </td>
                     <td>                    
                      {{ story.preview_subtitle }}

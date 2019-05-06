@@ -22,6 +22,7 @@
 					<button class="theme_btn">Continue</button>
 				</div>
 			</form>
+			<button class="theme_btn saveBtn" (click)="updateDraft('manual')">Save Draft</button>
 		</div>
 		<div class="clearfix"></div>
 		<div class="col-md-12" *ngIf="showPreview" [@slideInOut]>
@@ -103,4 +104,35 @@
 		</div>
 	</div>
 	
+</div>
+
+<button #confirmReviewSubmit data-toggle="modal" data-target="#confirm-submit-review" [hidden]="true"></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="confirm-submit-review">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Confirm</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body">
+				<p *ngFor="let message of customValidationMessages">
+					{{message}}
+				</p>
+				<p>Confirm to submit for review.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-dismiss="modal" (click)="changeStatus(setStatus)">Confirm</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+			
+		</div>
+	</div>
 </div>

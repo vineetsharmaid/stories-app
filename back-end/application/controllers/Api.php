@@ -779,11 +779,11 @@ class Api extends REST_Controller {
       $story_slug = $this->uri->segment(3);
 
       $story = $this->common_model->get_story_data( array('stories.slug' => $story_slug));
-
+      
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($story) ) {
 
-          if ( $story[0]->status ==  STORY_STATUS_PUBLISHED || $story[0]->author_id ==  $this->token_data->id ) {
+          if ( $story[0]->status ==  STORY_STATUS_PUBLISHED || $story[0]->author_id ==  $this->token_data->id || $this->token_data->user_type ==  'admin' ) {
             
             // if user is logged in
             if (isset($this->token_data)) { 
