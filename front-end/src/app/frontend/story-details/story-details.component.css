@@ -87,3 +87,5 @@ h3.singleStory_Subtitle{font-size: 28px;font-weight: 300;line-height: 1.2;}
 .theme_btn{width: auto;}
 .alink:hover{cursor: pointer;}
 .alink{cursor: pointer;text-decoration: underline !important;}
+
+.single_footer_social_share{max-width: 900px;margin: auto;padding: 30px;}
