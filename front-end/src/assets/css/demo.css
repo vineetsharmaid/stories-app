@@ -307,4 +307,5 @@ h1, h2, h3, h4, h5, h6{font-family: 'Playfair Display', serif; font-weight: bold
 .theme_color{color: #f1663b}
 .comments_heading {margin: 20px 0px;}
 a{color:#f1663b}
+.user_profile_pic_wrap{margin-left: 30px}
 /*--------------Style for development--------------*/
