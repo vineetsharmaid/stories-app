@@ -17,6 +17,7 @@ import { UserListComponent } from '../../admin/user-list/user-list.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
 import { TagsComponent } from '../../admin/tags/tags.component';
 import { TopicsComponent } from '../../admin/topics/topics.component';
+import { CompaniesComponent } from '../../admin/companies/companies.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { AnswersComponent } from '../../admin/answers/answers.component';
@@ -61,6 +62,7 @@ import {
     CategoriesComponent,
     TagsComponent,
     TopicsComponent,
+    CompaniesComponent,
     StoriesComponent,
     QuestionsComponent,
     AnswersComponent,

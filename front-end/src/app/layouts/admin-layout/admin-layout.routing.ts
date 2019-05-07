@@ -12,6 +12,7 @@ import { UpgradeComponent } from '../../admin/upgrade/upgrade.component';
 import { CategoriesComponent } from '../../admin/categories/categories.component';
 import { TagsComponent } from '../../admin/tags/tags.component';
 import { TopicsComponent } from '../../admin/topics/topics.component';
+import { CompaniesComponent } from '../../admin/companies/companies.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
 import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { AnswersComponent } from '../../admin/answers/answers.component';
@@ -63,6 +64,15 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/topics/topics.module#TopicsModule'
+            }
+        ] 
+    },{
+        path: 'companies',
+        component: CompaniesComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/companies/companies.module#CompaniesModule'
             }
         ] 
     },{

@@ -438,6 +438,103 @@ class Admin extends REST_Controller {
       }
     }
 
+    public function add_company_post() {
+      
+      $topic_data = array(         
+        'name' => $this->input->post('name'),
+      );
+
+      if( $this->common_model->insert_entry( 'companies', $topic_data ) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'company_added_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to add company'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function get_companies_get() {
+      
+      $companies = $this->common_model->get_data( 'companies' );
+
+      if( !empty($companies) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $companies,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to get companies'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function get_company_get() {
+      
+      $company_id = $this->uri->segment(4);
+
+      $companies = $this->common_model->get_data( 'companies', array('company_id' => $company_id) );
+
+      if( !empty($companies) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $companies[0],
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to get company'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function edit_company_post() {
+      
+      $company = array(         
+        'name' => ucfirst( $this->input->post('name') ),        
+      );
+
+      $where = array( 'company_id' => $this->input->post('company_id') );
+
+      if( $this->common_model->update_entry( 'companies', $company, $where ) ) {
+      
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'topic_updated_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to update topic'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
 
     public function edit_topic_post() {
       
