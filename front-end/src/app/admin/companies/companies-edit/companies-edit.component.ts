@@ -89,40 +89,4 @@ export class CompaniesEditComponent implements OnInit {
 		}
 
 
-  	companySearchChanged(event: any) {
-
-  		if ( typeof event == 'object' ) {
-
-  			this.selectedcompany = event.tag_id;
-  			this.limitOffset = 0;
-  			
-  		} else {
-
-  			this.selectedcompany  = "";
-		    const filterValue = this.searchcompany.toString().toLowerCase();
-		    if ( filterValue != '' ) {
-		    	
-		    	this.companiesService.searchcompanys(filterValue).subscribe((response) => {
-
-		    		this.filteredcompanys = response['data'];
-		    	}, (error) => {
-
-		    		console.log('error', error);
-		    		this.filteredcompanys = [];
-		    	});
-		    } else {
-
-		    	this.filteredcompanys = [];
-		    }
-  		}
-  	}
-
-	displayFn(company): Object | undefined {
-		
-		console.log('display company', company);
-		return company ? company.name : undefined;
-	}
-
-
-
 }

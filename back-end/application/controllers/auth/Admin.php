@@ -707,6 +707,13 @@ class Admin extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         } else {
 
+
+          // allocate points to author on question publish 
+          if ($this->input->post('status') == 1) {
+            
+            $this->update_question_points($this->input->post('question_id'), $this->input->post('author_id'));
+          }
+
           // Set the response and exit
           $this->response(  
             array(
@@ -756,6 +763,13 @@ class Admin extends REST_Controller {
                 'message' => 'Unable to update answer status'
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         } else {
+
+
+          // allocate points to author on question publish 
+          if ($this->input->post('status') == 1) {
+            
+            $this->update_answer_points($this->input->post('answer_id'), $this->input->post('author_id'));
+          }
 
           // Set the response and exit
           $this->response(  
@@ -855,6 +869,17 @@ class Admin extends REST_Controller {
                 'message' => 'Unable to update comment status'
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         } else {
+
+          // update points on comment approval
+          if ( $this->input->post('status') == 1 ) {
+            
+            $comment = $this->common_model->get_data( 
+              'comments', 
+              array('comment_id' => $this->input->post('comment_id'))
+            );
+
+            $this->verify_comments_points($comment[0]->story_id);
+          }
 
           // Set the response and exit
           $this->response(  
@@ -998,10 +1023,14 @@ class Admin extends REST_Controller {
         $data = array('review' => $this->input->post('review'), 'status' => $this->input->post('review'));
         $where = array('story_id' => $this->input->post('story_id'));
 
-        
-
         // Check if the story data store contains story (in case the database result returns NULL)
         if ( $this->common_model->update_entry( 'stories', $data, $where ) ) {
+
+            // allocate points to author on story publish 
+            if ($this->input->post('review') == STORY_STATUS_PUBLISHED) {
+              
+              $this->update_story_points($this->input->post('story_id'), $this->input->post('author_id'));
+            }
 
             // Set the response and exit
             $this->response(  
@@ -1061,5 +1090,119 @@ class Admin extends REST_Controller {
         return null;
     }
 
+  private function verify_comments_points($story_id) {
+
+    $comments_count = $this->common_model->data_exists( 'comments', array('story_id' => $story_id, 'approved' => 1) );
+
+    $points = 0;
+
+    if ( $comments_count == 10 ) {
+      $points = POINTS_FOR_10_COMMENTS;
+    } else if ( $comments_count == 20 ) {
+      
+      $points = POINTS_FOR_20_COMMENTS;
+    } else if ( $comments_count == 30 ) {
+      
+      $points = POINTS_FOR_30_COMMENTS;
+    }
+
+    if ( $points > 0 ) {
+      // get author from story
+      $story = $this->common_model->get_story_author($story_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($story->author_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $story->author_id,
+        'points'    => $points,
+        'milestone' => $comments_count,
+        'activity'  => 'comments',
+        'selector'  => 'story',
+        'selector_id'  => $story_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+    }
+
+  } 
+
+  private function update_story_points($story_id, $user_id) {
+
+    $points = STORY_PUBLISH_POINTS;
+
+    if ( $points > 0 ) {
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($user_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $user_id,
+        'points'    => $points,
+        'milestone' => 1,
+        'activity'  => 'approved',
+        'selector'  => 'story',
+        'selector_id'  => $story_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+    }
+  } 
+
+  private function update_question_points($question_id, $user_id) {
+
+    $points = QUESTION_PUBLISH_POINTS;
+
+    if ( $points > 0 ) {
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($user_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $user_id,
+        'points'    => $points,
+        'milestone' => 1,
+        'activity'  => 'approved',
+        'selector'  => 'question',
+        'selector_id'  => $question_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+    }
+  }
+  
+  private function update_answer_points($answer_id, $user_id) {
+
+    $points = ANSWER_PUBLISH_POINTS;
+
+    if ( $points > 0 ) {
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($user_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $user_id,
+        'points'    => $points,
+        'milestone' => 1,
+        'activity'  => 'approved',
+        'selector'  => 'answer',
+        'selector_id'  => $answer_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+    }
+  } 
 
 }

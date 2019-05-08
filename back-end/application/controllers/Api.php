@@ -104,10 +104,10 @@ class Api extends REST_Controller {
                   'user_type'     => 'user',
                   'status'        => 1,
                   'user_email'    => $post_data->email,
+                  'company_id'    => $post_data->company,
                   'profile_pic'   => isset($post_data->photoUrl) ? $post_data->photoUrl : '',
                   'password'      => $password_hashed
               );
-
 
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
@@ -475,6 +475,32 @@ class Api extends REST_Controller {
           $this->response([
               'status' => FALSE,
               'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
+    public function get_companies_get()
+    {
+
+      $companies = $this->common_model->get_data('companies');
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($companies) ) {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $companies,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No companies were found'
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 

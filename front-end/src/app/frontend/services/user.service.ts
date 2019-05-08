@@ -110,6 +110,13 @@ export class UserService {
 			);
 		}
 
+  	getCompanies(): Observable<any>{
+			
+			return this.http.get(API_URL+'get_companies', httpOptions).pipe(
+				tap((companies: Object) => console.log('companies', companies)),
+				catchError(this.handleError)
+			);
+		}
 
 		public uploadImage(image: File, type: string): Observable<string> {
 	    

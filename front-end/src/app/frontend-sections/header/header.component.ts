@@ -23,27 +23,28 @@ export class HeaderComponent implements OnInit {
    
   public auth2: any;
 
-	public  submitted:boolean = false;
+	public submitted:boolean = false;
 	public loggedIn: boolean = false;
 	public loginLoading: boolean = false;
-	public  loginSubmitted:boolean = false;
+	public loginSubmitted:boolean = false;
 	public registerLoading: boolean = false;
   public forgotPassLoading: boolean = false;
-  public  passwordEmailSent: boolean = false;
-  public  forgotPassSubmitted:boolean = false;
+  public passwordEmailSent: boolean = false;
+  public forgotPassSubmitted:boolean = false;
 	public accountAlreadyExists: boolean = false;
 	
-	public  loginForm: FormGroup;
-  public  registerForm: FormGroup;
-  public  forgotPassForm: FormGroup;
+	public loginForm: FormGroup;
+  public registerForm: FormGroup;
+  public forgotPassForm: FormGroup;
 	public loginErrors: Array<string>;
   public forgotPassErrors: Array<string>;
-  public  passwordEmailSuccess: string;
+  public passwordEmailSuccess: string;
 
   public loading: any;
   public showHideLogin: any;
   public showForgotPassword: any;
   public showHideSignupForm: any;
+  public companies: Array<object>;
   
 
 	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
@@ -78,6 +79,15 @@ export class HeaderComponent implements OnInit {
       }
     });
 
+    this.userService.getCompanies().subscribe((response) => {
+
+      this.companies = response['data'];
+    }, (error) => {
+      
+      this.companies = [];
+      console.log('error', error);
+    });
+
   	this.loadFacebookSDK();
 
     this.loginForm = this.formBuilder.group({
@@ -92,6 +102,7 @@ export class HeaderComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
           firstName: [ '', Validators.required ],
           lastName: [ '', Validators.required ],
+          company: [ '' ],
           username: [ 
 	          '', // default value
 	          {
@@ -120,12 +131,13 @@ export class HeaderComponent implements OnInit {
       // stop here if form is invalid
       if (this.registerForm.status === "VALID") {
 
-      	var user = {  
-      		first_name: this.registerForm.get('firstName').value, 
-					last_name: this.registerForm.get('lastName').value,
-					username: this.registerForm.get('username').value,
-					email: this.registerForm.get('email').value,
-				};
+        var user = {  
+          first_name: this.registerForm.get('firstName').value, 
+          last_name: this.registerForm.get('lastName').value,
+          username: this.registerForm.get('username').value,
+          email: this.registerForm.get('email').value,
+          company: this.registerForm.get('company').value,
+        };
 
 				this.registerUser(user);
       } else {
@@ -183,14 +195,10 @@ export class HeaderComponent implements OnInit {
   }
 
   registerUser(user) {
-  	console.log('user', user);
+  	
   	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
 
-  		console.log('register response', response);
-
   		if ( response['status'] == 200 || user.loginBy == 'facebook' || user.loginBy == 'google' ) {
-  			
-  			console.log('registered');
   			
   			// Close login modal
   			this.closeLoginModal.nativeElement.click();

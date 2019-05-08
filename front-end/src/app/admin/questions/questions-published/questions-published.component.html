@@ -36,7 +36,7 @@
                     </td>
                     <td>{{question.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-success" (click)="unPublishQuestion(question.question_id, indx)">
+                      <button class="btn btn-sm btn-success" (click)="unPublishQuestion(question.question_id, question.author_id, indx)">
                         Unpublish
                       </button>
                       <button class="btn btn-sm btn-danger" (click)="deleteQuestion(question.question_id, indx)">

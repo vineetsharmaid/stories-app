@@ -6,6 +6,6 @@
 export const environment = {
   production: false,
   // baseUrl: 'http://soastaging.com/back-end',
-  baseUrl: 'http://localhost/soa/back-end',
+  baseUrl: 'http://localhost/stories-app/back-end',
   defaultListingCount: 4,
 };

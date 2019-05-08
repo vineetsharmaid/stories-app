@@ -39,10 +39,10 @@ export class AnswersPendingComponent implements OnInit {
 	    });
   	}
 
-  	publishAnswer(answerID, index) {
+  	publishAnswer(answerID, authorID, index) {
 	   	
 	   	// 1: value for status publish
-	    this.forumService.updateAnswerstatus(answerID, 1).subscribe((response: Array<Object>) => {
+	    this.forumService.updateAnswerstatus(answerID, authorID, 1).subscribe((response: Array<Object>) => {
 
 	      this.answers.splice(index, 1);	      
 	      this.showNotification('top','center', 'success', 'Status updated succesfully');	      

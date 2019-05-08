@@ -33,10 +33,10 @@ export class QuestionsPendingComponent implements OnInit {
 	    });
   	}
 
-  	publishQuestion(questionID, index) {
+  	publishQuestion(questionID, authorID, index) {
 	   	
 	   	// 1: value for status publish
-	    this.forumService.updateQuestionStatus(questionID, 1).subscribe((response: Array<Object>) => {
+	    this.forumService.updateQuestionStatus(questionID, authorID, 1).subscribe((response: Array<Object>) => {
 
 	      this.questions.splice(index, 1);
 	      console.log('publishQuestion this.questions', this.questions);

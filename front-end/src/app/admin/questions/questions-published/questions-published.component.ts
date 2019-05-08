@@ -34,10 +34,10 @@ export class QuestionsPublishedComponent implements OnInit {
   	}
 
 
-  	unPublishQuestion(questionID, index) {
+  	unPublishQuestion(questionID, authorID, index) {
 	   	
 	   	// 0: value for status unpublish
-	    this.forumService.updateQuestionStatus(questionID, 0).subscribe((response: Array<Object>) => {
+	    this.forumService.updateQuestionStatus(questionID, authorID, 0).subscribe((response: Array<Object>) => {
 
 	      this.questions.splice(index, 1);	      
 	      this.showNotification('top','center', 'success', 'Status updated succesfully');

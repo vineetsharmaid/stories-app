@@ -15,6 +15,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/pairwise';
 
 import { StoryService } from '../../../services/story.service';
+import { UserService } from '../../../services/user.service';
 
 import { environment } from '../../../../../environments/environment';
 const API_URL  =  environment.baseUrl+'/api/';
@@ -60,6 +61,7 @@ export class StoryEditComponent implements OnInit {
 	public storyId: number;
   public story: Object;
   public storyErrors: Array<string>;
+  public companies: Array<object>;
   isNewStory: boolean;
 
 
@@ -144,7 +146,7 @@ export class StoryEditComponent implements OnInit {
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
 
-  constructor(private formBuilder: FormBuilder, private storyService: StoryService, 
+  constructor(private formBuilder: FormBuilder, private storyService: StoryService, private userService: UserService, 
     private router: Router, private activatedRoute: ActivatedRoute) {   
   }
  
@@ -162,6 +164,8 @@ export class StoryEditComponent implements OnInit {
   		previewSubtitle: [''],
       previewTags: [''],
       previewType: [''],
+      haveCompany: ['0'],
+      company: [''],
   		// previewImage: ['', Validators.required],
   	});
 
@@ -174,7 +178,17 @@ export class StoryEditComponent implements OnInit {
         startWith(''),        
         map((tag: string | null) => tag ? this._filterTags(tag) : [])
     );
-    
+
+
+    this.userService.getCompanies().subscribe((response) => {
+
+      this.companies = response['data'];
+    }, (error) => {
+      
+      this.companies = [];
+      console.log('error', error);
+    });
+
   }
 
   getStory() {
@@ -196,7 +210,7 @@ export class StoryEditComponent implements OnInit {
           this.filePath = APP_URL+'/assets/uploads/stories/'+this.story['preview_image'];
         }
 
-        if ( this.story['type'] != "" || this.story['type'] != 0 ) {
+        if ( this.story['type'] == "" || this.story['type'] == 0 ) {
           
           this.previewForm.patchValue({  
 
@@ -209,6 +223,12 @@ export class StoryEditComponent implements OnInit {
             previewType: this.story['type'],
           });  
         }
+
+        this.previewForm.patchValue({  
+
+          company: this.story['company_id'],
+          haveCompany: this.story['have_company'],
+        });  
 
         /****SET FORM FIELDS VALUE****/ 
         this.editStoryForm.patchValue({  
@@ -293,6 +313,8 @@ export class StoryEditComponent implements OnInit {
   get as() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
+
+
   updateDraft(event) {
 
     var draftStory = {
@@ -374,7 +396,7 @@ export class StoryEditComponent implements OnInit {
 			previewTitle: this.previewForm.get('previewTitle').value,
 			previewSubtitle: this.previewForm.get('previewSubtitle').value,
 			story: this.story['story_id'],
-			username: localStorage.getItem('username'),      
+			username: localStorage.getItem('username'),
 		};
 
     // stop here if form is invalid
@@ -384,9 +406,9 @@ export class StoryEditComponent implements OnInit {
       return;
     } else {
 
-    	this.storyService.submitForReview(draftStory).subscribe((response) => {
+    	this.storyService.savePreview(draftStory).subscribe((response) => {
 
-        console.log('Preview data saved to draft');
+        // console.log('Preview data saved to draft');
     	}, (error) => {
 
     		console.log(error);
@@ -405,13 +427,11 @@ export class StoryEditComponent implements OnInit {
 
       if(this.editStoryForm.get('title').value == "") {
         
-        console.log('title is empty');
         this.customValidationPrompt = true;
         this.customValidationMessages.push("Title of the story is required.");
       }
       if(description.length < 201) {
 
-        console.log('description short than 200');
         this.customValidationPrompt = true;
         this.customValidationMessages.push("Story is shorter than 200 Characters.");
       }
@@ -448,6 +468,8 @@ export class StoryEditComponent implements OnInit {
       story: this.story['story_id'],
       username: localStorage.getItem('username'),
       type: this.previewForm.get('previewType').value,
+      company_id: this.previewForm.get('company').value,
+      have_company: this.previewForm.get('haveCompany').value,
     };
 
     // stop here if form is invalid

@@ -109,7 +109,9 @@ export class StoryDetailsComponent implements OnInit {
 
         // set position of new comment in the comments json
         if (typeof index == 'undefined') {
-
+          // set children for child comments
+          response['data']['children'] = [];
+          
           this.comments.push(response['data'])
           // update property to hide comment box in frontend
           this.showCommentBox = false;

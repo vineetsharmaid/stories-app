@@ -153,6 +153,27 @@ class Common_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_story_author($story_id)
+    {
+        
+        $this->db->select('stories.author_id');
+        $this->db->from('stories');
+        $this->db->where( array('stories.story_id' => $story_id) );
+        return $this->db->get()->row();
+    }
+
+    public function update_user_points($user_id, $points)
+    {
+      $this->db->where('user_id', $user_id);
+      $this->db->set('points', 'points+'.$points, FALSE);
+      $this->db->update('users');
+
+      $this->db->select('users.points');
+        $this->db->from('users');
+      $this->db->where('user_id', $user_id);
+      return $this->db->get()->row();
+    }
+
     public function get_stories($where='', $limit='', $offset='', $order='', $like='', $user_id=0) {
         
 

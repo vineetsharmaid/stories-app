@@ -70,11 +70,12 @@ export class StoriesService {
 	}
 
 	/** POST: update status of story */
-	changeStatus (status, story_id): Observable<any> {
+	changeStatus (status, story_id, author_id): Observable<any> {
 
  		const formData = new FormData();
       	formData.append('review', status);
       	formData.append('story_id', story_id);
+      	formData.append('author_id', author_id);
 			
 		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 

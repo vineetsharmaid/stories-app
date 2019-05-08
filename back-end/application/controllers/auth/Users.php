@@ -322,7 +322,7 @@ class Users extends REST_Controller {
       if( $this->common_model->insert_entry('comments', $comment) ) {
             
           $comment_data = $this->common_model->get_comment_by_id( $this->db->insert_id() );
-          
+
           // Set the response and exit
           $this->response(  
             array( 'status' => TRUE, 'data' => $comment_data,'message' => 'comment added to story', ), 
@@ -451,11 +451,46 @@ class Users extends REST_Controller {
         'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
         'author_id' => $user[0]->user_id,
         'status' => 0,
+        'company_id' => $post_data->company_id,
+        'have_company' => $post_data->have_company,
         'type'   => $post_data->type,
         'review' => 2, // submitted for review
       );
       
       // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->update_entry('stories', $story, array('story_id' => $post_data->story)) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    function save_preview_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $post_data->username));
+      
+      $story = array(
+        'preview_title' => trim( strip_tags($post_data->previewTitle) ),
+        'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
+        'author_id' => $user[0]->user_id,
+      );
 
       if( $this->common_model->update_entry('stories', $story, array('story_id' => $post_data->story)) ) {
 
@@ -1112,6 +1147,8 @@ class Users extends REST_Controller {
         if ($this->common_model->data_exists('story_user_likes', $data) == 0) {
           if ( $this->common_model->insert_entry('story_user_likes', $data) ) {
 
+              $this->verify_likes_points($this->input->post('story_id'));
+
               // Set the response and exit
               $this->response(  
                 array(
@@ -1209,6 +1246,47 @@ class Users extends REST_Controller {
 
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
-    } 
+    }
+
+  private function verify_likes_points($story_id) {
+
+    $likes_count = $this->common_model->data_exists( 'story_user_likes', array('story_id' => $story_id) );
+
+    $points = 0;
+
+    if ( $likes_count == 10 ) {
+      $points = POINTS_FOR_10_LIKES;
+    } else if ( $likes_count == 20 ) {
+      
+      $points = POINTS_FOR_20_LIKES;
+    } else if ( $likes_count == 30 ) {
+      
+      $points = POINTS_FOR_30_LIKES;
+    }
+
+    if ( $points > 0 ) {
+      // get author from story
+      $story = $this->common_model->get_story_author($story_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($story->author_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $story->author_id,
+        'points'    => $points,
+        'milestone' => $likes_count,
+        'activity'  => 'likes',
+        'selector'  => 'story',
+        'selector_id'  => $story_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  } 
 
 }

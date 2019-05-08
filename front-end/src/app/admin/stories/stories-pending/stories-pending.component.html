@@ -42,7 +42,7 @@
                       <a class="btn btn-sm btn-success" target="_blank" [routerLink]="['/story/', story.slug]">
                         View
                       </a>
-                      <button class="btn btn-sm btn-success" (click)="changeStatus(1, story.story_id, indx)">
+                      <button class="btn btn-sm btn-success" (click)="changeStatus(1, story.story_id, story.author_id, indx)">
                         Publish
                       </button>
                     </td>

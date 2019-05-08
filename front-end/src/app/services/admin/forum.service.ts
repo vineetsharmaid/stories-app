@@ -45,7 +45,7 @@ export class ForumService {
 			return this.http.post(ADMIN_API_URL+'get_answers', formData, httpOptions);
 		}
 
-  	updateQuestionStatus(questionId, status): Observable<any>{
+  	updateQuestionStatus(questionId, authorID, status): Observable<any>{
 			
 				let httpOptions = {
 				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
@@ -53,12 +53,13 @@ export class ForumService {
 
 			const formData = new FormData();		
 	    formData.append('question_id', questionId);
+	    formData.append('author_id', authorID);
 	    formData.append('status', status);
 
 			return this.http.post(ADMIN_API_URL+'update_question_status', formData, httpOptions);
 		}
 
-  	updateAnswerstatus(answerId, status): Observable<any>{
+  	updateAnswerstatus(answerId, authorID, status): Observable<any>{
 			
 				let httpOptions = {
 				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
@@ -66,6 +67,7 @@ export class ForumService {
 
 			const formData = new FormData();		
 	    formData.append('answer_id', answerId);
+	    formData.append('author_id', authorID);
 	    formData.append('status', status);
 
 			return this.http.post(ADMIN_API_URL+'update_answer_status', formData, httpOptions);

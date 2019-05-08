@@ -33,9 +33,9 @@ export class StoriesPendingComponent implements OnInit {
 	    });
   	}
 
-  	changeStatus(status, storyID, storyIndex) {
+  	changeStatus(status, storyID, authorId, storyIndex) {
 
-	    this.storiesService.changeStatus(status, storyID).subscribe((response: Array<Object>) => {
+	    this.storiesService.changeStatus(status, storyID, authorId).subscribe((response: Array<Object>) => {
 
 	    	this.stories.splice(storyIndex, 1);
 	    	this.showNotification('top','center', 'success', 'Status updated succesfully');

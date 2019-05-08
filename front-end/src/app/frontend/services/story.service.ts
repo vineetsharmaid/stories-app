@@ -69,6 +69,18 @@ export class StoryService {
 	    );
 		}
 
+  	savePreview(story): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};    	
+    	
+			return this.http.post(USER_API_URL+'save_preview', story, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	addQuestion(question): Observable<any>{
 			
 			const formData = new FormData();

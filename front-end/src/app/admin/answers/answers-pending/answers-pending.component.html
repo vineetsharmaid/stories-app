@@ -40,7 +40,7 @@
                     </td>
                     <td>{{answer.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-success" (click)="publishAnswer(answer.answer_id, indx)">
+                      <button class="btn btn-sm btn-success" (click)="publishAnswer(answer.answer_id, answer.author_id, indx)">
                         Publish
                       </button>
                       <button class="btn btn-sm btn-danger" (click)="deleteAnswer(answer.answer_id, indx)">
