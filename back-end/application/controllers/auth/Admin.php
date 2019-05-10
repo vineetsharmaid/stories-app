@@ -440,27 +440,58 @@ class Admin extends REST_Controller {
     }
 
     public function add_company_post() {
-      
-      $topic_data = array(         
-        'name' => $this->input->post('name'),
-      );
+     
+      $config['upload_path']          = './assets/uploads/companies/';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
+      $config['max_size']             = 2048*5;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
 
-      if( $this->common_model->insert_entry( 'companies', $topic_data ) ) {
-      
-          // Set the response and exit
-          $this->response(  
-            array(
-              'status' => TRUE,
-              'data' => 'company_added_successfully',
-            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-      } else {
+      $this->load->library('upload', $config);
+      $this->load->library('image_lib');
+      if ( ! $this->upload->do_upload('logo'))
+      {
+          $error = array('error' => $this->upload->display_errors());
 
           // Set the response and exit
           $this->response([
-              'status' => FALSE,
-              'message' => 'Unable to add company'
+              'status'  => FALSE,
+              'message' => 'Logo not uploaded',
+              'error'   => $error,
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+          $upload_data['raw_name'].$upload_data['file_ext'];
+          
+          $company_data = array(         
+            'name'  => $this->input->post('name'),
+            'email' => $this->input->post('email'),
+            'logo'  => $upload_data['raw_name'].$upload_data['file_ext'],
+          );
+
+          if( $this->common_model->insert_entry( 'companies', $company_data ) ) {
+          
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data' => 'company_added_successfully',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+              // Set the response and exit
+              $this->response([
+                  'status' => FALSE,
+                  'message' => 'Unable to add company'
+              ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+          }
+      }
+
     }
 
 
@@ -512,28 +543,58 @@ class Admin extends REST_Controller {
 
 
     public function edit_company_post() {
-      
-      $company = array(         
-        'name' => ucfirst( $this->input->post('name') ),        
-      );
 
-      $where = array( 'company_id' => $this->input->post('company_id') );
+      $config['upload_path']          = './assets/uploads/companies/';
+      $config['allowed_types']        = 'gif|jpg|png|jpeg';
+      $config['max_size']             = 2048*5;
+      // $config['max_width']            = 1024;
+      // $config['max_height']           = 768;
 
-      if( $this->common_model->update_entry( 'companies', $company, $where ) ) {
-      
-          // Set the response and exit
-          $this->response(  
-            array(
-              'status' => TRUE,
-              'data' => 'topic_updated_successfully',
-            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-      } else {
+      $this->load->library('upload', $config);
+      $this->load->library('image_lib');
+      if ( ! $this->upload->do_upload('logo'))
+      {
+          $error = array('error' => $this->upload->display_errors());
 
           // Set the response and exit
           $this->response([
-              'status' => FALSE,
-              'message' => 'Unable to update topic'
+              'status'  => FALSE,
+              'message' => 'Logo not uploaded',
+              'error'   => $error,
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      else
+      {
+          $data = array('upload_data' => $this->upload->data());
+
+          $upload_data = $data['upload_data'];
+
+          $upload_data['raw_name'].$upload_data['file_ext'];
+          
+          $company_data = array(         
+            'name'  => $this->input->post('name'),
+            'email' => $this->input->post('email'),
+            'logo'  => $upload_data['raw_name'].$upload_data['file_ext'],
+          );
+
+          $where = array( 'company_id' => $this->input->post('company_id') );
+
+          if( $this->common_model->update_entry( 'companies', $company_data, $where ) ) {
+          
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data' => 'company_updated_successfully',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+              // Set the response and exit
+              $this->response([
+                  'status' => FALSE,
+                  'message' => 'Unable to update company'
+              ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+          }
       }
     }
 

@@ -680,6 +680,14 @@ class Users extends REST_Controller {
 
     public function user_image_upload_post() { 
       
+      echo "<pre>";
+      print_r($_POST);
+      echo "</pre>";
+      echo "<pre>";
+      print_r($_FILES);
+      echo "</pre>";
+      die('here');
+
       $config['upload_path']          = './assets/uploads/users/';
       $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048*5;
