@@ -6,6 +6,10 @@ import {map, startWith} from 'rxjs/operators';
 
 import { CompaniesService } from "../../../services/admin/companies.service";
 
+class ImageSnippet {
+  constructor(public src: string, public file: File) {}
+}
+
 @Component({
   selector: 'app-companies-edit',
   templateUrl: './companies-edit.component.html',
@@ -18,7 +22,7 @@ export class CompaniesEditComponent implements OnInit {
 	public formSubmitted: boolean = false;
 	public company: any;
 	public formErrors: Array<string>;
-
+	public logoFile: any;
 
   	constructor(private formBuilder: FormBuilder, 
   		private companiesService: CompaniesService, 
@@ -27,9 +31,11 @@ export class CompaniesEditComponent implements OnInit {
 
   	ngOnInit() {
   		
-  		this.editCompanyForm = this.formBuilder.group(
-  			{ 'name': ['', Validators.required] }
-  		);
+  		this.editCompanyForm = this.formBuilder.group({ 
+  			'name': ['', Validators.required],
+  			'email': ['', Validators.required],
+  			'logo': ['', Validators.required] 
+  		});
 
   		this.getCompany();
   	}
@@ -47,7 +53,9 @@ export class CompaniesEditComponent implements OnInit {
 	      this.company = response['data'];
 	      
 	      this.editCompanyForm.patchValue({
-			    name: this.company['name']			    
+			    name: this.company['name'],
+			    email: this.company['email'],
+			    logo: this.company['logo'],
 				});
 
 	    }, error => {
@@ -68,10 +76,15 @@ export class CompaniesEditComponent implements OnInit {
 				return;
 			} else {
 
-				var company = {'name': this.editCompanyForm.get('name').value, 'company_id': this.company['company_id']}
+				var company = {
+					'name': this.editCompanyForm.get('name').value,
+					'email': this.editCompanyForm.get('email').value,
+					'company_id': this.company['company_id'],
+					'logo': this.logoFile.file,
+				};
+				
 				this.companiesService.editcompany(company).subscribe((response: Array<Object>) => {
 
-					console.log('response', response);
 					if ( response['status'] == true ) {
 						
 			      this.router.navigateByUrl('/admin/companies');
@@ -88,5 +101,19 @@ export class CompaniesEditComponent implements OnInit {
 			}
 		}
 
+
+  uploadCoverPic(imageInput: any) {
+
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+
+      this.logoFile = new ImageSnippet(event.target.result, file);
+    });
+
+    reader.readAsDataURL(file);
+
+  }
 
 }

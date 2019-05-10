@@ -7,39 +7,48 @@
             <h4 class="card-title">Company List</h4>
             <!-- <p class="card-category"> List of users.</p> -->
             <button class="btn btn-sm btn-success pull-right" [routerLink]="['./add']">
-               Add New
+            Add New
             </button>
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table class="table">
                 <thead class=" text-primary">
-                  <th width="20%">Name </th>                  
+                  <th width="20%">Name </th>
+                  <th width="20%">Email </th>
+                  <th width="20%">Logo </th>
                   <th width="10%">Created </th>
                   <th width="10%">Action </th>
                 </thead>
                 <tbody *ngIf="companies?.length > 0">
                   <tr *ngFor="let company of companies">
-                    <td>                      
+                    <td>
                       {{company.name}}
+                    </td>
+                    
+                    <td>
+                      {{company.email}}
+                    </td>
+                    
+                    <td>
+                      <img *ngIf="company?.logo.length > 0" [src]="company.logo" height="50px" width="80px">
                     </td>
                     
                     <td>{{company.created | date: 'mediumDate'}}</td>
                     <td>
                       <button class="btn btn-sm btn-info" routerLink="./edit/{{company.company_id}}">
-                        Edit
+                      Edit
                       </button>
                     </td>
                   </tr>
                 </tbody>
-
                 <tbody *ngIf="companies?.length == 0">
                   <tr>
                     <td colspan="6" class="empty-list">
                       No company found.
                       <br>
                       <button class="btn btn-sm btn-success" [routerLink]="['./add']">
-                         Add New
+                      Add New
                       </button>
                     </td>
                   </tr>

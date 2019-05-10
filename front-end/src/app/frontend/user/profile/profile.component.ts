@@ -153,8 +153,7 @@ export class ProfileComponent implements OnInit {
     reader.addEventListener('load', (event: any) => {
 
       this.coverPicFile = new ImageSnippet(event.target.result, file);
-      console.log('this.coverPicFile', this.coverPicFile);
-
+      
       this.userService.uploadImage(this.coverPicFile.file, 'cover_pic').subscribe(
         (res) => {
           

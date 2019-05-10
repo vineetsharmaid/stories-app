@@ -24,7 +24,8 @@ export const ROUTES: RouteInfo[] = [
       children: [
         { path: '/admin/stories/pending', title: 'Unpublished Stories', letter:'US' },
         { path: '/admin/stories/published', title: 'Published Stories', letter:'PS' },
-        { path: '/admin/category', title: 'Categories',  letter:'C' },
+        { path: '/admin/stories/flagged', title: 'Flagged Stories', letter:'FS' },
+        // { path: '/admin/category', title: 'Categories',  letter:'C' },
         { path: '/admin/tags', title: 'Tags',  letter:'T' },
       ]
     }, { 

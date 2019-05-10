@@ -79,10 +79,8 @@ export class UserService {
 
   	getUserInfo(userId): Observable<any>{
 			
-			let httpAuthOptions = {
-			  headers: new HttpHeaders({ 'Content-Type': 'application/json', 
-			  	"Authorization": "Bearer " + localStorage.getItem('jwtToken')
-			  })
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 			};
 			
 			// return this.http.get(ADMIN_API_URL+'get_user_info/'+userId, httpAuthOptions).pipe(

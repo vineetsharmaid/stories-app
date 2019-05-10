@@ -10,6 +10,10 @@ import { environment } from '../../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
+class ImageSnippet {
+  constructor(public src: string, public file: File) {}
+}
+
 @Component({
   selector: 'app-companies-add',
   templateUrl: './companies-add.component.html',
@@ -21,32 +25,40 @@ export class CompaniesAddComponent implements OnInit {
 	public addCompanyForm: FormGroup;
 	public formSubmitted: boolean = false;
 	public formErrors: Array<string>;
+	public logoFile: any;
 
   	constructor(private formBuilder: FormBuilder, private companiesService: CompaniesService, private router: Router) { }
 
   	ngOnInit() {
 
-  		this.addCompanyForm = this.formBuilder.group(
-  			{ 'name': ['', Validators.required] }
-  		);
-
+  		this.addCompanyForm = this.formBuilder.group({ 
+  			'name': ['', Validators.required],
+  			'email': ['', Validators.required],
+  			'logo': ['', Validators.required] 
+  		});
   	}
 
   	// convenience getter for easy access to form fields
   	get fields() { return this.addCompanyForm.controls; }    	
 
-  	addCompany() {
+  	addCompany(imageInput: any) {
 
   		this.formSubmitted = true;
-		  		
+
 			// stop here if form is invalid
 			if (this.addCompanyForm.invalid) {
 
 				console.log('Validation error.');
 				return;
 			} else {
-				console.log(this.addCompanyForm.get('name').value);
-				this.companiesService.addCompany(this.addCompanyForm.get('name').value).subscribe((response: Array<Object>) => {
+				
+				var company = {
+					'name': this.addCompanyForm.get('name').value,
+					'email': this.addCompanyForm.get('email').value,
+					'logo': this.logoFile.file,
+				};
+
+				this.companiesService.addCompany(company).subscribe((response: Array<Object>) => {
 
 					console.log('response', response);
 					if ( response['status'] == true ) {
@@ -66,5 +78,19 @@ export class CompaniesAddComponent implements OnInit {
 
   	}
 
+
+  uploadCoverPic(imageInput: any) {
+
+    const file: File = imageInput.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+
+      this.logoFile = new ImageSnippet(event.target.result, file);
+    });
+
+    reader.readAsDataURL(file);
+
+  }
 
 }

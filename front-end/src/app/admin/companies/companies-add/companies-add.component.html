@@ -25,6 +25,26 @@
 										</mat-form-field>
 						      </div>
 									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input matInput formControlName="email" type="text" placeholder="Email">
+										<div *ngIf="formSubmitted && fields.email.errors" class="invalid-feedback">
+											<div *ngIf="fields.email.errors.required">Email is required</div>
+										</div>
+										</mat-form-field>
+						      </div>
+									
+									<div class="form-group">
+										<!-- <mat-form-field class="example-full-width"> -->
+										<!-- <input matInput formControlName="logo" type="text" placeholder="Company Logo"> -->
+										<input class="ng-hide" formControlName="logo" id="input-file-id" #imageInput accept="image/*" type="file" (change)="uploadCoverPic(imageInput)" />
+										<label for="input-file-id" class="btn btn-success">Choose Logo</label>
+										<div *ngIf="formSubmitted && fields.logo.errors" class="invalid-feedback">
+											<div *ngIf="fields.logo.errors.required">Logo is required</div>
+										</div>
+										<!-- </mat-form-field> -->
+						      </div>
+									
 									<button mat-raised-button type="submit" class="btn btn-danger pull-right">Add</button>
 								</div>
 								<div class="col-md-3"></div>

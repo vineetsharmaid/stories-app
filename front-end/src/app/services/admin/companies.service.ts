@@ -21,28 +21,29 @@ export class CompaniesService {
 	
   	constructor(private http: HttpClient) { }
 
-	/** POST: get category by cat id to the database */
+	/** POST: get company from the database */
 	getCompanies (): Observable<any> {
 	  
 	  return this.http.get(ADMIN_API_URL+'get_companies/', httpOptions);
 	}
 
-	/** POST: get category by cat id to the database */
+	/** POST: get company by companyIdfrom the database */
 	getCompany (companyId): Observable<any> {
 	  
 	  return this.http.get(ADMIN_API_URL+'get_company/'+companyId, httpOptions);
 	}
 
-	/** POST: add a new category to the database */
+	/** POST: add a new company to the database */
 	addCompany (company): Observable<any> {
-
 
 		let httpOptions = {
 		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
 		};
 
 		const formData = new FormData();		
-    	formData.append('name', company);
+    	formData.append('name', company.name);
+    	formData.append('email', company.email);
+    	formData.append('logo', company.logo);
 
 	  	return this.http.post(ADMIN_API_URL+'add_company', formData, httpOptions)
     	.pipe(
@@ -50,7 +51,7 @@ export class CompaniesService {
     	);
 	}
 
-	/** POST: add a new category to the database */
+	/** POST: update company to the database */
 	editcompany (company): Observable<any> {
 
 		let httpOptions = {
@@ -59,6 +60,9 @@ export class CompaniesService {
 
 		const formData = new FormData();		
     	formData.append('name', company.name);
+    	formData.append('email', company.email);
+    	formData.append('logo', company.logo);
+
     	formData.append('company_id', company.company_id);
 	  	
 	  	return this.http.post(ADMIN_API_URL+'edit_company', formData, httpOptions)

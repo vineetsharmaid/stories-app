@@ -32,7 +32,7 @@
                      {{ story.preview_subtitle }}
                     </td>
                     <td>
-                      <a href="#" class="user_name">
+                      <a [routerLink]="['/admin/user-list/', story.author_id]" class="user_name">
                         {{ story.author_first_name | titlecase }} {{story.author_last_name | titlecase }}
                       </a>
                       <p class="user_name text-muted">
@@ -40,7 +40,7 @@
                       </p>
                     </td>
                     <td>
-                      <a href="#" class="user_name">
+                      <a [routerLink]="['/admin/user-list/', story.reporter_id]" class="user_name">
                         {{ story.reporter_first_name | titlecase }} {{story.reporter_last_name | titlecase }}
                       </a>
                       <p class="user_name text-muted">

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { CompaniesService } from "../../../services/admin/companies.service";
+import { environment } from '../../../../environments/environment';
+const APP_URL  =  environment.baseUrl;
 
 @Component({
   selector: 'app-companies-list',
@@ -21,10 +23,14 @@ export class CompaniesListComponent implements OnInit {
 	   
 	    this.companiesService.getCompanies().subscribe((response: Array<Object>) => {
 
-	      console.log('getCompanies response', response);
 	      if ( response['status'] == true ) {
 	        
-	        this.companies = response['data'];
+	    		var companies = response['data'] 
+	    		companies.forEach((company) => {
+
+		    			company['logo'] = company['logo'] == '' ? '' : APP_URL+'/assets/uploads/companies/'+company['logo'];
+	    		});
+	        this.companies = companies;
 	      }
 
 	    }, error => {

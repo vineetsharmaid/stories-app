@@ -30,7 +30,6 @@ export class UserDetailsComponent implements OnInit {
 
     this.userService.getUserPoints(userId).subscribe((response) => {
 
-      console.log('pointsLog response', response);
       this.points = response['data'];
     }, (error) => {
 
@@ -42,7 +41,6 @@ export class UserDetailsComponent implements OnInit {
 
     this.userService.getUserStories(userId).subscribe((response) => {
 
-      console.log('getUserStories response', response);
       this.stories = response['data'];
     }, (error) => {
 
@@ -54,7 +52,6 @@ export class UserDetailsComponent implements OnInit {
 
     this.userService.getUserInfo(userId).subscribe( (response) => {
 
-      console.log('response', response);
       this.userInfo = response['data'][0];
       this.userInfo['cover_pic'] = this.userInfo['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['cover_pic'];
       this.userInfo['profile_pic'] = this.userInfo['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['profile_pic'];
