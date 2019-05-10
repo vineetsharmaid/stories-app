@@ -144,8 +144,20 @@ export class StoryDetailsComponent implements OnInit {
 
       this.storyData['liked'] = true;
     }, error => {
-    	
-    	console.log('getstories error', error);
+      
+      console.log('likeStory error', error);
+    });    
+  }
+
+  reportStory() {
+
+    this.storiesService.reportStory(this.storyData['story_id']).subscribe((response: Array<Object>) => {
+
+      this.storyData['flagged'] = true;
+    	console.log('reportStory response', response);
+    }, error => {
+      
+      console.log('reportStory error', error);
     });  	
   }
 

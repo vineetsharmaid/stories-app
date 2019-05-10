@@ -61,6 +61,17 @@ class Admin_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_flagged_stories() {
+        
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.status, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, authorUser.first_name as author_first_name, authorUser.last_name as author_last_name, authorUser.username as author_username, reporterUser.first_name as reporter_first_name, reporterUser.last_name as reporter_last_name, reporterUser.username as reporter_username');
+        $this->db->from('stories');
+        $this->db->join('flagged_posts', 'flagged_posts.post_id = stories.story_id');
+        $this->db->join('users as reporterUser', 'reporterUser.user_id = flagged_posts.flagged_by');
+        $this->db->join('users as authorUser', 'authorUser.user_id = stories.author_id');
+        $this->db->group_by( 'stories.story_id' );
+        return $this->db->get()->result();
+    }
+
     public function get_comments($where='') {
         
 

@@ -1123,7 +1123,6 @@ class Admin extends REST_Controller {
       }
     }
 
-
     public function get_user_stories_get($user_id) {
 
       $stories = $this->common_model->get_stories( 
@@ -1132,6 +1131,30 @@ class Admin extends REST_Controller {
           'stories.author_id' => $user_id
         )
       );
+
+      if ( !empty($stories) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function get_flagged_stories_get() {
+
+      $stories = $this->admin_model->get_flagged_stories();
 
       if ( !empty($stories) ) {
           

@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { StoriesPendingComponent } from './stories-pending/stories-pending.component';
 import { StoriesPublishedComponent } from './stories-published/stories-published.component';
 import { StoriesViewComponent } from './stories-view/stories-view.component';
+import { StoriesFlaggedComponent } from './stories-flagged/stories-flagged.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -22,6 +23,11 @@ export const StoriesRoutes: Routes = [
     { 
         path: 'published',     
         component: StoriesPublishedComponent,
+        canActivate: [AuthGuard]
+    },
+    { 
+        path: 'flagged',     
+        component: StoriesFlaggedComponent,
         canActivate: [AuthGuard]
     },
     { 

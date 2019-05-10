@@ -36,12 +36,28 @@
                     <h1>{{storyData.title}}</h1>
                     <div class="right_inner_footer_bottom top20">
                         <ul>
-                            <li (click)="like()">
+                            <li *ngIf="isLoggedIn == 'true'" (click)="like()">
                                 <img src="assets/img/liked.png" alt="" *ngIf="storyData.liked">
                                 <img src="assets/img/like_white.png" alt="" *ngIf="!storyData.liked">
                                 Recommend
                             </li>
-                            <li class="bookmark"><img src="assets/img/bookmark.png" alt=""> 14 min rea</li>
+                            <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
+                                <img src="assets/img/like_white.png" alt="" *ngIf="!storyData.liked">
+                                Recommend
+                            </li>
+                            <li *ngIf="isLoggedIn == 'true' && storyData.flagged == false" data-toggle="modal" data-target="#confirm-report-modal">
+                                <span>
+                                    <i class="fa fa-flag-o fa-2x"></i>
+                                </span>
+                                Report
+                            </li>
+                            <li *ngIf="isLoggedIn == 'true' && storyData.flagged == true" data-toggle="modal" data-target="#already-reported">
+                                <span>
+                                    <i class="fa fa-flag-o fa-2x" style="color:#f1663b;"></i>
+                                </span>
+                                Report
+                            </li>
+                            <!-- <li class="bookmark"><img src="assets/img/bookmark.png" alt=""> 14 min rea</li> -->
                         </ul>
                     </div>
                 </div>
@@ -101,12 +117,16 @@
         <div class="col-md-12">
             <div class="right_inner_footer_bottom top20 single_footer_social_share">
                 <ul>
-                    <li (click)="like()">
+                    <li *ngIf="isLoggedIn == 'true'" (click)="like()">
                         <img src="assets/img/liked.png" alt="" *ngIf="storyData.liked">
-                        <img src="assets/img/like_white.png" alt="" *ngIf="!storyData.liked">
+                        <img src="assets/img/like-black.png" alt="" *ngIf="!storyData.liked">
                         Recommend
                     </li>
-                    <li class="bookmark"><img src="assets/img/bookmark.png" alt=""> 14 min rea</li>
+                    <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
+                        <img src="assets/img/like-black.png" alt="" *ngIf="!storyData.liked">
+                        Recommend
+                    </li>
+                    <!-- <li class="bookmark"><img src="assets/img/bookmark.png" alt=""> 14 min rea</li> -->
                 </ul>
             </div>
         </div>
@@ -187,7 +207,59 @@
             
         </div>
         <ng-template #showLogin>
-        <p class="login-message" (click)="showLoginPopup()">Login to comment.</p>
+        <button class="login-message theme_btn" (click)="showLoginPopup()">Login to comment</button>
         </ng-template>
+    </div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="confirm-report-modal" *ngIf="isLoggedIn == 'true' && storyData.flagged == false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header p-2">
+                <h4 class="modal-title">Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body pt-5 pb-5">
+                <p>Click on confirm to flag this story as inappropriate.</p>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-sm btn-success" data-dismiss="modal" (click)="reportStory()">Confirm</button>
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal fade" id="already-reported" *ngIf="isLoggedIn == 'true' && storyData.flagged == true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="modal-header p-2">
+                <h4 class="modal-title">Already Reported</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body pt-5 pb-5">
+                <p>You have already flagged this story as inappropriate.</p>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            
+        </div>
     </div>
 </div>

@@ -30,6 +30,15 @@ export class StoriesService {
 		return this.http.get(ADMIN_API_URL+'get_stories_by_review_status/'+status, httpOptions);
 	}
 
+  	getFlaggedStories(): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+		
+		return this.http.get(ADMIN_API_URL+'get_flagged_stories/', httpOptions);
+	}
+
   	getParentCategories(catId): Observable<any>{
 			
 		let httpOptions = {

@@ -1200,6 +1200,42 @@ class Users extends REST_Controller {
     }
 
 
+    public function report_story_post()
+    {
+        
+        $data = array('post_id' => $this->input->post('post_id'), 'flagged_by' => $this->token_data->id);
+
+        if ($this->common_model->data_exists('flagged_posts', $data) == 0) {
+          if ( $this->common_model->insert_entry('flagged_posts', $data) ) {
+
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data'   => 'Reported the story',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already reported by this user',
+                'error' => array('You have already reported this story.'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
 
     /**
      * get access token from header

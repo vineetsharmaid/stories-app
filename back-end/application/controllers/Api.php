@@ -850,13 +850,16 @@ class Api extends REST_Controller {
             if (isset($this->token_data)) { 
 
               $liked_where = array('story_id' => $story[0]->story_id, 'user_id' => $this->token_data->id);
+              $flagged_where = array('post_id' => $story[0]->story_id, 'flagged_by' => $this->token_data->id);
               
               // check if user liked this story
               $story[0]->liked = $this->common_model->data_exists('story_user_likes',  $liked_where) ? true : false;
+              $story[0]->flagged = $this->common_model->data_exists('flagged_posts',  $flagged_where) ? true : false;
 
             } else {
 
               $story[0]->liked = false;
+              $story[0]->flagged = false;
             }
 
             $story[0]->tags = $this->common_model->get_story_tags($story[0]->story_id);

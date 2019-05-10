@@ -4,9 +4,9 @@
       <div class="col-md-12">
 
         <button class="btn btn-md btn-current mr-2" [routerLink]="['/admin/stories/pending']">Unpublished</button>
-        <button class="btn btn-md btn-danger ml-2" [routerLink]="['/admin/stories/published']">Published</button>
-        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/stories/flagged']">Flagged</button>
-          
+        <button class="btn btn-current btn-md ml-2" [routerLink]="['/admin/stories/published']">Published</button>
+        <button class="btn btn-md btn-danger ml-2" [routerLink]="['/admin/stories/flagged']">Flagged</button>
+
         <div class="card">
           <div class="card-header card-header-danger">
             <h4 class="card-title">Published Stories</h4>
@@ -18,9 +18,9 @@
                 <thead class=" text-primary">
                   <th width="20%">Preview Title </th>
                   <th width="25%">Sub Title </th>
-                  <th width="10%">Author </th>
+                  <th width="15%">Author </th>
+                  <th width="15%">Reporter </th>
                   <th width="15%">Last Updated </th>
-                  <th width="10%">Featured </th>
                   <th width="20%">Action </th>
                 </thead>
                 <tbody *ngIf="stories?.length > 0">
@@ -33,25 +33,30 @@
                     </td>
                     <td>
                       <a href="#" class="user_name">
-                        {{ story.first_name | titlecase }} {{story.last_name | titlecase }}
+                        {{ story.author_first_name | titlecase }} {{story.author_last_name | titlecase }}
                       </a>
                       <p class="user_name text-muted">
-                        @{{story.username}}
+                        @{{story.author_username}}
+                      </p>
+                    </td>
+                    <td>
+                      <a href="#" class="user_name">
+                        {{ story.reporter_first_name | titlecase }} {{story.reporter_last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{story.reporter_username}}
                       </p>
                     </td>
                     <td>{{story.created | date: 'mediumDate'}}</td>
                     <td>
-                      <mat-checkbox [checked]= "story.featured == 1" (click)="updateFeatured(story.story_id, i)">
-                        <p *ngIf="story.featured == 1"> Yes </p>
-                        <p *ngIf="story.featured == 0"> No </p>
-                      </mat-checkbox>
-                    </td>
-                    <td>
                       <a class="btn btn-sm btn-success" target="_blank" [routerLink]="['/story/', story.slug]">
                         View
                       </a>
-                      <button class="btn btn-sm btn-success" (click)="changeStatus(0, story.story_id, story.author_id, i)">
-                        Unpublish
+                      <button *ngIf="story.status != 2" class="btn btn-sm btn-danger" (click)="changeStatus(2, story.story_id, story.author_id, i)">
+                        Block
+                      </button>
+                      <button *ngIf="story.status == 2" class="btn btn-sm btn-success" (click)="changeStatus(1, story.story_id, story.author_id, i)">
+                        Unblock
                       </button>
                     </td>
                   </tr>
