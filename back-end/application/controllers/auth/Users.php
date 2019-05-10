@@ -682,7 +682,7 @@ class Users extends REST_Controller {
       
       $config['upload_path']          = './assets/uploads/users/';
       $config['allowed_types']        = 'gif|jpg|png|jpeg';
-      $config['max_size']             = 2048;
+      $config['max_size']             = 2048*5;
       // $config['max_width']            = 1024;
       // $config['max_height']           = 768;
 
@@ -766,6 +766,29 @@ class Users extends REST_Controller {
                 'status' => FALSE,
                 'message' => 'No user were found',
                 'error' => array('No user were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    public function get_user_points_get() {
+
+      $points = $this->user_model->get_user_points( $this->token_data->id );
+
+      if ( !empty($points) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $points,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
     }

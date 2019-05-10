@@ -481,6 +481,41 @@ class Api extends REST_Controller {
     }
 
 
+    public function get_author_stories_get($username, $limit="", $offset="")
+    {
+
+      $user = $this->common_model->get_data('users', array('username' => $username) );
+
+      if (isset($this->token_data)) { 
+
+        $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.author_id' => $user[0]->user_id), $limit, $offset, $order="", $like="", $this->token_data->id );
+      } else {
+
+        $stories = $this->common_model->get_stories( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.author_id' => $user[0]->user_id), $limit, $offset, $order="", $like="", 0);
+      }
+
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($stories) ) {
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
     public function get_companies_get()
     {
 

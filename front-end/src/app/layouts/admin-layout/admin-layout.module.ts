@@ -7,6 +7,7 @@ import { AdminLayoutRoutes } from './admin-layout.routing';
 
 import { DashboardComponent } from '../../admin/dashboard/dashboard.component';
 import { UserProfileComponent } from '../../admin/user-profile/user-profile.component';
+import { UserDetailsComponent } from '../../admin/user-details/user-details.component';
 import { TableListComponent } from '../../admin/table-list/table-list.component';
 import { TypographyComponent } from '../../admin/typography/typography.component';
 import { IconsComponent } from '../../admin/icons/icons.component';
@@ -52,6 +53,7 @@ import {
   declarations: [
     DashboardComponent,
     UserProfileComponent,
+    UserDetailsComponent,
     TableListComponent,
     TypographyComponent,
     IconsComponent,

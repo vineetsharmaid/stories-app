@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { ProfileComponent } from '../../frontend/user/profile/profile.component';
 import { StoryComponent } from '../../frontend/user/story/story.component';
 import { ForumComponent } from '../../frontend/user/forum/forum.component';
+import { PointsComponent } from '../../frontend/user/points/points.component';
 
 
 import { 
@@ -32,5 +33,9 @@ export const ProfileLayoutRoutes: Routes = [
 	      loadChildren: '../../frontend/user/forum/forum.module#ForumModule'
 	  	}],
     	canActivate: [AuthGuard]
-	},
+	}, {
+		path: 'points',
+		component: PointsComponent,
+    canActivate: [AuthGuard]
+	}
 ];

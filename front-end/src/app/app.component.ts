@@ -18,12 +18,13 @@ export class AppComponent {
 
 	ngOnInit() {
 
- //   	this.router.events.subscribe((evt) => {
- //            if (!(evt instanceof NavigationEnd)) {
- //                return;
- //            }
- //            window.scrollTo(0, 0)
- //        });
+   	// this.router.events.subscribe((evt) => {
+    //   if (!(evt instanceof NavigationEnd)) {
+    //       return;
+    //   }
+    //   window.scrollTo(0, 0);
+    // });
+
  		this.sharedService.currentMessage.subscribe(message => console.log('detail message', message) );
 
  		if ( localStorage.getItem('isLoggedIn') ) {

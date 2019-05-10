@@ -42,7 +42,7 @@ class Common_model extends CI_Model {
     public function get_users()
     {
 
-        $this->db->select('users.first_name, users.last_name, users.profile_pic, users.user_email, users.user_type, users.username, users.created, status.name as status');
+        $this->db->select('users.user_id, users.first_name, users.last_name, users.profile_pic, users.user_email, users.user_type, users.username, users.created, status.name as status');
         $this->db->from('users');
         $this->db->join('status', 'users.status = status.id', 'left');
         $this->db->where('users.user_type = "user"'); 
@@ -169,9 +169,36 @@ class Common_model extends CI_Model {
       $this->db->update('users');
 
       $this->db->select('users.points');
-        $this->db->from('users');
+      $this->db->from('users');
       $this->db->where('user_id', $user_id);
-      return $this->db->get()->row();
+      $user_points = $this->db->get()->row();
+
+      if ( $user_points->points > 0 && $user_points->points <= 100 ) {
+        
+        $badge =  "Beginner";
+      } else if ( $user_points->points > 100 && $user_points->points <= 500 ) {
+        
+        $badge =  "Apprentice";
+      } else if ( $user_points->points > 500 && $user_points->points <= 1000 ) {
+        
+        $badge =  "Enthusiast";
+      } else if ( $user_points->points > 1000 && $user_points->points <= 2000 ) {
+        
+        $badge =  "Intermediate";
+      } else if ( $user_points->points > 2000 && $user_points->points <= 5000 ) {
+        
+        $badge =  "Pro";
+      } else if ( $user_points->points > 5000 ) {
+        
+        $badge =  "Master";
+      }
+
+      $this->update_entry('users', 
+        array('badge' => $badge), 
+        array('user_id' => $user_id)
+      );
+
+      return $user_points;
     }
 
     public function get_stories($where='', $limit='', $offset='', $order='', $like='', $user_id=0) {

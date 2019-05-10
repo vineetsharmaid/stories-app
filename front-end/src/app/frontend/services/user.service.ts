@@ -42,6 +42,18 @@ export class UserService {
 			);
 		}
 
+  	getUserPoints(): Observable<any>{
+    	    	
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_points', httpOptions).pipe(
+				tap((newUser: Object) => console.log('newUser', newUser)),
+				catchError(this.handleError)
+			);
+		}
+
   	loginUser(User): Observable<any>{
     	
     	// return  this.http.get(`${API_URL}`);

@@ -4,7 +4,7 @@ class User_model extends CI_Model {
 
     public function get_user_info($where) {
 
-      $this->db->select("users.first_name, users.last_name, users.profile_pic, users.user_email, users.user_type, users.username, users.cover_pic, 
+      $this->db->select("users.first_name, users.last_name, users.profile_pic, users.user_email, users.points, users.badge, users.user_type, users.username, users.cover_pic, 
         max(case when usermeta.meta_key='professional_info' then usermeta.meta_value end) as professional_info,
         max(case when usermeta.meta_key='short_info' then usermeta.meta_value end) as short_info,
         max(case when usermeta.meta_key='website' then usermeta.meta_value end) as website,
@@ -13,6 +13,26 @@ class User_model extends CI_Model {
       $this->db->join('usermeta', 'usermeta.user_id = users.user_id', 'left');
       $this->db->where( $where );
       $this->db->group_by( 'users.user_id' );
+      return $this->db->get()->result();
+    }
+
+    public function get_user_points($user_id) {
+
+      $this->db->select("points_allocation.*, stories.slug, answer_ka_question.slug as answer_slug, question.slug as question_slug");
+      $this->db->from('points_allocation');
+      // join for story as selector
+      $this->db->join('stories', "points_allocation.selector_id = stories.story_id AND points_allocation.selector = 'story'", 'left');
+
+      // joins for answer as selector
+      $this->db->join('forum_answers', "points_allocation.selector_id = forum_answers.answer_id AND points_allocation.selector = 'answer'", 'left');
+      $this->db->join('forum_questions as answer_ka_question', "answer_ka_question.question_id = forum_answers.question_id", 'left');
+
+      // join for question as selector
+      $this->db->join('forum_questions as question', "points_allocation.selector_id = question.question_id AND points_allocation.selector = 'question'", 'left');
+
+      $this->db->where( array("points_allocation.user_id" => $user_id) );
+      $this->db->group_by( 'points_allocation.point_id' );
+      $this->db->order_by( 'points_allocation.created', 'DESC' );
       return $this->db->get()->result();
     }
 

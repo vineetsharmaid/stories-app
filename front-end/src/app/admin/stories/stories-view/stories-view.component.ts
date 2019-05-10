@@ -91,16 +91,16 @@ export class StoriesViewComponent implements OnInit {
 	   	
 	   	console.log('status', status);
 
-	    this.storiesService.changeStatus(status, this.story['story_id']).subscribe((response: Array<Object>) => {
+	    // this.storiesService.changeStatus(status, this.story['story_id']).subscribe((response: Array<Object>) => {
 
-	    	console.log('changeStatus response', response);
-	    	this.reviewStatus = status;
-	    	this.showNotification('top','center', 'success', 'Status updated succesfully');
-	    }, error => {
+	    // 	console.log('changeStatus response', response);
+	    // 	this.reviewStatus = status;
+	    // 	this.showNotification('top','center', 'success', 'Status updated succesfully');
+	    // }, error => {
 
-	    	console.log('changeStatus error', error);
-	    	this.showNotification('top','center', 'danger', 'Unable to update status');
-	    });
+	    // 	console.log('changeStatus error', error);
+	    // 	this.showNotification('top','center', 'danger', 'Unable to update status');
+	    // });
   	}
 
   	back() {

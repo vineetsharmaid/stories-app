@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommentsRoutes } from './comments.routing';
 import { CommentsPendingComponent } from './comments-pending/comments-pending.component';
 import { CommentsPublishedComponent } from './comments-published/comments-published.component';
-import { CommentsViewComponent } from './comments-view/comments-view.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -43,7 +42,7 @@ import {
   declarations: [
     CommentsPendingComponent,
     CommentsPublishedComponent,
-    CommentsViewComponent,
+    
   ],
   providers: [
     AuthGuard

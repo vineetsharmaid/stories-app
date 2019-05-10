@@ -14,6 +14,7 @@ import { ForumComponent } from '../../frontend/forum/forum.component';
 import { SearchComponent } from '../../frontend/search/search.component';
 import { StoriesComponent } from '../../frontend/stories/stories.component';
 import { StoryDetailsComponent } from '../../frontend/story-details/story-details.component';
+import { AuthorProfileComponent } from '../../frontend/author-profile/author-profile.component';
 
 import { AboutComponent } from '../../frontend/static-pages/about/about.component';
 import { TeamComponent } from '../../frontend/static-pages/team/team.component';
@@ -62,6 +63,7 @@ import {
     SearchComponent,
     StoriesComponent,
     StoryDetailsComponent,
+    AuthorProfileComponent,
     AboutComponent,
     TeamComponent,
     PrivacyPolicyComponent,

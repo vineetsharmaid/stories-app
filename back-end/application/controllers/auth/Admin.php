@@ -39,6 +39,7 @@ class Admin extends REST_Controller {
         $this->methods['users_delete']['limit'] = 50; // 50 requests per hour per user/key
 
         $this->load->model('admin_model');
+        $this->load->model('user_model');
         $this->load->helper('common_helper');
 
         if ( is_null($this->input->get_request_header('Authorization')) ) {
@@ -1073,6 +1074,82 @@ class Admin extends REST_Controller {
         }
 
 
+    }
+
+    public function get_user_info_get($user_id) {
+
+      $user = $this->user_model->get_user_info( array('users.user_id' => $user_id) );
+
+      if ( !empty($user) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $user,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No user were found',
+                'error' => array('No user were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function get_user_points_get($user_id) {
+
+      $points = $this->user_model->get_user_points( $user_id );
+
+      if ( !empty($points) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $points,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function get_user_stories_get($user_id) {
+
+      $stories = $this->common_model->get_stories( 
+        array(
+          'stories.status'    => STORY_STATUS_PUBLISHED, 
+          'stories.author_id' => $user_id
+        )
+      );
+
+      if ( !empty($stories) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $stories,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
     }
 
 

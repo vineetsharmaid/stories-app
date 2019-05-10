@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForumCommentsViewComponent } from './forum-comments-view.component';
+import { PointsComponent } from './points.component';
 
-describe('ForumCommentsViewComponent', () => {
-  let component: ForumCommentsViewComponent;
-  let fixture: ComponentFixture<ForumCommentsViewComponent>;
+describe('PointsComponent', () => {
+  let component: PointsComponent;
+  let fixture: ComponentFixture<PointsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForumCommentsViewComponent ]
+      declarations: [ PointsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ForumCommentsViewComponent);
+    fixture = TestBed.createComponent(PointsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

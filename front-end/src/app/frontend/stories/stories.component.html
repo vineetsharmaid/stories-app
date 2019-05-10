@@ -48,8 +48,8 @@
 
                         <div class="right_inner_footer">
                             <div class="right_inner_footer_top">
-                                <a href="#" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
-                                <a href="#" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
+                                <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
+                                <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" href="#" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
                                 <!-- <a href="#" class="coubt2">Indigenous</a> -->
                                 <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/tag/', tag.tag_id]" class="light_tag">{{tag.name}}</a>
                             </div>

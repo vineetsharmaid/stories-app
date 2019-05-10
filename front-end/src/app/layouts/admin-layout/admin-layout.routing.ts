@@ -4,6 +4,7 @@ import { DashboardComponent } from '../../admin/dashboard/dashboard.component';
 import { UserProfileComponent } from '../../admin/user-profile/user-profile.component';
 import { TableListComponent } from '../../admin/table-list/table-list.component';
 import { UserListComponent } from '../../admin/user-list/user-list.component';
+import { UserDetailsComponent } from '../../admin/user-details/user-details.component';
 import { TypographyComponent } from '../../admin/typography/typography.component';
 import { IconsComponent } from '../../admin/icons/icons.component';
 import { MapsComponent } from '../../admin/maps/maps.component';
@@ -30,14 +31,15 @@ export const AdminLayoutRoutes: Routes = [
     	canActivate: [AuthGuard],
         data : {title : 'Dashboard'}
     },
-    { path: 'user-profile',   component: UserProfileComponent },
-    { path: 'table-list',     component: TableListComponent },
-    { path: 'user-list',     component: UserListComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'maps',           component: MapsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent }, 
+    { path: 'user-profile',   component: UserProfileComponent, canActivate: [AuthGuard] },
+    { path: 'table-list',     component: TableListComponent, canActivate: [AuthGuard] },
+    { path: 'user-list',     component: UserListComponent, canActivate: [AuthGuard] },
+    { path: 'user-list/:userId', component: UserDetailsComponent, canActivate: [AuthGuard] },
+    { path: 'typography',     component: TypographyComponent, canActivate: [AuthGuard] },
+    { path: 'icons',          component: IconsComponent, canActivate: [AuthGuard] },
+    { path: 'maps',           component: MapsComponent, canActivate: [AuthGuard] },
+    { path: 'notifications',  component: NotificationsComponent, canActivate: [AuthGuard] },
+    { path: 'upgrade',        component: UpgradeComponent, canActivate: [AuthGuard] }, 
     // { path: 'category',        component: CategoriesComponent }, 
     {
         path: 'category',
@@ -47,7 +49,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/categories/categories.module#CategoriesModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'tags',
         component: TagsComponent,
@@ -56,7 +59,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/tags/tags.module#TagsModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'topics',
         component: TopicsComponent,
@@ -65,7 +69,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/topics/topics.module#TopicsModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'companies',
         component: CompaniesComponent,
@@ -74,7 +79,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/companies/companies.module#CompaniesModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'stories',
         component: StoriesComponent,
@@ -83,7 +89,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/stories/stories.module#StoriesModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'questions',
         component: QuestionsComponent,
@@ -92,7 +99,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/questions/questions.module#QuestionsModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'answers',
         component: AnswersComponent,
@@ -101,7 +109,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/answers/answers.module#AnswersModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'comments',
         component: CommentsComponent,
@@ -110,7 +119,8 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/comments/comments.module#CommentsModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },{
         path: 'forum-comments',
         component: ForumCommentsComponent,
@@ -119,6 +129,7 @@ export const AdminLayoutRoutes: Routes = [
               path: '',
               loadChildren: '../../admin/forum-comments/forum-comments.module#ForumCommentsModule'
             }
-        ] 
+        ],
+        canActivate: [AuthGuard], 
     },
 ];

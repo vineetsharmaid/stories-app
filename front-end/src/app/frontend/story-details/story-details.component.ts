@@ -75,6 +75,13 @@ export class StoryDetailsComponent implements OnInit {
       this.comments.forEach((comment) => {
 
         comment['profile_pic'] = comment['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
+
+        if( comment['children'].length > 0 ) {
+          comment['children'].forEach((childComment) => {
+            
+            childComment['profile_pic'] = childComment['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+childComment['profile_pic'];
+          });          
+        }
       });
 
       console.log('getStoryComments this.comments', this.comments);
@@ -106,18 +113,20 @@ export class StoryDetailsComponent implements OnInit {
 
         this.commentsForm.reset();
         
-
+        var comment = response['data'];
         // set position of new comment in the comments json
         if (typeof index == 'undefined') {
           // set children for child comments
-          response['data']['children'] = [];
+          comment['children'] = [];
+          comment['profile_pic'] = APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
           
-          this.comments.push(response['data'])
+          this.comments.push(comment)
           // update property to hide comment box in frontend
           this.showCommentBox = false;
         } else {
 
-          this.comments[index]['children'].push(response['data']);
+          comment['profile_pic'] = APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
+          this.comments[index]['children'].push(comment);
           // update property to hide comment box in frontend
           this.comments[index]['addReply'] = false;
         }

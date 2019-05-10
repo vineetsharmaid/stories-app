@@ -50,6 +50,49 @@ export class UserService {
 			);
 		}
 
+  	getUserPoints(userId): Observable<any>{
+    	    	
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			// return this.http.get(ADMIN_API_URL+'get_user_points/'+userId, httpOptions).pipe(
+			// 	tap((userPoints: any) => console.log('userPoints', userPoints)),
+			// 	catchError(this.handleError)
+			// );
+			return this.http.get(ADMIN_API_URL+'get_user_points/'+userId, httpOptions);
+		}
+
+  	getUserStories(userId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			// return this.http.get(ADMIN_API_URL+'get_user_stories/'+userId, httpOptions).pipe(
+			// 	tap((userPoints: any) => console.log('userPoints', userPoints)),
+			// 	catchError(this.handleError)
+			// );
+
+			return this.http.get(ADMIN_API_URL+'get_user_stories/'+userId, httpOptions);
+		}
+
+  	getUserInfo(userId): Observable<any>{
+			
+			let httpAuthOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', 
+			  	"Authorization": "Bearer " + localStorage.getItem('jwtToken')
+			  })
+			};
+			
+			// return this.http.get(ADMIN_API_URL+'get_user_info/'+userId, httpAuthOptions).pipe(
+			// 	tap((userInfo: Object) => console.log('userInfo', userInfo)),
+			// 	catchError(this.handleError)
+			// );
+			return this.http.get(ADMIN_API_URL+'get_user_info/'+userId, httpOptions);
+		}
+
+
 
 
 

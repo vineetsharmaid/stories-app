@@ -45,6 +45,18 @@ export class StoriesService {
 	    );
 		}
 
+  	getAuthorStories(username, limit, offset): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_author_stories/'+username+'/'+limit+'/'+offset, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getfeaturedStories(limit, offset): Observable<any>{
 
 			let httpOptions = {

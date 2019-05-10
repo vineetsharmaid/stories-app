@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { CommentsPendingComponent } from './comments-pending/comments-pending.component';
 import { CommentsPublishedComponent } from './comments-published/comments-published.component';
-import { CommentsViewComponent } from './comments-view/comments-view.component';
+// import { CommentsViewComponent } from './comments-view/comments-view.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -24,9 +24,9 @@ export const CommentsRoutes: Routes = [
         component: CommentsPublishedComponent,
         canActivate: [AuthGuard]
     },
-    { 
-        path: 'view/:storyId',
-        component: CommentsViewComponent,
-        canActivate: [AuthGuard]
-    },
+    // { 
+    //     path: 'view/:storyId',
+    //     component: CommentsViewComponent,
+    //     canActivate: [AuthGuard]
+    // },
 ];

@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="row search-results-wrap">
+    <div class="col-md-12">
+      <span class="search-section-heading">STORIES</span>
+      <hr>
+      <div class="row" infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()">
+        <div class="col-md-6" *ngFor="let story of stories; let indx = index">
+          <div class="story_outer_wrap">
+            <a [routerLink]="['/story/', story.slug]">
+              <div class="main_story_img_wrap">
+                <img [src]="story.preview_image" [alt]="story.preview_title">
+                <div class="overlay_dark"></div>
+                <div class="story_text_block">
+                  <div class="story_tag_wrap">
+                    <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
+                    <span class="dark_tag" *ngIf="story.type == 2">Business</span>
+                  </div>
+                  <h3>{{story.preview_title}}</h3>
+                  <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p>
+                </div>
+              </div>
+            </a>
+            <div class="right_inner_footer_bottom">
+              <ul>
+                <li class="fl" (click)="like(story.story_id, indx)">
+                    <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
+                    <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0"> 
+                    {{story.likes}}
+                </li>
+                <li class="bookmark fr">
+                  <div class="share_img_wrap">
+                    <img src="assets/img/bookmark.png" alt="">
+                    <div class="social_wrap">
+                      <ul>
+                        <li><a (click)="share()"><img src="assets/img/facebook.png" alt=""></a></li>
+                        <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
+                        <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
+                      </ul>
+                    </div>
+                  </div> 14 min rea
+                </li>
+              </ul>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

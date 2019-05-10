@@ -1,0 +1,56 @@
+<div class="container user_info_wrap">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="heading_gap">
+				<h2>Points</h2>
+			</div>
+		</div>
+		<div class="col-md-3 mb-5 text-center user-info">
+      <div class="user_profile_pic_wrap">
+          <img *ngIf="userInfo['profile_pic']?.length > 0" [src]="userInfo['profile_pic']" alt="">
+          <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/user/user.jpg" alt="">
+      </div>
+
+      <h3>{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
+
+      <span class="mt-5">
+          <strong>{{userInfo.badge}}</strong> ({{userInfo.points}} Points)
+      </span>
+
+		</div>
+		<div class="col-md-9 mb-5">
+			<ul class="list-group" *ngIf="points?.length > 0">
+				<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let point of points">
+					<span *ngIf="point.activity == 'likes'">
+						Your 
+						<a [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						has been recommended by {{point.milestone}} readers.
+					</span>
+					<span *ngIf="point.activity == 'approved'">
+						Your 
+						<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						
+						<a *ngIf="point.selector == 'question'" [routerLink]="['/forum/question/', point.question_slug]">{{point.selector}}</a>
+						
+						<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+
+						has been approved by the SOA Team.
+					</span>
+					<span *ngIf="point.activity == 'comments'">
+						Your 
+						<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						
+						<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+						got {{point.milestone}} {{point.activity}} from readers.
+					</span>
+
+					<span class="badge badge-primary badge-pill">
+						+{{point.points}}
+					</span>
+					
+					<span> {{point.created | date: 'mediumDate'}} </span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
