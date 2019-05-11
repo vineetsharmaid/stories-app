@@ -45,13 +45,13 @@
                                 <img src="assets/img/like_white.png" alt="" *ngIf="!storyData.liked">
                                 Recommend
                             </li>
-                            <li *ngIf="isLoggedIn == 'true' && storyData.flagged == false" data-toggle="modal" data-target="#confirm-report-modal">
+                            <li *ngIf="isLoggedIn == 'true' && storyData['flagged'] == false" data-toggle="modal" data-target="#confirm-report-modal">
                                 <span>
                                     <i class="fa fa-flag-o fa-2x"></i>
                                 </span>
                                 Report
                             </li>
-                            <li *ngIf="isLoggedIn == 'true' && storyData.flagged == true" data-toggle="modal" data-target="#already-reported">
+                            <li *ngIf="isLoggedIn == 'true' && storyData['flagged'] == true" data-toggle="modal" data-target="#already-reported">
                                 <span>
                                     <i class="fa fa-flag-o fa-2x" style="color:#f1663b;"></i>
                                 </span>
@@ -214,7 +214,7 @@
 
 
 <!-- The Modal -->
-<div class="modal fade" id="confirm-report-modal" *ngIf="isLoggedIn == 'true' && storyData.flagged == false">
+<div class="modal fade" id="confirm-report-modal" *ngIf="isLoggedIn == 'true' && storyData['flagged'] == false">
     <div class="modal-dialog">
         <div class="modal-content">
             
@@ -240,7 +240,7 @@
 </div>
 
 <!-- The Modal -->
-<div class="modal fade" id="already-reported" *ngIf="isLoggedIn == 'true' && storyData.flagged == true">
+<div class="modal fade" id="already-reported" *ngIf="isLoggedIn == 'true' && storyData['flagged'] == true">
     <div class="modal-dialog">
         <div class="modal-content">
             

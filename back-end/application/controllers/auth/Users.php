@@ -101,13 +101,21 @@ class Users extends REST_Controller {
       $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
       $title  = trim( strip_tags($post_data->title) );
       $slug   = strtolower( str_replace(' ', '-', $title) );
+      
+      $description = $post_data->description;
+      
+      // remove froala text
+      if(strpos($description, '<p data-f-id="pbf"')) {
+  
+        $description = substr($description, 0, strpos($description, '<p data-f-id="pbf"'));
+      }
 
       $story = array(
         'title'  => trim( strip_tags($post_data->title) ),
         'slug'   => $slug,
         'status' => 0,
         'author_id' => $user[0]->user_id,
-        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'description' => htmlEntities($description, ENT_QUOTES),
       );
       
       // html_entity_decode($encodedHTML)
@@ -135,12 +143,20 @@ class Users extends REST_Controller {
 
 
     function save_answer_post() {
+      
+      $subject = $this->input->post('subject');
+      
+      // remove froala text
+      if(strpos($subject, '<p data-f-id="pbf"')) {
+  
+        $subject = substr($subject, 0, strpos($subject, '<p data-f-id="pbf"'));
+      }
 
       $answer = array(
         'status' => 0,
         'author_id' => $this->token_data->id,
         'question_id' => $this->input->post('question_id'),
-        'subject'  => htmlEntities($this->input->post('subject'), ENT_QUOTES),
+        'subject'  => htmlEntities($subject, ENT_QUOTES),
       );
       
       // html_entity_decode($encodedHTML)
@@ -190,8 +206,16 @@ class Users extends REST_Controller {
 
     function update_answer_post() {
 
+      $subject = $this->input->post('subject');
+      
+      // remove froala text
+      if(strpos($subject, '<p data-f-id="pbf"')) {
+  
+        $subject = substr($subject, 0, strpos($subject, '<p data-f-id="pbf"'));
+      }
+
       $answer = array(        
-        'subject'  => htmlEntities($this->input->post('subject'), ENT_QUOTES),
+        'subject'  => htmlEntities($subject, ENT_QUOTES),
       );
       
       $where = array('answer_id' => $this->input->post('answer_id'));
@@ -382,11 +406,18 @@ class Users extends REST_Controller {
 
       $title  = trim( strip_tags($post_data->title) );
       // $slug   = strtolower( str_replace(' ', '-', $title) );
+      $description = $post_data->description;
+      
+      // remove froala text
+      if(strpos($description, '<p data-f-id="pbf"')) {
+  
+        $description = substr($description, 0, strpos($description, '<p data-f-id="pbf"'));
+      }
 
       $story = array(
         'title' => trim( strip_tags($post_data->title) ),
         // 'slug'   => $slug,
-        'description' => htmlEntities($post_data->description, ENT_QUOTES),
+        'description' => htmlEntities($description, ENT_QUOTES),
         'author_id' => $user[0]->user_id,
         'status' => 0
       );
@@ -680,14 +711,6 @@ class Users extends REST_Controller {
 
     public function user_image_upload_post() { 
       
-      echo "<pre>";
-      print_r($_POST);
-      echo "</pre>";
-      echo "<pre>";
-      print_r($_FILES);
-      echo "</pre>";
-      die('here');
-
       $config['upload_path']          = './assets/uploads/users/';
       $config['allowed_types']        = 'gif|jpg|png|jpeg';
       $config['max_size']             = 2048*5;
@@ -755,9 +778,15 @@ class Users extends REST_Controller {
 
     }
 
-    public function get_user_info_get() {
+    public function get_user_info_get($username="") {
 
-      $user = $this->user_model->get_user_info( array('users.user_id' => $this->token_data->id) );
+      if ( !empty($username) ) {
+        
+        $user = $this->user_model->get_user_info( array('users.username' => $username) );
+      } else {
+
+        $user = $this->user_model->get_user_info( array('users.user_id' => $this->token_data->id) );
+      }
 
       if ( !empty($user) ) {
           

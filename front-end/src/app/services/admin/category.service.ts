@@ -42,6 +42,11 @@ export class CategoryService {
 	  return this.http.get(ADMIN_API_URL+'get_categories/'+catId, httpOptions);
 	}
 
+	getTag (tagId): Observable<any> {
+	  
+	  return this.http.get(ADMIN_API_URL+'get_tags/'+tagId, httpOptions);
+	}
+
 	/** POST: add a new category to the database */
 	addCategory (category): Observable<any> {
 	  return this.http.post(ADMIN_API_URL+'add_category', category, httpOptions)
@@ -69,6 +74,22 @@ export class CategoryService {
 	/** POST: add a new category to the database */
 	editCategory (category): Observable<any> {
 	  return this.http.post(ADMIN_API_URL+'edit_category', category, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+	}
+
+	editTag (tag): Observable<any> {
+
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
+
+		const formData = new FormData();		
+    formData.append('name', tag.name);
+    formData.append('tag_id', tag.tag_id);
+
+	  return this.http.post(ADMIN_API_URL+'edit_tag', formData, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

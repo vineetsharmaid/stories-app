@@ -5,6 +5,7 @@ import {map, startWith} from 'rxjs/operators';
 
 import { StoriesService } from '../services/stories.service'
 import { StoryService } from '../services/story.service'
+import { UserService } from '../services/user.service'
 
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
@@ -20,12 +21,19 @@ export class AuthorProfileComponent implements OnInit {
 	public stories: Array<object> = [];
 	public limitOffset: number = 0;
 	public username: string;
+	public author: Array<object>;
 
-  	constructor( private storyService : StoryService,private storiesService : StoriesService, private router: Router, private activatedRoute: ActivatedRoute ) { }
+  	constructor( 
+  		private storiesService : StoriesService, 
+  		private storyService : StoryService, 
+  		private userService : UserService, 
+  		private router: Router, 
+  		private activatedRoute: ActivatedRoute ) { }
  
   	ngOnInit() {
 
   		this.username = this.activatedRoute.snapshot.paramMap.get('username');
+  		this.getAuthorInfo();
   		this.getAuthorStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
   	}
 
@@ -84,5 +92,24 @@ export class AuthorProfileComponent implements OnInit {
 	    	console.log('getAuthorStories error', error);
 	    });
   	}
+
+
+  getAuthorInfo() {
+
+  	this.userService.getAuthorInfo(this.username).subscribe( (response) => {
+
+  		console.log('response', response);
+			this.author = response['data'][0];
+      this.author['cover_pic'] = this.author['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.author['cover_pic'];
+      this.author['profile_pic'] = this.author['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.author['profile_pic'];
+      
+  	}, (error) => {
+
+  		console.log('error', error['code']);
+  		if ( error['code'] == 401 ) {
+  			// authentication error show login popup
+  		}
+  	});
+  }
 
 }

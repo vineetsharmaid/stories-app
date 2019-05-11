@@ -24,11 +24,12 @@ const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 })
 export class ForumListComponent implements OnInit {
 
-	public stories: Array<object>;
-	public featuredStories: Array<object>;
-	public addQuestionForm: FormGroup;
-	public addAnswerForm: FormGroup;
+  public stories: Array<object>;
+  public featuredStories: Array<object>;
+  public addQuestionForm: FormGroup;
+  public addAnswerForm: FormGroup;
   public dataLoading: boolean = true;
+  public currentUserId: string = localStorage.getItem('user_id');
 
 
 	public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -243,7 +244,13 @@ export class ForumListComponent implements OnInit {
       console.log('Validation error.');
       return;
     } else {
-    	
+
+      // remove froala text
+      if(this.allQuestions[questionIndex]['tempAnswer'].indexOf('<p data-f-id="pbf"') > 0) {
+        
+        this.allQuestions[questionIndex]['tempAnswer'] = this.allQuestions[questionIndex]['tempAnswer'].substring(0, this.allQuestions[questionIndex]['tempAnswer'].indexOf('<p data-f-id="pbf"'));
+      }
+          	
     	let answer = {
     		'subject': this.allQuestions[questionIndex]['tempAnswer'],
     		'slug': this.allQuestions[questionIndex]['slug'],

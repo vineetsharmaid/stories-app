@@ -41,7 +41,7 @@ export class CompaniesAddComponent implements OnInit {
   	// convenience getter for easy access to form fields
   	get fields() { return this.addCompanyForm.controls; }    	
 
-  	addCompany(imageInput: any) {
+  	addCompany() {
 
   		this.formSubmitted = true;
 

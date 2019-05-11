@@ -1,12 +1,38 @@
+<div class="author_page">
+  <!-- Section 1 -->
+  <div class="container-fluid author_info_wrap">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="author_box">
+            <h1 class="author_big_name">
+              {{author['first_name']}} {{author['last_name']}}
+            </h1>
+            <div class="author_position">
+              <span>{{author['badge']}}</span>
+            </div>
+            <!-- <div class="winner_wrap">
+              <div class="winner_icon_wrap"><img src="assets/img/winner.png" alt=" "></div>
+              <div class="winner_icon_wrap"><img src="assets/img/winner.png" alt=" "></div>
+              <div class="winner_icon_wrap"><img src="assets/img/winner.png" alt=" "></div>
+            </div> -->
+          </div>
+          <div class="about_author" *ngIf="author?.short_info?.length > 0">
+            <p>{{author['short_info']}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Section 1 -->
+</div>
 <div class="container">
   <div class="row search-results-wrap">
-    <div class="col-md-12">
-      <span class="search-section-heading">STORIES</span>
-      <hr>
+    <div class="col-md-12 mt-5">
       <div class="row" infiniteScroll
-      [infiniteScrollDistance]="2"
-      [infiniteScrollThrottle]="50"
-      (scrolled)="onScroll()">
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="onScroll()">
         <div class="col-md-6" *ngFor="let story of stories; let indx = index">
           <div class="story_outer_wrap">
             <a [routerLink]="['/story/', story.slug]">
@@ -26,9 +52,9 @@
             <div class="right_inner_footer_bottom">
               <ul>
                 <li class="fl" (click)="like(story.story_id, indx)">
-                    <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
-                    <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0"> 
-                    {{story.likes}}
+                  <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
+                  <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0">
+                  {{story.likes}}
                 </li>
                 <li class="bookmark fr">
                   <div class="share_img_wrap">

@@ -11,10 +11,10 @@
           <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/user/user.jpg" alt="">
       </div>
 
-      <h3>{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
+      <h3>{{userInfo['first_name']}}  {{userInfo['last_name']}}</h3>
 
       <span class="mt-5">
-          <strong>{{userInfo.badge}}</strong> ({{userInfo.points}} Points)
+          <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
       </span>
 
 		</div>

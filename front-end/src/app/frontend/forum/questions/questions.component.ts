@@ -17,12 +17,13 @@ import { SharedService } from "../../services/shared.service";
 })
 export class QuestionsComponent implements OnInit {
 
-	public questionData: Object;
+  public questionData: Object;
   public commentForm: FormGroup;
   public allAnswers: Array<Object>;
   public answerByUser: Object;
   public isLoggedIn: string = 'false';
   public dataLoading: boolean = true;
+  public currentUserId: string = localStorage.getItem('user_id');
 
   public editorAnswerOptions: Object = {
     // toolbarInline: true,  
@@ -338,6 +339,12 @@ export class QuestionsComponent implements OnInit {
       return;
     } else {
       
+      // remove froala text
+      if(this.questionData['tempAnswer'].indexOf('<p data-f-id="pbf"') > 0) {
+        
+        this.questionData['tempAnswer'] = this.questionData['tempAnswer'].substring(0, this.questionData['tempAnswer'].indexOf('<p data-f-id="pbf"'));
+      }
+
       let answer = {
         'subject': this.questionData['tempAnswer'],
         'slug': this.questionData['slug'],
@@ -382,7 +389,13 @@ export class QuestionsComponent implements OnInit {
       console.log('Validation error.');
       return;
     } else {
-      
+
+      // remove froala text
+      if(this.answerByUser['answer'].indexOf('<p data-f-id="pbf"') > 0) {
+        
+        this.answerByUser['answer'] = this.answerByUser['answer'].substring(0, this.answerByUser['answer'].indexOf('<p data-f-id="pbf"'));
+      }
+            
       let answer = {
         'subject': this.answerByUser['answer'],
         'slug': this.questionData['slug'],

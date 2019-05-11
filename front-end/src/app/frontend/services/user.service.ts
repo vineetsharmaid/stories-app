@@ -108,6 +108,33 @@ export class UserService {
 	    );
 		}
 
+  	submitContactForm(data): Observable<any>{
+
+	 		const formData = new FormData();
+      formData.append('first_name', data.firstName);
+      formData.append('last_name', data.lastName);
+      formData.append('message', data.message);
+      formData.append('email', data.email);
+
+			return this.http.post(API_URL+'submit_contact_form/', formData)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	submitNewsletter(data): Observable<any>{
+
+	 		const formData = new FormData();
+      formData.append('first_name', data.firstName);
+      formData.append('last_name', data.lastName);
+      formData.append('email', data.email);
+
+			return this.http.post(API_URL+'add_newsletter_subscriber/', formData)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getUserInfo(): Observable<any>{
 			
 			let httpAuthOptions = {
@@ -117,6 +144,21 @@ export class UserService {
 			};
 			
 			return this.http.get(USER_API_URL+'get_user_info', httpAuthOptions).pipe(
+				tap((emailSent: Object) => console.log('emailSent', emailSent)),
+				catchError(this.handleError)
+			);
+		}
+
+
+  	getAuthorInfo(username): Observable<any>{
+			
+			let httpAuthOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', 
+			  	"Authorization": "Bearer " + localStorage.getItem('jwtToken')
+			  })
+			};
+			
+			return this.http.get(USER_API_URL+'get_user_info/'+username, httpAuthOptions).pipe(
 				tap((emailSent: Object) => console.log('emailSent', emailSent)),
 				catchError(this.handleError)
 			);

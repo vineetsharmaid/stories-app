@@ -29,6 +29,15 @@ export class UserService {
 			return this.http.get(ADMIN_API_URL+'get_users', httpOptions);
 		}
 
+  	getSubscribers(): Observable<any>{
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(ADMIN_API_URL+'get_subscribers', httpOptions);
+		}
+
   	loginUser(User): Observable<any>{
     	
     	// return  this.http.get(`${API_URL}`);

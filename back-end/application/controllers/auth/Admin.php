@@ -116,6 +116,31 @@ class Admin extends REST_Controller {
 
     }
 
+    public function get_subscribers_get()
+    {
+            
+        $subscribers = $this->common_model->get_data('newsletter_subscribers');
+
+        // Check if the users data store contains users (in case the database result returns NULL)
+        if ( !empty($subscribers) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $subscribers,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No subscribers were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+    }
+
     public function users_post()
     {
         // $this->some_model->update_user( ... );
@@ -324,7 +349,7 @@ class Admin extends REST_Controller {
           // Find and return a single record.
           $tag_id = (int) $tag_id;
 
-          $tags = $this->common_model->get_tag($tag_id);
+          $tags = $this->common_model->get_data('tags', array('tag_id' => $tag_id));
         }
 
         // Check if the tags data store contains tags (in case the database result returns NULL)
@@ -622,6 +647,34 @@ class Admin extends REST_Controller {
           $this->response([
               'status' => FALSE,
               'message' => 'Unable to update topic'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function edit_tag_post() {
+      
+      $tag_data = array( 
+        'status' => 1,
+        'name' => ucfirst( $this->input->post('name') ),
+      );
+
+      $where = array( 'tag_id' => $this->input->post('tag_id') );
+
+      if( $this->common_model->update_entry( 'tags', $tag_data, $where ) ) {
+        
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'tag_updated_successfully',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to update tag'
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
     }

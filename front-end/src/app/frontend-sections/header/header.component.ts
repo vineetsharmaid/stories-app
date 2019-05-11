@@ -204,7 +204,7 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin(response['data']['username'], response['token']);
+				this.setUserLogin(response['data']['id'], response['data']['username'], response['token']);
   			console.log('loggedIn', this.loggedIn);
         console.log('token', response['token']);
   		}
@@ -234,7 +234,7 @@ export class HeaderComponent implements OnInit {
   			this.closeLoginModal.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin(response['data']['username'], response['token']);
+				this.setUserLogin(response['data']['id'], response['data']['username'], response['token']);
   			console.log('loggedIn', this.loggedIn);
 
   		}
@@ -275,16 +275,15 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  setUserLogin(username, jwtToken) {
-
-    console.log('setUserLogin jwtToken', jwtToken);
+  setUserLogin(id, username, jwtToken) {
 
 		// set login
 		localStorage.setItem('isLoggedIn', 'true');
 		localStorage.setItem('userType', 'user');
     localStorage.setItem('username', username);
+    localStorage.setItem('user_id', id);
     localStorage.setItem('jwtToken', jwtToken);
-
+    console.log('id', id);
 		this.loggedIn = true;
 
 		this.navigate('/user');

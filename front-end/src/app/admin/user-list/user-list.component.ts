@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 
 import { UserService } from "../../services/admin/user.service";
 
+import { environment } from '../../../environments/environment';
+const APP_URL  =  environment.baseUrl;
+
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -25,7 +28,12 @@ export class UserListComponent implements OnInit {
 	      console.log('getUsers response', response);
 	      if ( response['status'] == true ) {
 	        
-	        this.users = response['data'];
+	        var users = response['data'];
+	        users.forEach((user) => {
+
+	        	user['profile_pic'] = user['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+user['profile_pic'];
+	        })
+	        this.users = users;
 	      }
 	    }, error => {
 

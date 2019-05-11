@@ -5,12 +5,22 @@
             <div class="col-md-12">
                 <div class="subscribe_wrap">
                     <h3>Subscribe to receive the very best stories in your inbox</h3>
-                    <form>
-                        <input type="text" name="" placeholder="First Name">
-                        <input type="text" name="" placeholder="Last Name">
-                        <input type="email" name="" placeholder="Email">
-                        <input type="submit" name="" value="Subscribe Now">
+                    <form [formGroup]="newsletterForm" (ngSubmit)="submitNewsletter()">
+                        <input type="text" matInput formControlName="firstName" placeholder="First Name">
+                        
+                        <input type="text" matInput formControlName="lastName" placeholder="Last Name">
+
+                        <input type="email" matInput formControlName="email" placeholder="Email">
+
+                        <input type="submit" value="Subscribe Now">
                     </form>
+                    <div *ngIf="formSubmitted && (fields.firstName.errors || fields.lastName.errors || fields.email.errors)" class="invalid-feedback">
+                        <div *ngIf="fields.firstName.errors?.required || fields.lastName.errors?.required || fields.email.errors?.required">All fields are required</div>
+                    </div>
+
+                    <div *ngIf="formSubmitted && fields.email.errors" class="invalid-feedback">
+                      <div *ngIf="fields.email.errors.email">Email must be valid</div>
+                    </div>
                 </div>
                 <div class="footer_link_wrap">
                     <div class="col">
@@ -69,3 +79,53 @@
     </div>
 </footer>
 <!-- Footer -->
+
+
+<button data-toggle="modal" data-target="#newsletter-success" class="d-none" #sucessNewsletterBtn></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="newsletter-success">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="subscribeError?.length == 0">
+        <p class="p-2">Thank you for subscribing!</p>
+
+        <p class="p-2">Have a great day!</p>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="subscribeError?.length > 0">
+        <p class="p-2">{{subscribeError}}</p>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer p-2">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<button data-toggle="modal" data-target="#newsletter-error" class="d-none" #errorNewsletterBtn></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="newsletter-error">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        Unable to subscribe.
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>

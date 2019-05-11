@@ -79,7 +79,8 @@
               <div class="ans_content not_answered mt-2" *ngIf="question.answer == null">
                 
                 <p>Not answered yet.</p>
-                <ul>
+                
+                <ul *ngIf="currentUserId != question.author_id">
                   <li (click)="question.showAnswerBox = true">
                     <span><i class="fa fa fa-edit"></i> Answer </span>
                   </li>

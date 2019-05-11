@@ -8,9 +8,9 @@
               <img *ngIf="userInfo['profile_pic']?.length > 0" [src]="userInfo['profile_pic']" alt="">
               <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/user/user.jpg" alt="">
             </div>
-            <h3>{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
+            <h3>{{userInfo['first_name']}}  {{userInfo['last_name']}}</h3>
             <span class="mt-5">
-              <strong>{{userInfo.badge}}</strong> ({{userInfo.points}} Points)
+              <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
             </span>
           </div>
           <div class="col-md-8 mb-5">
@@ -20,14 +20,14 @@
                   <h5 class="mb-1">Email</h5>
                   <!-- <small>3 days ago</small> -->
                 </div>
-                <p class="user-detailp mb-1">{{userInfo.user_email}}</p>
+                <p class="user-detailp mb-1">{{userInfo['user_email']}}</p>
               </a>
               <a class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">Short Info</h5>
                   <!-- <small class="text-muted">3 days ago</small> -->
                 </div>
-                <p class="user-detailp mb-1" *ngIf="userInfo?.professional_info.length > 0">{{userInfo.professional_info}}</p>
+                <p class="user-detailp mb-1" *ngIf="userInfo?.professional_info.length > 0">{{userInfo['professional_info']}}</p>
                 <p class="user-detailp mb-1" *ngIf="userInfo?.professional_info.length == 0">Short information not added.</p>
               </a>
               <a class="list-group-item list-group-item-action flex-column align-items-start">
@@ -35,7 +35,7 @@
                   <h5 class="mb-1">LinkedIn URL</h5>
                   <!-- <small class="text-muted">3 days ago</small> -->
                 </div>
-                <p class="user-detailp mb-1" *ngIf="userInfo?.website.length > 0">{{userInfo.website}}</p>
+                <p class="user-detailp mb-1" *ngIf="userInfo?.website.length > 0">{{userInfo['website']}}</p>
                 <p class="user-detailp mb-1" *ngIf="userInfo?.website.length == 0">LinkedIn URL not added.</p>
               </a>
             </div>

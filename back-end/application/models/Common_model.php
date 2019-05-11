@@ -398,7 +398,7 @@ class Common_model extends CI_Model {
         // return $this->get_data('forum_questions', $where);
     }
     
-    public function get_questions_list($where="", $user_id="", $limit="", $offset="", $like="")
+    public function get_questions_list($where="", $user_id="", $limit="", $offset="", $like="", $having="")
     {
 
       if ( $user_id == "" ) {
@@ -433,7 +433,12 @@ class Common_model extends CI_Model {
           
           $this->db->like($like);
         }
-        
+
+        if ( $having != '' ) {
+          
+          $this->db->having('find_in_set("'.$having.'", topic_ids) <> 0');
+        }
+
         return $this->db->get()->result();
       } else {
 
@@ -468,6 +473,11 @@ class Common_model extends CI_Model {
         if ( $like != '' ) {
           
           $this->db->like($like);
+        }
+
+        if ( $having != '' ) {
+          
+          $this->db->having('find_in_set("'.$having.'", topic_ids) <> 0');
         }
 
         return $this->db->get()->result();

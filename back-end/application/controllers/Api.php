@@ -83,7 +83,7 @@ class Api extends REST_Controller {
               $message = array(
                 'message' => 'email_exists', 
                 'token'   => $jwt_token,
-                'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ),
+                'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username, 'id' => $user[0]->user_id ),
                 'status'  => 201
               );
           } else {
@@ -111,6 +111,16 @@ class Api extends REST_Controller {
 
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
+
+                $from_name = 'Stories Of Asia';
+                $from_email = CONTACT_EMAIL;
+                $message    = "Thanks for signing up, below are your login details.<br /><br />
+                  Email: ".$post_data->email."
+                  <br />
+                  Password: ".$password;
+                $subject    = 'WELCOME ABOARD';
+                $to_email   = $post_data->email;
+                $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
                 
                 $user =  new stdClass();
                 $user->user_id   = $this->db->insert_id();
@@ -121,7 +131,7 @@ class Api extends REST_Controller {
 
                 $message = array(
                     'message' => 'Registered new user', 
-                    'data'    => array( 'username' => $username ),
+                    'data'    => array( 'username' => $username, 'id' => $user->user_id ),
                     'token'   => $jwt_token,
                     'status'  => 200);
               }
@@ -262,7 +272,7 @@ class Api extends REST_Controller {
 
                 $message = [
                     'message' => 'Logged In',
-                    'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ),
+                    'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username, 'id' => $user[0]->user_id ),
                     'token'   => $jwt_token,
                     'status'  => 200
                 ];
@@ -310,10 +320,9 @@ class Api extends REST_Controller {
               if (password_verify($user_data['password'], $user[0]->password)) {
 
                   $jwt_token = $this->_generate_jwt_token($user[0]);
-
                   $message = [
                       'message' => 'Logged In',
-                      'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username ),
+                      'data'    => array( 'user_type' => $user[0]->user_type, 'username' => $user[0]->username, 'id' => $user[0]->user_id ),
                       'token'   => $jwt_token,
                       'status'  => 200
                   ];
@@ -701,8 +710,6 @@ class Api extends REST_Controller {
         array( 'tags.status'  => TAG_STATUS_PUBLISHED, 'tag_id' => $tag_id ) //where
       );
 
-      // echo $this->db->last_query();
-
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($tags) ) {
           
@@ -923,10 +930,11 @@ class Api extends REST_Controller {
     public function get_questions_list_post($limit, $offset) {
 
       $where = array( 'forum_questions.status'  => STORY_STATUS_PUBLISHED );
+      $having = "";
 
       if ( $this->input->post('search_topic') != "" ) {
         
-        $where['thread_topics.topic_id'] = $this->input->post('search_topic');
+        $having = $this->input->post('search_topic');
       }
 
       if ( $this->input->post('search_question') != "" ) {
@@ -940,10 +948,10 @@ class Api extends REST_Controller {
 
       if ( isset($this->token_data->id) ) {
         
-        $questions = $this->common_model->get_questions_list( $where, $this->token_data->id, $limit, $offset, $like );
+        $questions = $this->common_model->get_questions_list( $where, $this->token_data->id, $limit, $offset, $like, $having );
       } else {
 
-        $questions = $this->common_model->get_questions_list( $where, "", $limit, $offset, $like );
+        $questions = $this->common_model->get_questions_list( $where, "", $limit, $offset, $like, $having );
       }
 
       // echo $this->db->last_query();
@@ -1069,6 +1077,105 @@ class Api extends REST_Controller {
       }
     }
 
+
+    function submit_contact_form_post() {
+
+      $from_name = $this->input->post('first_name').' '.$this->input->post('last_name');
+      $from_email = $this->input->post('email');
+      $message    = $this->input->post('message');
+      $subject    = 'SOA Contact Form';
+      $to_email   = CONTACT_EMAIL;
+      $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+
+      if( $mail ) {
+        // Set the response and exit
+        $this->response(  
+          array(
+            'status' => TRUE,
+            'data'   => 'email_sent',
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code      
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'Unable to send email.'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+      
+    }
+
+    function add_newsletter_subscriber_post() {
+
+      $subscriber = array(
+        'first_name' => $this->input->post('first_name'),
+        'last_name'  => $this->input->post('last_name'),
+        'email'      => $this->input->post('email'),
+      );
+
+      $count = $this->common_model->data_exists(
+        'newsletter_subscribers', 
+        array( 'email' => $this->input->post('email') )
+      );
+
+      if ( $count > 0 ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already subscribed.'
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+        if( $this->common_model->insert_entry('newsletter_subscribers', $subscriber) ) {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data'   => 'subscribed',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code      
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to subscribe user.'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      }
+      
+    }
+
+    private function send_mail($from_name, $from_email, $to_email, $subject, $message) {
+
+      $config = Array(
+          'protocol' => 'smtp',
+          'smtp_host' => 'ssl://smtp.googlemail.com',
+          'smtp_port' => 465,
+          'smtp_user' => 'dev.bizdesire@gmail.com',
+          'smtp_pass' => 'Bizdesire@789',
+          'mailtype'  => 'html', 
+          'charset'   => 'iso-8859-1'
+      );
+      $this->load->library('email', $config);
+      $this->email->set_newline("\r\n");
+
+      // Set to, from, message, etc.
+
+      $this->email->from($from_email, $from_name);
+      $this->email->to($to_email); 
+
+      $this->email->subject($subject);
+      $this->email->message($message);  
+
+      if( $this->email->send() ) {
+        
+        return true;
+      } else {
+
+        return false;
+      }
+    }
 
 
     public function get_answer_comments_get($answer_id)

@@ -18,7 +18,7 @@ export const TagsRoutes: Routes = [
     	component: TagsAddComponent,
     	canActivate: [AuthGuard]
     },    { 
-    	path: 'edit/:catId',
+    	path: 'edit/:tagID',
     	component: TagsEditComponent,
     	canActivate: [AuthGuard]
     },

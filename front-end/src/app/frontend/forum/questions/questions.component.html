@@ -51,10 +51,12 @@
               Answer
             </span>
 
-
             <!-- NO ANSWER YET -->
-            <div class="empty-answer m-5" *ngIf="allAnswers?.length == 0 && answerByUser?.length == 0;">
-              <p class="text-center" (click)="questionData.showAnswerBox = true">
+            <div class="empty-answer m-5" *ngIf="allAnswers?.length == 0 && (answerByUser | json) == '{}';">
+              <p class="text-center" *ngIf="questionData.author_id == currentUserId">
+                <i class="fa fa-edit fa-4x text-muted"></i>
+              </p>
+              <p class="text-center" (click)="questionData.showAnswerBox = true" *ngIf="questionData.author_id != currentUserId">
                 <i class="fa fa-edit fa-4x text-muted"></i>
               </p>
               <h4 class="text-center text-muted">

@@ -15,6 +15,7 @@ import { TagsComponent } from '../../admin/tags/tags.component';
 import { TopicsComponent } from '../../admin/topics/topics.component';
 import { CompaniesComponent } from '../../admin/companies/companies.component';
 import { StoriesComponent } from '../../admin/stories/stories.component';
+import { SubscribersComponent } from '../../admin/subscribers/subscribers.component';
 import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
@@ -40,6 +41,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps',           component: MapsComponent, canActivate: [AuthGuard] },
     { path: 'notifications',  component: NotificationsComponent, canActivate: [AuthGuard] },
     { path: 'upgrade',        component: UpgradeComponent, canActivate: [AuthGuard] }, 
+    { path: 'subscribers',    component: SubscribersComponent, canActivate: [AuthGuard] }, 
     // { path: 'category',        component: CategoriesComponent }, 
     {
         path: 'category',

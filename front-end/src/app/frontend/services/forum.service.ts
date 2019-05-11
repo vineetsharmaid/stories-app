@@ -22,8 +22,6 @@ export class ForumService {
     	
 			formData.append('title', question.title);
       formData.append('topics', question.topics);
-
-      console.log('question.topics', question.topics);
 			
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 

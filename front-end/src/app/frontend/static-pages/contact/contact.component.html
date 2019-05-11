@@ -29,24 +29,37 @@
     </div>
     <div class="row top70">
       <div class="col-lg-8">
-        <form class="contact-form" action="?" method="POST">
+        <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputFirstName">First Name <span class="required">*</span></label>
-              <input type="text" class="form-control" id="inputFirstName" placeholder="" required>
+              <input matInput formControlName="firstName" type="text" class="form-control" id="inputFirstName">
+              <div *ngIf="formSubmitted && fields.firstName.errors" class="invalid-feedback">
+                <div *ngIf="fields.firstName.errors.required">First Name is required</div>
+              </div>
             </div>
             <div class="form-group col-md-6">
               <label for="inputLastName">Last Name</label>
-              <input type="text" class="form-control" id="inputLastName" placeholder="">
+              <input matInput formControlName="lastName" type="text" class="form-control">
+              <div *ngIf="formSubmitted && fields.lastName.errors" class="invalid-feedback">
+                <div *ngIf="fields.lastName.errors.required">Last Name is required</div>
+              </div>
             </div>
           </div>
           <div class="form-group">
             <label for="FormControlYourEmail">Your Email <span class="required">*</span></label>
-            <input type="email" class="form-control" id="FormControlYourEmail" placeholder="" required>
+            <input matInput formControlName="email" type="email" class="form-control" id="FormControlYourEmail">
+            <div *ngIf="formSubmitted && fields.email.errors" class="invalid-feedback">
+              <div *ngIf="fields.email.errors.required">Email is required</div>
+              <div *ngIf="fields.email.errors.email">Email must be valid</div>
+            </div>  
           </div>
           <div class="form-group">
             <label for="inputYourMessage">Your Message <span class="required">*</span></label>
-            <textarea class="form-control" id="inputYourMessage" rows="3" required></textarea>
+            <textarea matInput formControlName="message" class="form-control" rows="3"></textarea>
+            <div *ngIf="formSubmitted && fields.message.errors" class="invalid-feedback">
+              <div *ngIf="fields.message.errors.required">Message is required</div>
+            </div>
           </div>
           
           <div class="form-group">
@@ -69,3 +82,53 @@
   
 </div>
 <!-- Page title -->
+
+<button data-toggle="modal" data-target="#contact-success" class="d-none" #sucessContactBtn></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="contact-success">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p class="p-2">Thank you for getting in touch!</p>
+
+        <p class="p-2">We appreciate you contacting us. One of our customer happiness members will be getting back to you shortly.</p>
+
+        <p class="p-2">We will do our best to answer your queries quickly.</p>
+
+        <p class="p-2">Thanks in advance for your patience.</p>
+
+        <p class="p-2">Have a great day!</p>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer p-2">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<button data-toggle="modal" data-target="#contact-error" class="d-none" #errorContactBtn></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="contact-error">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        Failed to send your message.
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
+    </div>
+  </div>
+</div>

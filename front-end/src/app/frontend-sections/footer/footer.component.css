@@ -48,3 +48,5 @@ footer.footer{background: #000; padding: 60px 0}
 .footer_social_wrap {width: 100%;float: left;}
 .mobile_clear{clear: both;}
 }
+
+.invalid-feedback { display: block; }
