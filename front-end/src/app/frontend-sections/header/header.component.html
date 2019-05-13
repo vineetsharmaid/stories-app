@@ -22,8 +22,22 @@
   <div class="header_right_wrap">
     <a href="#" class="search_wrap"><img src="assets/img/search.png" alt=""></a>
 
+
+
+
     <div class="header_login_wrap" *ngIf="!loggedIn">
-    
+      <div class="dropdown user_profile_dropdown">
+    <div class="user_loged_pic dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img src="assets/img/user/user.jpg" alt="">
+    </div>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="#">Add Story</a>
+      <a class="dropdown-item" href="#">Stories</a>
+      <a class="dropdown-item" href="#">Logout</a>
+    </div>
+</div>
+
+
       <!-- On click these links shows login/signup forms and hide the reset password form (if it was opened) -->
       <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true; showForgotPassword = false; passwordEmailSent = false;">Join</a> | 
       <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false; showForgotPassword = false; passwordEmailSent = false;" #showLoginModal>Login</a>
@@ -67,7 +81,7 @@
         <h3 class="modal-title">Welcome back</h3>
         <div class="login_social_wrap">
           <a class="login_facebook alink" (click)="signInWithFB()"> <img src="assets/img/fb.png" alt=""> Login with Facebook</a>
-          <a class="login_twt alink" #googleLoginBtn> <img src="assets/img/twt.png" alt=""> Login with Google</a>
+          <a class="login_twt alink" #googleLoginBtn> <img src="assets/img/google_plus.png" alt=""> Login with Google</a>
           <p class="login_divider">OR</p>
         </div>
         <div class="emailExists mb-2" *ngIf="accountAlreadyExists">
@@ -109,7 +123,7 @@
         <h3 class="modal-title">Join Our Community To Submit Your Own Stories Now</h3>
         <div class="login_social_wrap" [hidden]="showHideSignupForm">
           <a (click)="signInWithFB()" class="login_facebook alink"> <img src="assets/img/fb.png" alt=""> Continue with Facebook</a>
-          <a #googleLoginBtn2 class="login_twt alink"> <img src="assets/img/twt.png" alt=""> Continue with Google</a>
+          <a #googleLoginBtn2 class="login_twt alink"> <img src="assets/img/google_plus.png" alt=""> Continue with Google</a>
         </div>
         
         <span [hidden]="showHideSignupForm">
@@ -163,7 +177,7 @@
             </div>
 
             <div class="form-group">
-              <button [disabled]="loading" class="btn btn-primary btn-map">Register</button>
+              <button [disabled]="loading" class="btn-map">Register</button>
               <a class="btn btn-link" (click)="showHideSignupForm = !showHideSignupForm">Cancel</a>
             </div>
 

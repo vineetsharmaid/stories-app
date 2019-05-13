@@ -71,3 +71,5 @@
 
 .user_profile_pic_wrap.quick-edit button.edit { left: 75px; top: 80px; }
 .theme_btn { width: auto !important; }
+.user_intro_box a{ margin:0 10px !important; position: relative;}
+.user_intro_box a.mr-2.mb-2:after{position: absolute; width: 4px; height: 4px; border-radius: 4px; background: #f1663b; top: 50%; transform: translateY(-50%); content: ""; right: -12px}
