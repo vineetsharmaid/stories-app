@@ -308,5 +308,6 @@ h1, h2, h3, h4, h5, h6{font-family: 'Playfair Display', serif; font-weight: bold
 .comments_heading {margin: 20px 0px;}
 a{color:#f1663b}
 .user_profile_pic_wrap{margin-left: 30px}
-/*--------------Style for development--------------*/
 .pointer { cursor: pointer; }
+.single_page_tagline_wrap ul li, .fr-element.fr-view ol li{list-style-position: inside;}
+/*--------------Style for development--------------*/

@@ -6,25 +6,29 @@
 .login_social_wrap a{display: inline-block; width: 100%; text-align: center; text-transform: uppercase;letter-spacing: 2px; margin-bottom: 15px; font-size: 13px; padding: 14px; color: #fff; font-weight: 700; transition: all .5s;}
 .login_facebook{background-color: #3b589a;}
 .login_facebook:hover{background-color: #4160a9;}
-.login_twt{background-color: #00aae5;}
-.login_twt:hover{background-color: #00b2ef;}
+.login_twt{background-color: #cf4332;}
+.login_twt:hover{background-color: #c04435;}
 .login_social_wrap a img{margin-right: 15px}
 .login_divider{margin-bottom: 20px; color: #a1a1a1}
 .login_form{}
 .login_form input[type="email"], .login_form input[type="text"], .login_form input[type="password"]{width: 100%; display: inline-block;height: 45px; color: #fff; /*margin-bottom: 20px;*/ padding: 0 10px; background-color: transparent; border: none; border-bottom: 1px solid #fff;}
 .login_form input[type="submit"]{display: inline-block;border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 40px}
-.forgt_pass{color: #fff; font-weight: bold;font-size: 15px; text-align: center; margin-top: 80px; display: inline-block;}
+.forgt_pass{color: #fff; font-weight: bold;font-size: 15px; text-align: center; margin-top: 80px; display: inline-block; text-decoration:underline !important;}
 .forgt_pass:hover, .forgt_pass:focus{color: #fff;}
 .close{position: fixed;right: 30px; top: 20px; color: #fff !important; z-index: 9999; font-size: 34px; font-weight: 100}
+.invalid-feedback{color:red}
 /*Popup Style*/
 
 .top-right-nav { position: fixed; color: #c7c0c0; right: 70px; top: 28px; }
 .top-right-nav a { font-weight: bold; font-size: 15px; text-align: center;  display: inline-block; }
-.btn-map { display: inline-block; border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 20px; }
+.btn-map { display: inline-block; border: 1px solid #fff; padding: 20px 30px; background: transparent; color: #fff; font-weight: bold; margin-top: 20px;transition:all .5s;}
+.btn-map:hover{background:#f1663b; border:1px solid #f1663b; box-shadow:none; cursor:pointer; outline:none; box-shadow:none}
+.btn-map:focus{outline:none; box-shadow:none}
+.login_social_wrap a:focus{outline:none}
 
 
 .alink { cursor: pointer; }
-.invalid-feedback { display: block; text-align: left; color: #ffffff; }
+.invalid-feedback { display: block; text-align: left;font-weight: bold;font-size: 13px;}
 
 a{color:#f1663b}
 
@@ -68,8 +72,13 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding
 
 .login_social_wrap select{background:none; height:45px;border:none; border-bottom:1px solid #fff; border-radius:0; position:relative}
 .login_social_wrap select:focus{outline:none;box-shadow: none;}
+.user_loged_pic{width: 50px; height: 50px; overflow: hidden;border-radius: 50px; position: relative;}
+.user_loged_pic img{width: 100%;height: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);object-fit: cover;}
+.user_loged_pic:hover{cursor: pointer;}
+.dropdown{position: relative;}
 
-
+.user_profile_dropdown a{color: #000;font-size: 15px;padding: 5px 10px;text-align: left !important;}
+.user_profile_dropdown .dropdown-menu{justify-content: flex-start;}
 
 
 
