@@ -63,9 +63,23 @@
                                     <li class="bookmark"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
                                         <div class="social_wrap">
                                             <ul>
-                                                <li><a href="#"><img src="assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
+                                                <li>
+                                                    <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[0].shareSlug" target="_blank">
+                                                        
+                                                        <img src="assets/img/facebook.png" [alt]="featuredStories[0].preview_title">
+                                                    </a>
+
+                                                </li>                                        
+                                                <li>
+                                                    <a [href]="'http://twitter.com/share?text='+featuredStories[0].preview_title+'&url='+featuredStories[0].shareSlug" target="_blank">
+                                                        <img src="assets/img/twtr.png" [alt]="featuredStories[0].preview_title">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[0].shareSlug+'&title='+featuredStories[0].preview_title+'&source=LinkedIn'" target="_blank">
+                                                        <img src="assets/img/linkedIn.png" [alt]="featuredStories[0].preview_title">
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -121,9 +135,23 @@
                                     <li class="bookmark fr"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
                                         <div class="social_wrap">
                                             <ul>
-                                                <li><a (click)="share()"><img src="assets/img/facebook.png" alt=""></a></li>
-                                                <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
-                                                <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
+                                                <li>
+                                                    <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+story.shareSlug" target="_blank">
+                                                        
+                                                        <img src="assets/img/facebook.png" [alt]="story.preview_title">
+                                                    </a>
+
+                                                </li>                                        
+                                                <li>
+                                                    <a [href]="'http://twitter.com/share?text='+story.preview_title+'&url='+story.shareSlug" target="_blank">
+                                                        <img src="assets/img/twtr.png" [alt]="story.preview_title">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+story.shareSlug+'&title='+story.preview_title+'&source=LinkedIn'" target="_blank">
+                                                        <img src="assets/img/linkedIn.png" [alt]="story.preview_title">
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>

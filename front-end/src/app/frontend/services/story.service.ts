@@ -177,6 +177,18 @@ export class StoryService {
 	    );
 		}
 
+  	getPage(slug): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+			};
+
+			return this.http.get(API_URL+'get_page/'+slug, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getUserStoryDetails(storyId): Observable<any>{
 
 			let httpOptions = {

@@ -56,10 +56,9 @@ export class AdminLoginComponent implements OnInit {
 
       	this.userService.loginUser(user).subscribe((response: Array<Object>) => {
 
-      		console.log('response', response);
       		if ( response['status'] == 200 ) {
       			
-            if ( response['data']['user_type'] == 'admin' ) {
+            if ( response['data']['user_type'] == 'admin' || response['data']['user_type'] == 'superadmin' ) {
                 
               localStorage.setItem('isLoggedIn', 'true');
               localStorage.setItem('userType', response['data'].user_type);

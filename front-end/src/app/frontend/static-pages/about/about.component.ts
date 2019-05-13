@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { StoryService } from '../../services/story.service'
+
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
@@ -8,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 export class AboutComponent implements OnInit {
 
 
-	constructor() { }
+	constructor(private storyService: StoryService) { }
 
 	ngOnInit() {
+
+		this.getPage('contact');
+	}
+
+	getPage(slug) {
+
+		this.storyService.getPage(slug).subscribe((reponse) => {
+
+			console.log('reponse', reponse);
+		}, (error) => {
+
+			console.log('error', error);
+		});
 	}
 
 }

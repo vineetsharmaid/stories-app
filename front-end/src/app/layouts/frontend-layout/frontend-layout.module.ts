@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {TimeAgoPipe} from 'time-ago-pipe';
+import { ShareButtonModule } from '@ngx-share/button';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ContentLoaderModule } from '@netbasal/content-loader';
 
@@ -54,6 +55,7 @@ import {
     MatIconModule,
     MatChipsModule,
     MatCardModule,
+    ShareButtonModule,
     InfiniteScrollModule,
     ContentLoaderModule,
   ],

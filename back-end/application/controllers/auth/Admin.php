@@ -61,13 +61,15 @@ class Admin extends REST_Controller {
           try {
              
              $this->token_data = JWT::decode($token, $jwt_key, array('HS256'));
-             if ( $this->token_data->user_type != 'admin' ) {
+             
+             $admins = array('admin', 'superadmin');
+             if ( !in_array($this->token_data->user_type, $admins) ) {
                     
                 // Set the response and exit
                 $this->response([
                     'status' => FALSE,
                     'message' => 'auth_error',
-                    'error' => array($e->getMessage()),
+                    'error' => 'Do not have admin access',
                 ], 401);               
              }
 
@@ -372,6 +374,90 @@ class Admin extends REST_Controller {
 
 
     }
+
+    public function get_pages_get()
+    {
+ 
+        $page_id = $this->uri->segment(4);
+
+        // If the id parameter doesn't exist return all the pages
+        if ($page_id === NULL) {
+
+          $pages = $this->common_model->get_data('pages');
+        } else {
+          
+          // Find and return a single record.
+          $page_id = (int) $page_id;
+
+          $pages = $this->common_model->get_data('pages', array('page_id' => $page_id));
+        }
+
+        // Check if the pages data store contains pages (in case the database result returns NULL)
+        if ( !empty($pages) ) {
+
+          foreach ($pages as $page) {
+            
+            $page->content = html_entity_decode($page->content);
+          }
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $pages,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No pages were found'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+
+    }
+
+
+    function save_page_post()
+    {
+      
+      $title = $this->input->post('title');
+      $content = $this->input->post('content');
+      $page_id = $this->input->post('page_id');
+      
+      // remove froala text
+      if(strpos($content, '<p data-f-id="pbf"')) {
+  
+        $content = substr($content, 0, strpos($content, '<p data-f-id="pbf"'));
+      }
+
+      $page = array(
+        'title'   => $title,
+        'content' => htmlEntities($content, ENT_QUOTES),
+      );
+      
+      // html_entity_decode($encodedHTML)
+
+      if( $this->common_model->update_entry('pages', $page, array('page_id' => $page_id)) ) {
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('page' => $page_id),
+                'message' => 'page_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save page.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
 
     public function get_topics_get()
     {

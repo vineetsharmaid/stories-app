@@ -1,0 +1,58 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Pages List</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="15%">Page </th>
+                  <th width="15%">Title </th>
+                  <th width="40%">Content </th>
+                  <th width="15%">Created </th>
+                  <th width="15%">Action </th>
+                </thead>
+                <tbody *ngIf="pages?.length > 0">
+                  <tr *ngFor="let page of pages">
+                    <td>{{page.slug | titlecase}}</td>
+
+                    <td>
+                      <a href="#" [routerLink]="['/', page.slug]" class="user_name" target="_blank"> {{page.title}} </a>
+                    </td>
+                    
+
+                    <td [innerHtml]="page.content"></td>
+                    
+                    <td>{{page.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-info" routerLink="./edit/{{page.page_id}}">
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="pages?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No page found.
+                      <br>
+                      <button class="btn btn-sm btn-success" [routerLink]="['./add']">
+                         Add New
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

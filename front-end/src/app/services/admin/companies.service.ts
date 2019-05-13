@@ -27,11 +27,44 @@ export class CompaniesService {
 	  return this.http.get(ADMIN_API_URL+'get_companies/', httpOptions);
 	}
 
-	/** POST: get company by companyIdfrom the database */
+	/** POST: get company by companyId from the database */
 	getCompany (companyId): Observable<any> {
 	  
 	  return this.http.get(ADMIN_API_URL+'get_company/'+companyId, httpOptions);
 	}
+
+	/** GET: get page from the database */
+	getPages (): Observable<any> {
+	  
+	  return this.http.get(ADMIN_API_URL+'get_pages/', httpOptions);
+	}
+	
+	/** GET: get page  by pageID from the database */
+	getPage (pageID): Observable<any> {
+	  
+	  return this.http.get(ADMIN_API_URL+'get_pages/'+pageID, httpOptions);
+	}
+
+	
+	/** POST: update page data in database */
+	editpage (page): Observable<any> {
+
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
+
+		const formData = new FormData();		
+
+    	formData.append('title', page.title);
+    	formData.append('content', page.content);
+    	formData.append('page_id', page.page_id);
+	  	
+	  	return this.http.post(ADMIN_API_URL+'save_page', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+	}
+
 
 	/** POST: add a new company to the database */
 	addCompany (company): Observable<any> {

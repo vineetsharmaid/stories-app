@@ -33,6 +33,7 @@ class Api extends REST_Controller {
         parent::__construct();
 
         $this->load->library('MailChimp');
+        $this->load->model('user_model');
 
         // list id from mailchimp 
         $this->mailchimpListId = "eef03ca5a8";
@@ -653,6 +654,33 @@ class Api extends REST_Controller {
 
     }
 
+    public function get_user_info_get($username="") {
+
+      if ( !empty($username) ) {
+        
+        $user = $this->user_model->get_user_info( array('users.username' => $username) );
+      }
+
+      if ( !empty($user) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $user,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No user were found',
+                'error' => array('No user were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
     public function search_tags_get($search_tag)
     {
 
@@ -891,6 +919,36 @@ class Api extends REST_Controller {
           $this->response([
               'status' => FALSE,
               'message' => 'No stories were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+
+    public function get_page_get()
+    {
+
+      $page_slug = $this->uri->segment(3);
+      $page = $this->common_model->get_data( 'pages', array('pages.slug' => $page_slug));
+      
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($page) ) {
+
+            $page[0]->content = html_entity_decode($page[0]->content);
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $page[0],
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          }
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No page were found'
           ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 

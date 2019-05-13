@@ -4,6 +4,7 @@ import { StoriesService } from '../services/stories.service'
 
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const WEB_URL  =  environment.webUrl;
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
 @Component({
@@ -34,6 +35,7 @@ export class StoriesComponent implements OnInit {
 	        	if ( story['preview_image'] != "" ) {
 	          
 	          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
+	          		story['shareSlug'] = WEB_URL+'/story/'+story['slug'];
 	        	}
 
 	        	stories.push(story);
@@ -61,6 +63,7 @@ export class StoriesComponent implements OnInit {
 	        	if ( story['preview_image'] != "" ) {
 	          
 	          		story['preview_image'] = APP_URL+'/assets/uploads/stories/'+story['preview_image'];
+	          		story['shareSlug'] = WEB_URL+'/story/'+story['slug'];
 	        	}
 
 	        	featuredStories.push(story);

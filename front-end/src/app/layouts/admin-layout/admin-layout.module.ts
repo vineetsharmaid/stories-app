@@ -25,6 +25,7 @@ import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
+import { PagesComponent } from '../../admin/pages/pages.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -72,6 +73,7 @@ import {
     AnswersComponent,
     CommentsComponent,
     ForumCommentsComponent,
+    PagesComponent,
   ],
   providers: [
     AuthGuard,
