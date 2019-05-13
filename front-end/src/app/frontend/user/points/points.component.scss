@@ -21,3 +21,5 @@ box-shadow: 0px 10px 20px 0px rgba(0,0,0,0.25); border-bottom: 1px solid #fff;
 .user_profile_pic_wrap{width: 200px; height: 200px; border-radius: 200px; overflow:hidden; margin:20px auto; position: relative;}
 .user_profile_pic_wrap img, .image_wraper_out img{width: 100%;height: 100%;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);object-fit: cover;}
 .user-info { border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 5px; height: max-content; padding-bottom: 20px; }
+
+li.list-group-item span:first-of-type { width: 80%; }
