@@ -102,6 +102,7 @@ class Api extends REST_Controller {
                 $username = $this->_generate_username($post_data->first_name.''.$post_data->last_name);
               }
 
+              $company = isset($post_data->company) ? $post_data->company : 0;
 
               $user_data = array(
                   'first_name'    => $post_data->first_name,
@@ -110,8 +111,8 @@ class Api extends REST_Controller {
                   'user_type'     => 'user',
                   'status'        => 1,
                   'user_email'    => $post_data->email,
-                  'company_id'    => $post_data->company,
-                  'profile_pic'   => isset($post_data->photoUrl) ? $post_data->photoUrl : '',
+                  'company_id'    => $company,
+                  'profile_pic'   => '',
                   'password'      => $password_hashed
               );
 
@@ -929,7 +930,7 @@ class Api extends REST_Controller {
     {
 
       $page_slug = $this->uri->segment(3);
-      $page = $this->common_model->get_data( 'pages', array('pages.slug' => $page_slug));
+      $page = $this->common_model->get_data( 'pages', array('slug' => $page_slug));
       
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($page) ) {
@@ -942,7 +943,6 @@ class Api extends REST_Controller {
                 'status' => TRUE,
                 'data' => $page[0],
               ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-          }
       } else {
 
           // Set the response and exit

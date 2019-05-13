@@ -1,31 +1,42 @@
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+    <content-loader>
+      <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" />
+      <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" />
+    </content-loader>
+</div>
+
 <!-- Page title -->
-<div class="single_story_page_title">
+<div class="single_story_page_title" *ngIf="dataLoading == false">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         
-        <h1>About</h1>
+        <h1>{{page.title}}</h1>
         
       </div>
     </div>
   </div>
 </div>
+
 <!-- Single story page section 2 -->
-<div class="container-fluid about_page_wrap">
+<div class="container-fluid about_page_wrap" *ngIf="dataLoading == false">
     <div class="container">      
         <div class="row">
-            <div class="col-md-10 offset-md-1 single_page_content">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <img src="assets/img/single1.jpg" alt="">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <div class="about_footer">
-                    <p>If you'd like to say “hello:” <a href="#">youremail@gmail.com</a></p>
-                    <p>Speaking requests, media, and pitches: <a href="#">youremail@gmail.com</a></p>
-                </div>
+            <div class="col-md-10 offset-md-1 single_page_content" [innerHtml]="page.content">
+                
             </div>
         </div>
     </div>

@@ -11,14 +11,14 @@ import { UserService } from "../../frontend/services/user.service";
 import { SharedService } from "../../frontend/services/shared.service";
 import { UserValidators } from '../../frontend/services/validators/user.validator';
 
+import { environment } from '../../../environments/environment';
+const APP_URL  =  environment.baseUrl;
+
 @Component({
   selector: 'frontend-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-
-
-
 export class HeaderComponent implements OnInit {
    
   public auth2: any;
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
   public showForgotPassword: any;
   public showHideSignupForm: any;
   public companies: Array<object>;
-  
+  public userInfo: Object;
 
 	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
   @ViewChild('closeLoginModal') closeLoginModal: ElementRef;
@@ -68,6 +68,7 @@ export class HeaderComponent implements OnInit {
   	if( localStorage.getItem('isLoggedIn') == 'true' ) {
 
   		this.loggedIn = true;
+      this.getUserInfo();
   	}
 
     this.sharedService.currentMessage.subscribe((message) => {
@@ -114,6 +115,26 @@ export class HeaderComponent implements OnInit {
           email: [ '',  Validators.compose([Validators.required, Validators.email]) ]
       });
   }
+
+
+  getUserInfo() {
+
+    this.userService.getUserInfo().subscribe( (response) => {
+
+      console.log('response', response);
+      this.userInfo = response['data'][0];
+      this.userInfo['cover_pic'] = this.userInfo['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['cover_pic'];
+      this.userInfo['profile_pic'] = this.userInfo['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['profile_pic'];
+      
+    }, (error) => {
+
+      console.log('error', error['code']);
+      if ( error['code'] == 401 ) {
+        // authentication error show login popup
+      }
+    });
+  }
+
 
 	// convenience getter for easy access to form fields
   get lf() { return this.loginForm.controls; }

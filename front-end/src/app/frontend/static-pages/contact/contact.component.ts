@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserService } from '../../services/user.service';
+import { StoryService } from '../../services/story.service'
 
 @Component({
   selector: 'app-contact',
@@ -14,12 +15,18 @@ export class ContactComponent implements OnInit {
 	public formSubmitted: boolean = false;
 	public formErrors: Array<string>;
 
+	public dataLoading: boolean = true;
+	public page: Object;
+
+
 	@ViewChild('sucessContactBtn')  sucessContactBtn: ElementRef;
 	@ViewChild('errorContactBtn')  errorContactBtn: ElementRef;
 
-	constructor(private formBuilder: FormBuilder, private userService: UserService) { }
+	constructor(private formBuilder: FormBuilder, private userService: UserService, private storyService: StoryService) { }
 
 	ngOnInit() {
+
+			this.getPage('contact');
 
   		this.contactForm = this.formBuilder.group({
   			'firstName': ['', Validators.required],
@@ -27,6 +34,20 @@ export class ContactComponent implements OnInit {
   			'email': ['',  Validators.compose([Validators.required, Validators.email]) ],
   			'message': ['', Validators.required],
   		})
+	}
+
+	getPage(slug) {
+
+		this.storyService.getPage(slug).subscribe((reponse) => {
+
+			console.log('reponse', reponse);
+			this.dataLoading  = false;
+			this.page  = reponse['data'];
+		}, (error) => {
+
+			console.log('error', error);
+			this.dataLoading  = false;
+		});
 	}
 
 	// convenience getter for easy access to form fields

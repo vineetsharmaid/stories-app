@@ -21,30 +21,27 @@
   <!-- Header right section for Search and Login -->
   <div class="header_right_wrap">
     <a href="#" [routerLink]="['/search']" class="search_wrap"><img src="assets/img/search.png" alt=""></a>
-
-
-
-
     <div class="header_login_wrap" *ngIf="!loggedIn">
-      <div class="dropdown user_profile_dropdown">
-    <div class="user_loged_pic dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img src="assets/img/user/user.jpg" alt="">
-    </div>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Add Story</a>
-      <a class="dropdown-item" href="#">Stories</a>
-      <a class="dropdown-item" href="#">Logout</a>
-    </div>
-</div>
-
-
+      
       <!-- On click these links shows login/signup forms and hide the reset password form (if it was opened) -->
-      <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true; showForgotPassword = false; passwordEmailSent = false;">Join</a> | 
+      <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = true; showForgotPassword = false; passwordEmailSent = false;">Join</a> |
       <a href="#" data-toggle="modal" data-target="#exampleModal" (click)="showHideLogin = false; showForgotPassword = false; passwordEmailSent = false;" #showLoginModal>Login</a>
-
     </div>
     <div class="header_login_wrap" *ngIf="loggedIn">
-      <a href="#" (click)="signOut()">Logout</a>
+      <div class="dropdown user_profile_dropdown" *ngIf="(userInfo | json) != '{}'">
+        <div class="user_loged_pic dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img *ngIf="userInfo?.profile_pic?.length > 0" [src]="userInfo['profile_pic']" alt="">
+          <img *ngIf="userInfo?.profile_pic?.length == 0" src="assets/img/forum/user_pic.png" alt="">
+        </div>
+        <div class="dropdown-menu profile" aria-labelledby="dropdownMenuButton">          
+          <a href="#" class="dropdown-item" [routerLink]="['/user/']">Profile</a>
+          <a href="#" class="dropdown-item" [routerLink]="['/user/story/new']">Add Story</a>
+          <a class="dropdown-item" href="#" [routerLink]="['/user/story/list']">Stories</a>          
+          <a class="dropdown-item" href="#" [routerLink]="['/user/forum/list']">Community Discussions</a>
+          <a class="dropdown-item" href="#" [routerLink]="['/user/points']">Points</a>
+          <a href="#" class="dropdown-item" (click)="signOut()">Logout</a>
+        </div>
+      </div>      
     </div>
     <div class="main_social_wrap">
       <ul class="team_social_list">
@@ -52,17 +49,16 @@
         <li><a href=""><img src="assets/img/insta.png" alt=""></a></li>
         <li><a href=""><img src="assets/img/linkedIn.png" alt=""></a></li>
       </ul>
-    </div>    
+    </div>
   </div>
   <!-- Header right section for Search and Login -->
 </nav>
-<!-- Header --> 
+<!-- Header -->
 <!-- Popup for login -->
 <div class="modal fade header_popup" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close" #closeLoginModal>
   <span aria-hidden="true">&times;</span>
   </button>
-
   <!-- On click these links shows login/signup forms, hide the reset password form (if it was opened) and hide reset success message (if exists)-->
   <span class="top-right-nav" (click)="showHideLogin = !showHideLogin; showForgotPassword = false; passwordEmailSent = false;" [hidden]="showHideLogin">
     Not yet a member?
@@ -72,10 +68,8 @@
     Already a member?
     <a class="alink">Login</a>
   </span>
-
   <div class="modal-dialog" role="document">
     <div class="modal-content" style="box-shadow: none;">
-
       <!----------- STARTS USER LOGIN FORM ------------>
       <div class="modal-body" [hidden]="showHideLogin || showForgotPassword">
         <h3 class="modal-title">Welcome back</h3>
@@ -87,29 +81,26 @@
         <div class="emailExists mb-2" *ngIf="accountAlreadyExists">
           An account for the specified email address already exists. Please login.
         </div>
-
         <div *ngFor="let error of loginErrors" class="col-sm-12 mb-2">
           <p class="error">{{error}}</p>
-        </div>          
-
+        </div>
         <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()"  class="login_form">
           
           <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': loginSubmitted && lf.email.errors }" placeholder="Email" />
           <div *ngIf="loginSubmitted && lf.email.errors" class="invalid-feedback">
             <div *ngIf="lf.email.errors.required">Email is required</div>
             <div *ngIf="lf.email.errors.email">Email must be valid</div>
-          </div>  
+          </div>
           
           <input type="password" formControlName="password" [ngClass]="{ 'is-invalid': loginSubmitted && lf.password.errors }" placeholder="Password" />
           <div *ngIf="loginSubmitted && lf.password.errors" class="invalid-feedback">
             <div *ngIf="lf.password.errors.required">Password is required</div>
           </div>
-
           <button type="submit" class="btn-map">
-            Login
-            <span *ngIf="loginLoading">
-              <i class='fa fa-circle-o-notch fa-spin'></i>
-            </span>
+          Login
+          <span *ngIf="loginLoading">
+            <i class='fa fa-circle-o-notch fa-spin'></i>
+          </span>
           </button>
           
         </form>
@@ -117,7 +108,6 @@
         <a href="#" class="forgt_pass alink mt-2" *ngIf="accountAlreadyExists">Sign up with another email address.</a>
       </div>
       <!----------- ENDS USER LOGIN FORM ------------>
-
       <!----------- STARTS USER REGISTERATION FORM ------------>
       <div class="modal-body" [hidden]="!showHideLogin || showForgotPassword">
         <h3 class="modal-title">Join Our Community To Submit Your Own Stories Now</h3>
@@ -131,30 +121,26 @@
         </span>
         <div class="login_social_wrap" [hidden]="!showHideSignupForm">
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login_form">
-
             <div class="form-group">
               <input type="text" formControlName="firstName" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" placeholder="First name" />
               <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
                 <div *ngIf="f.firstName.errors.required">First Name is required</div>
               </div>
             </div>
-
             <div class="form-group">
               <input type="text" formControlName="lastName" [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }" placeholder="Last name" />
               <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
                 <div *ngIf="f.lastName.errors.required">Last Name is required</div>
               </div>
             </div>
-
             <div class="form-group">
               <select class="form-control" formControlName="company">
                 <option value="">Choose company</option>
                 <option *ngFor="let company of companies" value="{{company.company_id}}">
                   {{company.name}}
                 </option>
-              </select>              
+              </select>
             </div>
-
             <div class="form-group">
               <input type="text" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" />
               <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
@@ -167,7 +153,6 @@
                 <div *ngIf="f.username.errors.userNameExists">This username has already been taken, sorry!</div>
               </div>
             </div>
-
             <div class="form-group">
               <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Email" />
               <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
@@ -175,18 +160,14 @@
                 <div *ngIf="f.email.errors.email">Email must be valid</div>
               </div>
             </div>
-
             <div class="form-group">
               <button [disabled]="loading" class="btn-map">Register</button>
               <a class="btn btn-link" (click)="showHideSignupForm = !showHideSignupForm">Cancel</a>
             </div>
-
           </form>
         </div>
       </div>
       <!----------- ENDS USER REGISTERATION FORM ------------>
-
-
       <!----------- STARTS FORGOT PASSWORD FORM ------------>
       <div class="modal-body" [hidden]="!showForgotPassword">
         <h3 class="modal-title">Reset your password</h3>
@@ -194,28 +175,24 @@
         <div *ngIf="passwordEmailSent; else displayPasswordResetForm">
           <p>{{passwordEmailSuccess}}</p>
         </div>
-
         <ng-template #displayPasswordResetForm>
-          <div class="mb-2">
-            Enter your email address and we will send you a link to reset your password.
+        <div class="mb-2">
+          Enter your email address and we will send you a link to reset your password.
+        </div>
+        <div *ngFor="let error of forgotPassErrors" class="col-sm-12 mb-2 mt-2">
+          <p class="error">{{error}}</p>
+        </div>
+        <form [formGroup]="forgotPassForm" (ngSubmit)="onForgotPassSubmit()"  class="login_form">
+          
+          <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': forgotPassSubmitted && fp.email.errors }" placeholder="Email" />
+          <div *ngIf="forgotPassSubmitted && fp.email.errors" class="invalid-feedback">
+            <div *ngIf="fp.email.errors.required">Email is required</div>
+            <div *ngIf="fp.email.errors.email">Email must be valid</div>
           </div>
-
-          <div *ngFor="let error of forgotPassErrors" class="col-sm-12 mb-2 mt-2">
-            <p class="error">{{error}}</p>
-          </div>
-
-          <form [formGroup]="forgotPassForm" (ngSubmit)="onForgotPassSubmit()"  class="login_form">
-            
-            <input type="email" formControlName="email" [ngClass]="{ 'is-invalid': forgotPassSubmitted && fp.email.errors }" placeholder="Email" />
-            <div *ngIf="forgotPassSubmitted && fp.email.errors" class="invalid-feedback">
-              <div *ngIf="fp.email.errors.required">Email is required</div>
-              <div *ngIf="fp.email.errors.email">Email must be valid</div>
-            </div>  
-
-            <button type="submit" class="btn-map" [disabled]="forgotPassLoading">Send</button>
-            <span *ngIf="forgotPassLoading"><i class="fa fa-spin fa-circle-o-notch"></i></span>
-            
-          </form>
+          <button type="submit" class="btn-map" [disabled]="forgotPassLoading">Send</button>
+          <span *ngIf="forgotPassLoading"><i class="fa fa-spin fa-circle-o-notch"></i></span>
+          
+        </form>
         </ng-template>
         
         <!-- On click it hides the reset password form as well as the success message (if exists) -->
@@ -223,12 +200,8 @@
           <span><i class="fa fa-arrow-left mr-2"></i></span>
           Back to login
         </a>
-
       </div>
       <!----------- ENDS FORGOT PASSWORD FORM ------------>
-
-
-
     </div>
   </div>
 </div>

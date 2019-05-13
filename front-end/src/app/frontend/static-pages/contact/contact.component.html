@@ -1,22 +1,41 @@
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+    <content-loader>
+      <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" />
+      <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" />
+    </content-loader>
+</div>
+
 <!-- Page title -->
-<div class="single_story_page_title">
+<div class="single_story_page_title" *ngIf="dataLoading == false">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         
-        <h1>Contact Us</h1>
+        <h1>{{page.title}}</h1>
         
       </div>
     </div>
   </div>
 </div>
-<div class="contact_top_wrap">
+
+<div class="contact_top_wrap" *ngIf="dataLoading == false">
   <div class="container">
     <div class="row">
-      <div class="col-lg-8">
-        <p class="size18">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
-        <p class="size18 top20">Lorem Ipsum has been the industry's printing and typesetting industry.</p>
-        <p class="size18 top20">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
+      <div class="col-lg-8" [innerHtml]="page.content">
+        
       </div>
       <div class="col-lg-4">
         <div class="aside-right size16">

@@ -1,8 +1,11 @@
 .formrow { height: 100vh; 
 	background: #efefef; /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #efefef, #f1663b80); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to top, #efefef, #f1663b80); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */}
+  background: linear-gradient(to bottom, #efefef, #f1663b80); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */}
 .login-errors { position: absolute; }
-.username-wrapper { margin-top: 30vh; }
+.username-wrapper { margin-top: 5vh; }
 .form-group label { color: #000000; }
 .btn-custom { background: #f1663b; border: none; }
+.admin-title { text-align: center; margin-top: 20vh; }
+.admin-title img { border-bottom: 1px solid #e67723; padding-bottom: 10px; }
+.admin-title p { font-size: 20px; margin-top: 10px; color: #e67723; text-transform: uppercase; font-weight: bold; }

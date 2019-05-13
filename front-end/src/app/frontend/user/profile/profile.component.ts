@@ -17,7 +17,7 @@ class ImageSnippet {
 })
 export class ProfileComponent implements OnInit {
 
-	public userInfo = Object;
+	public userInfo: Object;
   public stories: Array<object>;
   public storiesCount: number;
   public enableNameEdit: boolean = false;
