@@ -1,0 +1,5 @@
+.empty-list { text-align: center; padding-top: 30px; }
+.card-title { display: inline-block; }
+.invalid-feedback { display: block; position: absolute; bottom: -20px; }
+.disabled-input { border-bottom: 1px solid; cursor: not-allowed; }
+.fr-wrapper div:first-of-type { display: none;}

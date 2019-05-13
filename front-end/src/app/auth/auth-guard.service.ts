@@ -6,9 +6,7 @@ export class AuthGuardService implements CanActivate {
   constructor(public router: Router) {}
   canActivate(): boolean {
 
-  	console.log('isLoggedIn', localStorage.getItem('isLoggedIn'));
-
-    if (localStorage.getItem('isLoggedIn') && localStorage.getItem('userType') == 'admin') {
+    if (localStorage.getItem('isLoggedIn') && (localStorage.getItem('userType') == 'admin' || localStorage.getItem('userType') == 'superadmin') ) {
     	
     	return true;
     } else {

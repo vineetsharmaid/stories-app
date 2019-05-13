@@ -158,7 +158,7 @@ export class UserService {
 			  })
 			};
 			
-			return this.http.get(USER_API_URL+'get_user_info/'+username, httpAuthOptions).pipe(
+			return this.http.get(API_URL+'get_user_info/'+username, httpAuthOptions).pipe(
 				tap((emailSent: Object) => console.log('emailSent', emailSent)),
 				catchError(this.handleError)
 			);

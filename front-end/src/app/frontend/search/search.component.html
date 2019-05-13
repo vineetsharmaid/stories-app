@@ -1,10 +1,3 @@
-<!-- <div class="container">
-  <div class="row search-box-wrap empty-search" *ngIf="searchText == undefined || stories?.length == 0">
-    <div class="col-md-12">
-      <input type="search" class="search" [(ngModel)]="searchText" placeholder="Search Stories" (keyup)="startCountDown($event)" (keydown)="clearCountDown()">
-    </div>
-  </div>
-</div> -->
 <div class="container">
   <div class="row search-box-wrap">
   <!-- <div class="row search-box-wrap" *ngIf="searchText !== undefined && stories?.length > 0"> -->
@@ -71,6 +64,7 @@
                   <div class="story_tag_wrap">
                     <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
                     <span class="dark_tag" *ngIf="story.type == 2">Business</span>
+                    <span *ngFor="let tag of story.tags" class="light_tag">{{tag.name}}</span>
                   </div>
                   <h3>{{story.preview_title}}</h3>
                   <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p>
@@ -89,9 +83,23 @@
                     <img src="assets/img/bookmark.png" alt="">
                     <div class="social_wrap">
                       <ul>
-                        <li><a (click)="share()"><img src="assets/img/facebook.png" alt=""></a></li>
-                        <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
-                        <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
+                        <li>
+                            <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+story.shareSlug" target="_blank">
+                                
+                                <img src="assets/img/facebook.png" [alt]="story.preview_title">
+                            </a>
+
+                        </li>                                        
+                        <li>
+                            <a [href]="'http://twitter.com/share?text='+story.preview_title+'&url='+story.shareSlug" target="_blank">
+                                <img src="assets/img/twtr.png" [alt]="story.preview_title">
+                            </a>
+                        </li>
+                        <li>
+                            <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+story.shareSlug+'&title='+story.preview_title+'&source=LinkedIn'" target="_blank">
+                                <img src="assets/img/linkedIn.png" [alt]="story.preview_title">
+                            </a>
+                        </li>
                       </ul>
                     </div>
                   </div>

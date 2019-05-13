@@ -1,0 +1,46 @@
+<div class="main-content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header card-header-danger">
+						<h4 class="card-title">Edit Page</h4>
+						<!-- <p class="card-category"> List of users.</p> -->
+						<button class="btn btn-sm btn-success pull-right" [routerLink]="['/admin/pages']">
+						List
+						</button>
+					</div>
+					<div class="card-body">
+						<form [formGroup]="editPagesForm" (ngSubmit)="editpage()">
+							<div class="row">
+								<div class="col-md-3"></div>
+								<div class=" col-md-6">
+									
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+											<input matInput formControlName="title" type="text" placeholder="Title">
+											<div *ngIf="formSubmitted && fields.title.errors" class="invalid-feedback">
+												<div *ngIf="fields.title.errors.required">Name is required</div>
+											</div>
+										</mat-form-field>
+									</div>
+
+									<div class="form-group">
+										<textarea [froalaEditor]="editorPageOptions" placeholder="Content of the page" formControlName="content"></textarea>
+										<div *ngIf="formSubmitted && fields.content.errors" class="invalid-feedback">
+											<div *ngIf="fields.content.errors.required">Content is required</div>
+										</div>								
+									</div>
+								
+									<button mat-raised-button type="submit" class="btn btn-danger pull-right">Save</button>
+								</div>
+								<div class="col-md-3"></div>
+								<div class="clearfix"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -20,6 +20,7 @@ import { QuestionsComponent } from '../../admin/questions/questions.component';
 import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
+import { PagesComponent } from '../../admin/pages/pages.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
@@ -130,6 +131,16 @@ export const AdminLayoutRoutes: Routes = [
             {
               path: '',
               loadChildren: '../../admin/forum-comments/forum-comments.module#ForumCommentsModule'
+            }
+        ],
+        canActivate: [AuthGuard], 
+    },{
+        path: 'pages',
+        component: PagesComponent,
+        children: [
+            {
+              path: '',
+              loadChildren: '../../admin/pages/pages.module#PagesModule'
             }
         ],
         canActivate: [AuthGuard], 

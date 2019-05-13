@@ -113,4 +113,4 @@ define('STORY_PUBLISH_POINTS',100);
 define('QUESTION_PUBLISH_POINTS',10);
 define('ANSWER_PUBLISH_POINTS',30);
 
-define('CONTACT_EMAIL','vineet_360@yopmail.com');
+define('CONTACT_EMAIL','soa@storiesofasia.co');

@@ -1,6 +1,6 @@
 <div class="main-content">
   <div class="container-fluid">
-    <div class="row">
+    <div class="row" *ngIf="(dashboardData | json) != '{}'">
       <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card card-stats">
           <div class="card-header card-header-warning card-header-icon">
@@ -9,7 +9,7 @@
             </div>
             <p class="card-category">Total Users</p>
             <h3 class="card-title">
-            {{dashboardData['users']}}
+            {{dashboardData?.users}}
             </h3>
           </div>
           <div class="card-footer">
@@ -28,7 +28,7 @@
             </div>
             <p class="card-category">Total Stories</p>
             <h3 class="card-title">
-            {{dashboardData['stories']}}
+            {{dashboardData?.stories}}
             </h3>
           </div>
           <div class="card-footer">
@@ -47,7 +47,7 @@
             </div>
             <p class="card-category">Total Questions</p>
             <h3 class="card-title">
-            {{dashboardData['forum_questions']}}
+            {{dashboardData?.forum_questions}}
             </h3>
           </div>
           <div class="card-footer">
@@ -66,7 +66,7 @@
             </div>
             <p class="card-category">Total Answers</p>
             <h3 class="card-title">
-            {{dashboardData['forum_answers']}}
+            {{dashboardData?.forum_answers}}
             </h3>
           </div>
           <div class="card-footer">
