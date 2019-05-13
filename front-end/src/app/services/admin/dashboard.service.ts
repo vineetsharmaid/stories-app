@@ -32,6 +32,16 @@ export class DashboardService {
 	}
 
 
+  getUserRegisterData(): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+    	
+		return this.http.get(ADMIN_API_URL+'get_user_register_data/', httpOptions);
+	}
+
+
 
 
 

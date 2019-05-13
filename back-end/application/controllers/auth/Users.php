@@ -871,6 +871,71 @@ class Users extends REST_Controller {
       
     }
 
+    public function get_user_story_details_get()
+    {
+        $story_id = $this->uri->segment(4);
+
+        $story = $this->user_model->get_user_story_details($story_id);
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($story) ) {
+
+          if ( $this->token_data->id == $story[0]->author_id ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'different_author',
+                'error' => array('You do not have access to this story.'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No stories were found',
+                'error' => array('No stories were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+    public function get_story_views_get()
+    {
+        $story_id = $this->uri->segment(4);
+
+        $story_views = $this->user_model->get_story_views($story_id);
+
+        // Check if the categories data store contains categories (in case the database result returns NULL)
+        if ( !empty($story_views) ) {
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data' => $story_views,
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No views were found',
+                'error' => array('No views were found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
     public function update_meta_info_post()
     {
       $where = array('user_id' => $this->token_data->id);
@@ -1231,6 +1296,43 @@ class Users extends REST_Controller {
                 'status' => FALSE,
                 'message' => 'Already liked by this user',
                 'error' => array('Already liked by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
+    public function viewed_story_post() {
+        
+        $data = array('story_id' => $this->input->post('story_id'), 'user_id' => $this->token_data->id);
+
+        if ($this->common_model->data_exists('story_user_views', $data) == 0) {
+          if ( $this->common_model->insert_entry('story_user_views', $data) ) {
+
+              $this->verify_likes_points($this->input->post('story_id'));
+
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data'   => 'Viewed the story',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already viewed by this user',
+                'error' => array('Already viewed by this user'),
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
         }
       

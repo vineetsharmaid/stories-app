@@ -193,13 +193,15 @@ export class UserService {
 
 
 handleError(error) {
+	console.log('service error', error);
+	
    let errorMessage;
    if (error.error instanceof ErrorEvent) {
      // client-side error
      errorMessage = {'message': error.error.message};
    } else {
      // server-side error
-     errorMessage = {'code': error.status, 'message': error.message};
+     errorMessage = {'code': error.status, 'message': error.message, 'errorData': error.error};
    }
 
    return throwError(errorMessage);

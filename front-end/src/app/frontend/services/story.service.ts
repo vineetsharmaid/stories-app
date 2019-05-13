@@ -177,6 +177,30 @@ export class StoryService {
 	    );
 		}
 
+  	getUserStoryDetails(storyId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_user_story_details/'+storyId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	getstoryViews(storyId): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(USER_API_URL+'get_story_views/'+storyId, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getStories(): Observable<any>{
 
 			let httpOptions = {

@@ -92,4 +92,26 @@ class User_model extends CI_Model {
         return $this->db->get()->result();
       }
 
+    public function get_user_story_details($story_id) {
+        
+
+        $this->db->select('stories.title, stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, users.first_name, users.last_name, users.username, count(distinct story_user_views.user_id) as total_views, count(distinct story_user_likes.user_id) as total_likes, count(distinct comments.comment_id) as total_comments');
+        $this->db->from('stories');
+        $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->join('story_user_views', 'story_user_views.story_id = stories.story_id', 'left');
+        $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id', 'left');
+        $this->db->join('comments', 'comments.story_id = stories.story_id AND comments.approved = 1', 'left');
+        $this->db->where( array('stories.story_id' => $story_id) );
+        return $this->db->get()->result();
+    }
+
+    public function get_story_views($story_id) {
+        
+        $this->db->select('story_user_views.*, users.first_name, users.last_name, users.username');
+        $this->db->from('story_user_views');
+        $this->db->join('users', 'users.user_id = story_user_views.user_id');
+        $this->db->where( array('story_user_views.story_id' => $story_id) );
+        return $this->db->get()->result();
+    }
+
 }

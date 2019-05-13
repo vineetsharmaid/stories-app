@@ -55,19 +55,14 @@ export class FooterComponent implements OnInit {
 
 				this.formSubmitted = false;
 				this.newsletterForm.reset();
-		    if( response['status'] == true ) {
-		    	
-						this.subscribeError = "";
-		    } else {
-
-						this.subscribeError = response['message'];
-		    }
 				this.sucessNewsletterBtn.nativeElement.click();
 				
 			}, error => {
 
-				this.errorNewsletterBtn.nativeElement.click();
 				console.log('error', error);
+				this.subscribeError = error['errorData']['message'];
+				this.errorNewsletterBtn.nativeElement.click();
+				
 			});
 
 		}

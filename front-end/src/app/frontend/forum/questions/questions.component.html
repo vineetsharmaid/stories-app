@@ -87,7 +87,7 @@
                     </ng-template>
                   </div>
                   <div class="ans_info">
-                    <a href="#">{{answerByUser.first_name}} {{answerByUser.last_name}}</a>
+                    <a href="#" [routerLink]="['/author/', answerByUser.username]">{{answerByUser.first_name}} {{answerByUser.last_name}}</a>
                     <span>Answered {{answerByUser.answered_ago}}</span>
                   </div>
                 </div>
@@ -152,7 +152,7 @@
                           <ng-template #defaultImage>
                           <!-- <img class="rounded-circle" src="assets/img/default-user-image.jpg"> -->
                           <div class="user-imageholder">
-                            <span class="name-letter">
+                            <span class="name-letter" [routerLink]="['/author/', comment.username]">
                               {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
                             </span>
                           </div>
@@ -162,7 +162,7 @@
                           <span class="text-muted pull-right">
                             <small class="text-muted"> {{comment.created}}</small>
                           </span>
-                          <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                          <strong class="text-success" [routerLink]="['/author/', comment.username]">{{comment.first_name}} {{comment.last_name}}</strong>
                           
                           <p> {{comment.content}} </p>
                           
@@ -233,7 +233,7 @@
                     </ng-template>
                   </div>
                   <div class="ans_info">
-                    <a href="#">{{answer.first_name}} {{answer.last_name}}</a>
+                    <a href="#" [routerLink]="['/author/', answer.username]">{{answer.first_name}} {{answer.last_name}}</a>
                     <span>Answered {{answer.answered_ago}}</span>
                   </div>
                 </div>
@@ -285,7 +285,7 @@
                           <ng-template #defaultImage>
                           <!-- <img class="rounded-circle" src="assets/img/default-user-image.jpg"> -->
                           <div class="user-imageholder">
-                            <span class="name-letter">
+                            <span class="name-letter" [routerLink]="['/author/', comment.username]">
                               {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
                             </span>
                           </div>
@@ -295,7 +295,7 @@
                           <span class="text-muted pull-right">
                             <small class="text-muted"> {{comment.created}}</small>
                           </span>
-                          <strong class="text-success">{{comment.first_name}} {{comment.last_name}}</strong>
+                          <strong class="text-success" [routerLink]="['/author/', comment.username]">{{comment.first_name}} {{comment.last_name}}</strong>
                           
                           <p> {{comment.content}} </p>
                           

@@ -32,6 +32,11 @@ class Api extends REST_Controller {
         // Construct the parent class
         parent::__construct();
 
+        $this->load->library('MailChimp');
+
+        // list id from mailchimp 
+        $this->mailchimpListId = "eef03ca5a8";
+
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
         $this->methods['get_users_get']['limit'] = 500; // 500 requests per hour per user/key
@@ -1113,35 +1118,61 @@ class Api extends REST_Controller {
         'email'      => $this->input->post('email'),
       );
 
-      $count = $this->common_model->data_exists(
-        'newsletter_subscribers', 
-        array( 'email' => $this->input->post('email') )
-      );
+      $result = $this->mailchimp->post("lists/".$this->mailchimpListId."/members", [
+              'email_address' => $this->input->post('email'),
+              'merge_fields' => [
+                'FNAME'=>$this->input->post('first_name'), 
+                'LNAME'=>$this->input->post('last_name')
+              ],
+              'status'        => 'subscribed',
+          ]);
 
-      if ( $count > 0 ) {
+      // echo "<pre>";
+      // print_r($result);
+      // echo "</pre>";
 
-            // Set the response and exit
-            $this->response([
-                'status' => FALSE,
-                'message' => 'Already subscribed.'
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-      } else {
+      if ( $result['status'] == 'subscribed' ) {
+       
+        $count = $this->common_model->data_exists(
+          'newsletter_subscribers', 
+          array( 'email' => $this->input->post('email') )
+        );
 
-        if( $this->common_model->insert_entry('newsletter_subscribers', $subscriber) ) {
-          // Set the response and exit
-          $this->response(  
-            array(
-              'status' => TRUE,
-              'data'   => 'subscribed',
-            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code      
+        if ( $count == 0 ) {
+
+          $this->common_model->insert_entry('newsletter_subscribers', $subscriber);
+        } 
+
+        // Set the response and exit
+        $this->response(  
+          array(
+            'status' => TRUE,
+            'data'   => 'subscribed',
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code  
+      } else if ( $result['status'] == 400 ) {
+        
+        if ( $result['title'] == 'Invalid Resource' ) {
+          
+          $error = $result['detail'];
+        } else if ( $result['title'] == 'Member Exists' ) {
+          
+          $error = $subscriber['email']." is already subscribed.";
         } else {
 
-            // Set the response and exit
-            $this->response([
-                'status' => FALSE,
-                'message' => 'Unable to subscribe user.'
-            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+          $error = "Unable to subscribe.";
         }
+      } else {
+
+        $error = "Unable to subscribe.";
+      }
+
+      if (isset($error)) {
+        
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => $error
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
       
     }

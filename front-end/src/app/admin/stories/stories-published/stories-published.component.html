@@ -27,6 +27,9 @@
                   <tr *ngFor="let story of stories; let i = index">
                     <td>
                       <a href="#" target="_blank" [routerLink]="['/story/', story.slug]" class="user_name"> {{story.preview_title | titlecase}} </a>
+                      <br />
+                      {{story.total_likes}} Likes | 
+                      {{story.total_comments}} Comments
                     </td>
                     <td>                    
                      {{ story.preview_subtitle }}

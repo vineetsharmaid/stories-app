@@ -55,8 +55,11 @@ export class StoryDetailsComponent implements OnInit {
       	
       	this.displayStory = true;
         this.dataLoading  = false;
+            
+        if( this.isLoggedIn == 'true' ) {
 
-      console.log('getStories this.storyData', this.storyData);
+          this.updateStoryViewCount();
+        }
       
     }, error => {
 
@@ -90,6 +93,17 @@ export class StoryDetailsComponent implements OnInit {
 
       this.comments = [];        
       console.log('getStoryComments error', error);
+    });
+  }
+
+  updateStoryViewCount() {
+
+    this.storiesService.updateStoryViewCount(this.storyData['story_id']).subscribe((response: Array<Object>) => {
+      
+      console.log('updateStoryViewCount response', response);
+    }, error => {
+
+      console.log('updateStoryViewCount error', error);
     });
   }
 

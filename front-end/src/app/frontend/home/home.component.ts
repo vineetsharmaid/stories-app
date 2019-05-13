@@ -16,11 +16,13 @@ export class HomeComponent implements OnInit {
 	public stories: Array<object>;
 	public featuredStories: Array<object>;
   public dataLoading: boolean = true;
+  public isLoggedIn: string = 'false';
 
   constructor( private storiesService : StoriesService ) { }
  
   ngOnInit() {
 
+    this.isLoggedIn = localStorage.getItem('isLoggedIn');
   	this.getFeaturedStories();
   	this.getStories();
   }
@@ -86,6 +88,19 @@ export class HomeComponent implements OnInit {
 
       this.stories[index]['liked'] = true;
       this.stories[index]['likes'] = parseInt(this.stories[index]['likes']) + 1;
+    }, error => {
+      
+      console.log('getstories error', error);
+    });    
+  }
+
+
+  featuredLike(storyId, index) {
+
+    this.storiesService.likeStory(storyId).subscribe((response: Array<Object>) => {
+
+      this.featuredStories[index]['liked'] = true;
+      this.featuredStories[index]['likes'] = parseInt(this.featuredStories[index]['likes']) + 1;
     }, error => {
       
       console.log('getstories error', error);

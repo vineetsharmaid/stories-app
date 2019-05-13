@@ -770,7 +770,7 @@ class Admin extends REST_Controller {
       }
 
     }
-
+    
     public function get_answers_post() {
 
       $where = array( 'forum_answers.status'  => $this->input->post('status') );
@@ -799,6 +799,32 @@ class Admin extends REST_Controller {
         $this->response([
             'status' => FALSE,
             'message' => 'No answers were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
+    public function get_user_register_data_get() {
+
+      $users = $this->admin_model->get_user_register_data();
+
+      if ( !empty($users) ) {
+        // foreach ($users as $user) {
+          
+        //   $user->created = strtotime($user->created);
+        // }
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $users,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No users were found'
         ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 

@@ -14,6 +14,12 @@ export class AppComponent {
 	private tokenInterval: any;
 	constructor(private router: Router, private userService: UserService, private sharedService: SharedService) {
 
+		this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        (<any>window).ga('set', 'page', event.urlAfterRedirects);
+        (<any>window).ga('send', 'pageview');
+      }
+    });
 	}
 
 	ngOnInit() {

@@ -105,7 +105,7 @@
                   </ng-template>
                 </div>
                 <div class="ans_info">
-                  <a href="#">{{question.first_name}} {{question.last_name}}</a>
+                  <a href="#" [routerLink]="['/author/', question.username]">{{question.first_name}} {{question.last_name}}</a>
                   <span>Answered {{question.answered_ago}}</span>
                 </div>
               </div>

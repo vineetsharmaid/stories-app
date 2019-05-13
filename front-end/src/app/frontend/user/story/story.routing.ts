@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { StoryListComponent } from './story-list/story-list.component';
 import { StoryNewComponent } from './story-new/story-new.component';
 import { StoryEditComponent } from './story-edit/story-edit.component';
+import { StoryStatsComponent } from './story-stats/story-stats.component';
 
 export const StoryRoutes: Routes = [
     { 
@@ -21,5 +22,8 @@ export const StoryRoutes: Routes = [
     }, { 
         path: 'edit/:storyId',
         component: StoryEditComponent,
+    }, { 
+        path: 'stats/:storyId',
+        component: StoryStatsComponent,
     },
 ];

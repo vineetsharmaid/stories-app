@@ -89,17 +89,12 @@
     <div class="modal-content">
       
       <!-- Modal body -->
-      <div class="modal-body" *ngIf="subscribeError?.length == 0">
+      <div class="modal-body">
         <p class="p-2">Thank you for subscribing!</p>
 
         <p class="p-2">Have a great day!</p>
       </div>
 
-      <!-- Modal body -->
-      <div class="modal-body" *ngIf="subscribeError?.length > 0">
-        <p class="p-2">{{subscribeError}}</p>
-      </div>
-      
       <!-- Modal footer -->
       <div class="modal-footer p-2">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -117,8 +112,8 @@
     <div class="modal-content">
       
       <!-- Modal body -->
-      <div class="modal-body">
-        Unable to subscribe.
+      <div class="modal-body" *ngIf="subscribeError?.length > 0">
+        <p class="p-2">{{subscribeError}}</p>
       </div>
       
       <!-- Modal footer -->

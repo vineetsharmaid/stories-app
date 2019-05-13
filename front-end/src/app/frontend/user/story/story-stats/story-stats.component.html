@@ -1,0 +1,49 @@
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+    <content-loader>
+      <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" />
+      <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" />
+    </content-loader>
+</div>
+
+<div class="container user_info_wrap" *ngIf="dataLoading == false">
+	<div class="row" *ngIf="(story | json) != '{}'">
+		<div class="col-sm-12">
+			<div class="heading_gap">
+				<h2>{{story['title']}}</h2>
+				{{story['total_views']}} Views | {{story['total_likes']}} Likes | {{story['total_comments']}} Comments
+			</div>
+		</div>
+		<div class="col-sm-12 mb-5">
+			<ul class="list-group" *ngIf="storyViews?.length > 0">
+				<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let view of storyViews">
+					<span>
+						<a [routerLink]="['/author/', view.username]">
+							{{view.first_name}} {{view.last_name}}
+						</a>
+					</span>
+					
+					<span> {{view.created | date: 'mediumDate'}} </span>
+				</li>
+			</ul>
+
+			<ul class="list-group" *ngIf="storyViews?.length == 0">
+				<li class="list-group-item d-flex justify-content-between align-items-center">
+					<span>No views yet. </span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

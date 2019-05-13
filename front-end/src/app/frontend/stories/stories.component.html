@@ -9,8 +9,8 @@
     </div>
     <div class="story_post_date">
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#">Current Page Name</a></li>
+            <li><a href="/" [routerLink]="['/']">Home</a></li>
+            <li><a href="#"> Stories</a></li>
         </ul>
     </div>
 </div>
@@ -23,7 +23,7 @@
         <div class="col-md-9">
             <div class="big_img_wrap">
                 <div class="img_attribution">© 
-                    <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+                    <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
                 </div>
                 <a href="#" [routerLink]="['/story/', featuredStories[0].slug]">
                     <img [src]="featuredStories[0].preview_image" [alt]="featuredStories[0].preview_title">
@@ -43,7 +43,7 @@
                         </a>
 
                         <div class="inner_link_bottom">
-                            <a href="#">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+                            <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
                         </div>
 
                         <div class="right_inner_footer">

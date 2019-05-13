@@ -185,6 +185,21 @@ export class StoriesService {
 	    );
 		}
 
+  	updateStoryViewCount(story_id): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('story_id', story_id);
+
+			return this.http.post(USER_API_URL+'viewed_story/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	reportStory(story_id): Observable<any>{
 
 			let httpOptions = {

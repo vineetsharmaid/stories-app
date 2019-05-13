@@ -525,3 +525,5 @@ $config['proxy_ips'] = '';
 
 // example for my paypal testing: 
 $config['thekey']='Sh^rM^V1n33T04';
+
+$config['Mailchimp_api_key'] = 'f46e81607042952d8b100c15979b125d-us20';
