@@ -165,7 +165,7 @@ export class StoryNewComponent implements OnInit {
   }
 
 	// convenience getter for easy access to form fields
-  get as() { return this.addStoryForm.controls; }    
+  get addF() { return this.addStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
   saveDraft() {

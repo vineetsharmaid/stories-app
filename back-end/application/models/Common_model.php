@@ -344,6 +344,10 @@ class Common_model extends CI_Model {
         $this->db->from('tags');
         $this->db->join('story_tags', 'story_tags.tag_id = tags.tag_id', 'left');
         $this->db->join('users', 'users.user_id = tags.created_by', 'left');
+        if ( $where != "" ) {
+          
+          $this->db->where($where);
+        }
         $this->db->group_by('tags.tag_id');
         $this->db->order_by('stories', 'desc');
         return $this->db->get()->result();

@@ -90,3 +90,4 @@
 .height_50{height: 50px}
 .theme_btn{width: auto;}
 .saveBtn { position: absolute; right: 15px; bottom: 26px; }
+.invalid-feedback { display: block !important; }

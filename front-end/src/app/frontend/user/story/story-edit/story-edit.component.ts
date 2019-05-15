@@ -69,6 +69,9 @@ export class StoryEditComponent implements OnInit {
   filteredTags: Observable<string[]>;
   tags: any = [];
   allTags: any = [];
+  allCountries: Array<object>;
+  filteredCountries: Array<object>;
+  selectedCountry: any = "";
 
   visible    = true;
   removable  = true;
@@ -79,6 +82,7 @@ export class StoryEditComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;  
   @ViewChild('confirmReviewSubmit') confirmReviewSubmit: ElementRef<HTMLInputElement>;
+  @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -165,7 +169,8 @@ export class StoryEditComponent implements OnInit {
       previewTags: [''],
       previewType: [''],
       haveCompany: ['0'],
-      company: [''],
+      company: ['0'],
+      country: [''],
   		// previewImage: ['', Validators.required],
   	});
 
@@ -174,10 +179,10 @@ export class StoryEditComponent implements OnInit {
 
     this.getStory();
 
-    this.filteredTags = this.previewForm.controls['previewTags'].valueChanges.pipe(
-        startWith(''),        
-        map((tag: string | null) => tag ? this._filterTags(tag) : [])
-    );
+    // this.filteredTags = this.previewForm.controls['previewTags'].valueChanges.pipe(
+    //     startWith(''),        
+    //     map((tag: string | null) => tag ? this._filterTags(tag) : [])
+    // );
 
 
     this.userService.getCompanies().subscribe((response) => {
@@ -189,6 +194,30 @@ export class StoryEditComponent implements OnInit {
       console.log('error', error);
     });
 
+    this.subscribeToCountry();
+
+  }
+
+  subscribeToCountry() {
+
+
+    this.subPreviewForm = this.previewForm.get('country').valueChanges.subscribe(val => {
+      
+        var searchedCountry = this.previewForm.get('country').value.toString().toLowerCase();
+        var countries
+        if( searchedCountry.length > 0 ) {
+          
+          countries = this.allCountries.filter((country) => {
+            
+            return country['name'].toString().toLowerCase().includes(searchedCountry);
+          });
+        } else {
+          
+          countries = this.allCountries;
+        }
+
+        this.filteredCountries = countries;
+    });
   }
 
   getStory() {
@@ -201,6 +230,7 @@ export class StoryEditComponent implements OnInit {
         this.story = response['data'][0];
 
         this.getTags();
+        this.getCountries();
 
         // subscribe to changes on preview form
         this.onChanges();
@@ -228,6 +258,7 @@ export class StoryEditComponent implements OnInit {
 
           company: this.story['company_id'],
           haveCompany: this.story['have_company'],
+          country: this.story['country'],
         });  
 
         /****SET FORM FIELDS VALUE****/ 
@@ -281,6 +312,19 @@ export class StoryEditComponent implements OnInit {
   }
 
 
+  getCountries() {
+
+    this.storyService.getCountries().subscribe((response) => {
+
+      console.log('response', response);
+      this.filteredCountries = this.allCountries = response;
+    }, (error) => {
+
+      this.filteredCountries = this.allCountries = [];
+      console.log('error', error);
+    });
+  }
+
   getTags() {
 
     this.storyService.getTags().subscribe((response) => {
@@ -289,6 +333,10 @@ export class StoryEditComponent implements OnInit {
 
       let storyTags = this.story['tag_ids'] ? this.story['tag_ids'].split(", ") : [];
       
+      // this.filteredTags = allTags;
+      
+      console.log('filteredTags', this.filteredTags);
+
       this.allTags = allTags.filter((tag) => {
       
         if ( storyTags.includes(tag.tag_id) ) {
@@ -310,7 +358,7 @@ export class StoryEditComponent implements OnInit {
   }
 
 	// convenience getter for easy access to form fields
-  get as() { return this.editStoryForm.controls; }    
+  get editF() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
 
@@ -416,32 +464,32 @@ export class StoryEditComponent implements OnInit {
 		}
   }
 
-  submitPreview() {
+  submitPreview(confirmed: boolean = false) {
 
     this.previewSubmitted = true;
     
-    if( this.customValidationPrompt == false ) {
+    var description = this.editStoryForm.get('description').value;
+    description = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").replace(/\&nbsp;/g, '');
+    this.customValidationMessages = [];
+
+    if(this.editStoryForm.get('title').value == "") {
       
-      var description = this.editStoryForm.get('description').value;
-      description = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").replace(/\&nbsp;/g, '');
-
-      if(this.editStoryForm.get('title').value == "") {
-        
-        this.customValidationPrompt = true;
-        this.customValidationMessages.push("Title of the story is required.");
-      }
-      if(description.length < 201) {
-
-        this.customValidationPrompt = true;
-        this.customValidationMessages.push("Story is shorter than 200 Characters.");
-      }
-
-      if(this.customValidationPrompt == true) {
-
-        this.confirmReviewSubmit.nativeElement.click()      
-        return;
-      }
+      // this.customValidationPrompt = true;
+      this.customValidationMessages.push("Title of the story is required.");
     }
+
+    if(description.length < 201) {
+
+      // this.customValidationPrompt = true;
+      this.customValidationMessages.push("Story is shorter than 200 Characters.");
+    }
+
+    if(this.customValidationMessages.length > 0 && confirmed == false) {
+
+      this.confirmReviewSubmit.nativeElement.click();      
+      return;
+    }
+    
 
     if ( this.previewForm.get('previewTitle').value == "" ) {
       
@@ -470,6 +518,7 @@ export class StoryEditComponent implements OnInit {
       type: this.previewForm.get('previewType').value,
       company_id: this.previewForm.get('company').value,
       have_company: this.previewForm.get('haveCompany').value,
+      country: this.previewForm.get('country').value,
     };
 
     // stop here if form is invalid
@@ -479,6 +528,7 @@ export class StoryEditComponent implements OnInit {
       return;
     } else {
 
+      this.closeReviewSubmit.nativeElement.click();
       this.storyService.submitForReview(draftStory).subscribe((response) => {
 
         // this.toggleView();
@@ -600,13 +650,20 @@ export class StoryEditComponent implements OnInit {
     });
   }
 
+  displayFnCountry(country): Object | undefined {
+    
+    console.log('display country', country);
+
+    this.selectedCountry = country.name;
+
+    return country ? country.name : undefined;
+  }
+
+
   private _filterTags(value: string): string[] {
     
     const filterValue = value.toString().toLowerCase();
     
-    console.log('filterValue', filterValue);
-    console.log('this.filteredTags', this.filteredTags);
-
     return this.allTags.filter( tag => tag.name.toLowerCase().startsWith(filterValue) );
   }
 
