@@ -310,4 +310,5 @@ a{color:#f1663b}
 .user_profile_pic_wrap{margin-left: 30px}
 .pointer { cursor: pointer; }
 .single_page_tagline_wrap ul li, .fr-element.fr-view ol li{list-style-position: inside;}
+.contact_top_wrap input[type="text"], .contact_top_wrap input[type="email"], .contact_top_wrap textarea{border: 1px solid rgba(0, 0, 0, .4)}
 /*--------------Style for development--------------*/
