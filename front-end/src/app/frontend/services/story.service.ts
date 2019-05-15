@@ -236,6 +236,19 @@ export class StoryService {
 	      catchError(this.handleError)
 	    );
 		}
+
+  	getCountries(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get('assets/json/countries.json', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
 		getTopics(): Observable<any>{
 
 			let httpOptions = {

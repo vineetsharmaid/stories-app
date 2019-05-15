@@ -10,15 +10,19 @@
 	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">		        		
 		        		<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
 	    			</div>
+		    		
+		    		<div *ngIf="addStorySubmitted && addF.title.errors" class="invalid-feedback">
+	            <div *ngIf="addF.title.errors.required">Title is required</div>
+	          </div>
 	    		</div>
-	    		<!-- <div *ngIf="addStorySubmitted && as.title.errors" class="invalid-feedback">
-            <div *ngIf="as.title.errors.required">Title is required</div>
-          </div> -->
 
 	    		<!-- <hr> -->
 
 	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
 	        		<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell us your story here..." formControlName="description"></textarea>
+	    				<div *ngIf="addStorySubmitted && addF.description.errors" class="invalid-feedback">
+		            <div *ngIf="addF.description.errors.required">Story is required</div>
+		          </div>
 	    		</div>
 
 	    		<div class="form-group">

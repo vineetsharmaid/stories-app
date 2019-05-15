@@ -37,6 +37,7 @@ class Api extends REST_Controller {
 
         // list id from mailchimp 
         $this->mailchimpListId = "eef03ca5a8";
+        $this->mailchimpListIdUser = "4ea3a6421e";
 
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -135,6 +136,17 @@ class Api extends REST_Controller {
                 $user->user_type = $user_data['user_type'];
                 
                 $jwt_token = $this->_generate_jwt_token($user);
+
+
+                $result = $this->mailchimp->post("lists/".$this->mailchimpListIdUser."/members", [
+                        'email_address' => $post_data->email,
+                        'merge_fields' => [
+                          'FNAME'=>$post_data->first_name, 
+                          'LNAME'=>$post_data->last_name
+                        ],
+                        'status'        => 'subscribed',
+                    ]);
+
 
                 $message = array(
                     'message' => 'Registered new user', 

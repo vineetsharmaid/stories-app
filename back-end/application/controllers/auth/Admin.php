@@ -345,7 +345,7 @@ class Admin extends REST_Controller {
         // If the id parameter doesn't exist return all the tags
         if ($tag_id === NULL) {
 
-          $tags = $this->common_model->get_tags();
+          $tags = $this->common_model->get_tags(array('tags.status' => 1));
         } else {
           
           // Find and return a single record.

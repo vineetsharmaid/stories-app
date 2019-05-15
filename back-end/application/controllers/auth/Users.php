@@ -476,15 +476,19 @@ class Users extends REST_Controller {
       $post_data = json_decode(file_get_contents("php://input"));
 
       $user = $this->common_model->get_data('users', array('username' => $post_data->username));
-      
+      $company_id = isset($post_data->company_id) ? $post_data->company_id : 0;
+      $have_company = isset($post_data->have_company) ? $post_data->have_company : 0;
+      $country = isset($post_data->country) ? $post_data->country : "";
+
       $story = array(
         'preview_title' => trim( strip_tags($post_data->previewTitle) ),
         'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
-        'author_id' => $user[0]->user_id,
-        'status' => 0,
-        'company_id' => $post_data->company_id,
-        'have_company' => $post_data->have_company,
+        'author_id'    => $user[0]->user_id,
+        'company_id'   => $company_id,
+        'have_company' => $have_company,
+        'country'     => $country,
         'type'   => $post_data->type,
+        'status' => 0,
         'review' => 2, // submitted for review
       );
       
@@ -1165,7 +1169,7 @@ class Users extends REST_Controller {
 
     public function get_tags_get()
     {
-        $tags = $this->common_model->get_data('tags');
+        $tags = $this->common_model->get_data('tags', array('status' => 1));
 
         // Check if the categories data store contains categories (in case the database result returns NULL)
         if ( !empty($tags) ) {
