@@ -230,17 +230,46 @@ class Api extends REST_Controller {
         
         if ( !empty($user) ) {
           
-          // $this->send_forgot_password_email($email);
-          $message = array('message' => 'Check your email for a link to reset your password. If it doesn’t appear within a few minutes, check your spam folder.', 'status' => 200);
+          $password = $this->_randomPassword();
+          $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+
+          $this->common_model->update_entry( 'users', array('password' => $password_hashed), array('user_id' => $user[0]->user_id) );
+
+          $from_name = "Stories Of Asia";
+          $from_email = CONTACT_EMAIL;
+          $message    = "Hi ".$user[0]->first_name .' '.$user[0]->last_name."<br/><br/><br/>";
+          $message    .= "Somebody (hoperfully you) requested a new password for the SOA account for ".$email."<br/><br/>";
+          $message    .= "You can login to your account using a new password as below - <br/><br/>";
+          $message    .= "Password: ".$password."<br/><br/><br/>";
+          $message    .= "Yours, <br/>";
+          $message    .= "The SOA Team";
+          $subject    = 'SOA Forgot Password Request';
+          $to_email   = $email;
               
         } else {
 
-          $message = [
-              'message' => "Can't find that email, sorry.",
-              'error' => array("Can't find that email, sorry."),
-              'status' => 201
-          ];          
+
+          $from_name = "Stories Of Asia";
+          $from_email = CONTACT_EMAIL;
+          $message    = "Hi there,<br/><br/><br/>";
+          $message    .= "Somebody (hoperfully you) requested a new password for the SOA account for ".$email."<br/><br/>";
+          $message    .= "Unfortunately we can not find any account on SOA with email ".$email."<br/><br/><br/>";
+          $message    .= "Yours, <br/>";
+          $message    .= "The SOA Team";
+          $subject    = 'SOA Forgot Password Request';
+          $to_email   = $email;
         }
+
+        $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+        
+        if ($mail) {
+          
+          $message = array('message' => 'An email has been sent to '.$email.' with further instructions. If it doesn’t appear within a few minutes, check your spam folder.', 'status' => 200);
+        } else {
+          
+          $message = array('error' => 'Unable to send email.', 'status' => 201);
+        }
+
       } else {
         
         $message = [

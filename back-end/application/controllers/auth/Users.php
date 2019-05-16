@@ -1222,7 +1222,7 @@ class Users extends REST_Controller {
 
     public function get_user_stories_count_get() {
 
-      $count = $this->common_model->data_exists( 'stories', array('author_id' => $this->token_data->id) );
+      $count = $this->common_model->data_exists( 'stories', array('author_id' => $this->token_data->id, 'status'  => STORY_STATUS_PUBLISHED) );
 
       // Set the response and exit
       $this->response(  
@@ -1422,10 +1422,15 @@ class Users extends REST_Controller {
     }    
 
     function time_elapsed_string($datetime, $full = false) {
-        $now = new DateTime;
+        // added hours to match mysql time with server
+        $datetime = date( "Y-m-d H:i:s", 
+          strtotime('+5 hours', strtotime($datetime)) );
+        
+        $now = new DateTime();
         $ago = new DateTime($datetime);
+        
         $diff = $now->diff($ago);
-
+        
         $diff->w = floor($diff->d / 7);
         $diff->d -= $diff->w * 7;
 

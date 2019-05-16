@@ -364,7 +364,10 @@
 <div *ngIf="dataLoading == false" class="container-fluid main_story_wrap stories_wrap_main_stories_page">
 <div class="row">
     <div class="col-md-12">
-        <div class="row" *ngIf="stories?.length > 0">
+        <div class="row" *ngIf="stories?.length > 0" infiniteScroll
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="50"
+      (scrolled)="onScroll()">
             <div class="col-md-4" *ngFor="let story of stories; let indx = index">
                 <div class="story_outer_wrap">
                     <a [routerLink]="['/story/', story.slug]">

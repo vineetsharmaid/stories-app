@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { environment } from '../../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const WEB_URL  =  environment.webUrl;
 const API_URL  =  environment.baseUrl+'/api/';
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
@@ -220,6 +221,7 @@ export class QuestionsComponent implements OnInit {
           this.answerByUser = {};
         }
         
+        this.questionData['shareSlug'] = WEB_URL+'/forum/question/'+this.questionData['slug'];
         this.getAnswers(this.questionData['question_id']);
         
   		}, (error) => {

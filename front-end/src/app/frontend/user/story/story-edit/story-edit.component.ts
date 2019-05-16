@@ -83,6 +83,7 @@ export class StoryEditComponent implements OnInit {
   @ViewChild('auto') matAutocomplete: MatAutocomplete;  
   @ViewChild('confirmReviewSubmit') confirmReviewSubmit: ElementRef<HTMLInputElement>;
   @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
+  @ViewChild('saveDraftResponse') saveDraftResponse: ElementRef<HTMLInputElement>;
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -384,15 +385,15 @@ export class StoryEditComponent implements OnInit {
     } else {
 
       this.storyService.updateDraft(draftStory).subscribe((response) => {
-
-        console.log('Data saved to draft');
-        console.log(response);
         
         this.storyId = response['data']['story'];
         console.log('event', event);
         if( typeof event == 'undefined' ) {
           
           this.toggleView();
+        } else if(event == 'manual') {
+
+          this.saveDraftResponse.nativeElement.click();      
         }
       }, (error) => {
 

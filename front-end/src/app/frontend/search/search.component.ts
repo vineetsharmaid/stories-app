@@ -293,7 +293,7 @@ export class SearchComponent implements OnInit {
 
   	doneTyping() {
 
-  		console.log('search now', this.searchText);
+  		this.limitOffset = 0;
   		this.router.navigate(['search'], { queryParams: { q: this.searchText } });
   	}
 

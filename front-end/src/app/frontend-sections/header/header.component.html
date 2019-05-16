@@ -170,14 +170,14 @@
       <!----------- ENDS USER REGISTERATION FORM ------------>
       <!----------- STARTS FORGOT PASSWORD FORM ------------>
       <div class="modal-body" [hidden]="!showForgotPassword">
-        <h3 class="modal-title">Reset your password</h3>
+        <h3 class="modal-title">Forgot password?</h3>
         
         <div *ngIf="passwordEmailSent; else displayPasswordResetForm">
           <p>{{passwordEmailSuccess}}</p>
         </div>
         <ng-template #displayPasswordResetForm>
         <div class="mb-2">
-          Enter your email address and we will send you a link to reset your password.
+          Enter your email address and we will send you a new password on your email.
         </div>
         <div *ngFor="let error of forgotPassErrors" class="col-sm-12 mb-2 mt-2">
           <p class="error">{{error}}</p>

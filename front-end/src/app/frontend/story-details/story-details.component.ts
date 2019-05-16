@@ -6,6 +6,7 @@ import { StoriesService } from '../services/stories.service'
 import { SharedService } from "../services/shared.service";
 import { environment } from '../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const WEB_URL  =  environment.webUrl;
 
 @Component({
   selector: 'app-story-details',
@@ -52,7 +53,8 @@ export class StoryDetailsComponent implements OnInit {
       	
        	this.storyData['preview_image'] = APP_URL+'/assets/uploads/stories/'+this.storyData['preview_image'];
         this.storyData['profile_pic'] = APP_URL+'/assets/uploads/users/'+this.storyData['profile_pic'];
-      	
+        this.storyData['shareSlug'] = WEB_URL+'/story/'+this.storyData['slug'];
+
       	this.displayStory = true;
         this.dataLoading  = false;
             

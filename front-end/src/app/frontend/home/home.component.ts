@@ -304,7 +304,7 @@ export class HomeComponent implements OnInit {
 
     doneTyping() {
 
-      console.log('search now', this.searchText);
+      this.limitOffset = 0;
       // this.router.navigate(['/'], { queryParams: { q: this.searchText } });
       this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
     }

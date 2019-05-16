@@ -129,15 +129,28 @@
                   </li>
                   <li><img src="assets/img/forum/eye.png" alt="">{{question.views}}</li>
                   <li class="bookmark"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
-                    <div class="social_wrap">
-                      <ul>
-                        <li><a href="#"><img src="assets/img/facebook.png" alt=""></a></li>
-                        <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
-                        <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
-                      </ul>
-                    </div>
-                  </div> 254
-                </li>
+                  <div class="social_wrap">
+                    <ul>
+                      <li>
+                        <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+question.shareSlug" target="_blank">
+                          
+                          <img src="assets/img/facebook.png" [alt]="question.preview_title">
+                        </a>
+                      </li>
+                      <li>
+                        <a [href]="'http://twitter.com/share?text='+question.preview_title+'&url='+question.shareSlug" target="_blank">
+                          <img src="assets/img/twtr.png" [alt]="question.preview_title">
+                        </a>
+                      </li>
+                      <li>
+                        <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+question.shareSlug+'&title='+question.preview_title+'&source=LinkedIn'" target="_blank">
+                          <img src="assets/img/linkedIn.png" [alt]="question.preview_title">
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
               </ul>
               <ul class="fr">
                 <li class="nomargin"><a href="#"><img class="nomargin" src="assets/img/forum/menu.png" alt=""></a></li>

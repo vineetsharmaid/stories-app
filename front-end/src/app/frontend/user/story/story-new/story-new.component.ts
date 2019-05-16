@@ -151,7 +151,7 @@ export class StoryNewComponent implements OnInit {
 
 
   /*****SAVE PREVIEW FORM FIELDS ON CHANGE******/ 
-  onChanges(): void {  
+  onChanges(): void {
     
     // this.subAddForm = this.addStoryForm.get('title').valueChanges.subscribe(val => {
         

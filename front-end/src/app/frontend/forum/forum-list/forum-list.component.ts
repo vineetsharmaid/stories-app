@@ -14,6 +14,7 @@ import { ForumService } from '../../services/forum.service'
 
 import { environment } from '../../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
+const WEB_URL  =  environment.webUrl;
 const API_URL  =  environment.baseUrl+'/api/';
 const DEFAULT_LISTING_COUNT  =  environment.defaultListingCount;
 
@@ -196,6 +197,7 @@ export class ForumListComponent implements OnInit {
 
 	     		questions[i] = question;
 					questions[i]['profile_pic'] = question['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+question['profile_pic'];
+          questions[i]['shareSlug'] = WEB_URL+'/forum/question/'+questions[i]['slug'];
 
           if ( question['answer'] == null ) {
             
