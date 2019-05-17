@@ -53,10 +53,12 @@ class Admin_model extends CI_Model {
     public function get_stories($where='') {
         
 
-        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, users.first_name, users.last_name, users.username, count(distinct story_user_likes.user_id) as total_likes, count(distinct comments.user_id) as total_comments');
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, users.first_name, users.last_name, users.username, count(distinct story_user_views.user_id) as total_views, count(distinct story_user_shares.share_id) as total_shares, count(distinct story_user_likes.user_id) as total_likes, count(distinct comments.user_id) as total_comments');
         $this->db->from('stories');
         $this->db->join('users', 'users.user_id = stories.author_id');
+        $this->db->join('story_user_views', 'story_user_views.story_id = stories.story_id', 'left');
         $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id', 'left');
+        $this->db->join('story_user_shares', 'story_user_shares.story_id = stories.story_id', 'left');
         $this->db->join('comments', 'comments.story_id = stories.story_id AND comments.approved = 1', 'left');
         $this->db->where( $where );
         $this->db->group_by( 'stories.story_id' );
@@ -65,12 +67,14 @@ class Admin_model extends CI_Model {
 
     public function get_flagged_stories() {
         
-        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.status, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, authorUser.first_name as author_first_name, authorUser.last_name as author_last_name, authorUser.username as author_username, reporterUser.first_name as reporter_first_name, reporterUser.last_name as reporter_last_name, reporterUser.username as reporter_username, flagged_posts.flagged_by as reporter_id, count(distinct story_user_likes.user_id) as total_likes, count(distinct comments.user_id) as total_comments');
+        $this->db->select('stories.preview_title, stories.preview_subtitle, stories.status, stories.created, stories.story_id, stories.slug, stories.author_id, stories.featured, authorUser.first_name as author_first_name, authorUser.last_name as author_last_name, authorUser.username as author_username, reporterUser.first_name as reporter_first_name, reporterUser.last_name as reporter_last_name, reporterUser.username as reporter_username, flagged_posts.flagged_by as reporter_id, count(distinct story_user_views.user_id) as total_views, count(distinct story_user_shares.share_id) as total_shares, count(distinct story_user_likes.user_id) as total_likes, count(distinct comments.user_id) as total_comments');
         $this->db->from('stories');
         $this->db->join('flagged_posts', 'flagged_posts.post_id = stories.story_id');
         $this->db->join('users as reporterUser', 'reporterUser.user_id = flagged_posts.flagged_by');
         $this->db->join('users as authorUser', 'authorUser.user_id = stories.author_id');
+        $this->db->join('story_user_views', 'story_user_views.story_id = stories.story_id', 'left');
         $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id', 'left');
+        $this->db->join('story_user_shares', 'story_user_shares.story_id = stories.story_id', 'left');        
         $this->db->join('comments', 'comments.story_id = stories.story_id AND comments.approved = 1', 'left');
         $this->db->group_by( 'stories.story_id' );
         return $this->db->get()->result();

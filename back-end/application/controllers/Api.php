@@ -65,6 +65,34 @@ class Api extends REST_Controller {
         }       
     }
 
+    public function share_story_post()
+    {
+        $user_id = isset($this->token_data->id) ? $this->token_data->id : 0;
+        $data = array(
+          'story_id' => $this->input->post('story_id'),
+          'platform' => $this->input->post('platform'),
+          'user_id' => $user_id);
+
+          if ( $this->common_model->insert_entry('story_user_shares', $data) ) {
+
+              $this->verify_shares_points($this->input->post('story_id'));
+
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data'   => 'Shared the story',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+    }
 
     public function register_post() {
 
@@ -1013,7 +1041,7 @@ class Api extends REST_Controller {
 
         $question[0]->topics    = is_null($question[0]->topics) ? [] : explode(',', $question[0]->topics);
         $question[0]->topic_ids = is_null($question[0]->topic_ids) ? [] : explode(',', $question[0]->topic_ids);
-
+        $question[0]->created = $this->time_elapsed_string($question[0]->created);
         // Set the response and exit
         $this->response(  
           array(
@@ -1162,6 +1190,17 @@ class Api extends REST_Controller {
 
             $comment->children = $this->common_model->get_story_comments($comment->comment_id, $story_id);
           }
+          if (!empty($comment->children)) {
+            
+            foreach ($comment->children as $children) {
+              
+              $children->created = $this->time_elapsed_string($comment->created);
+            }
+          }
+
+          $comment->created = $this->time_elapsed_string($comment->created);
+          // date( "Y-m-d H:i:s", 
+          // strtotime('+5 hours', strtotime($comment->created)) );
       
         }
 
@@ -1330,6 +1369,16 @@ class Api extends REST_Controller {
 
             $comment->children = $this->common_model->get_answer_comments($comment->comment_id, $answer_id);
           }
+
+          if (!empty($comment->children)) {
+            
+            foreach ($comment->children as $children) {
+              
+              $children->created = $this->time_elapsed_string($comment->created);
+            }
+          }
+
+          $comment->created = $this->time_elapsed_string($comment->created);          
       
         }
 
@@ -1363,11 +1412,86 @@ class Api extends REST_Controller {
         return null;
     }
 
-    function time_elapsed_string($datetime, $full = false) {
-        $now = new DateTime;
-        $ago = new DateTime($datetime);
-        $diff = $now->diff($ago);
+    // function time_elapsed_string($datetime, $full = false) {
+    //     $now = new DateTime;
+    //     $ago = new DateTime($datetime);
+    //     $diff = $now->diff($ago);
 
+    //     $diff->w = floor($diff->d / 7);
+    //     $diff->d -= $diff->w * 7;
+
+    //     $string = array(
+    //         'y' => 'year',
+    //         'm' => 'month',
+    //         'w' => 'week',
+    //         'd' => 'day',
+    //         'h' => 'hour',
+    //         'i' => 'minute',
+    //         's' => 'second',
+    //     );
+    //     foreach ($string as $k => &$v) {
+    //         if ($diff->$k) {
+    //             $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+    //         } else {
+    //             unset($string[$k]);
+    //         }
+    //     }
+
+    //     if (!$full) $string = array_slice($string, 0, 1);
+    //     return $string ? implode(', ', $string) . ' ago' : 'just now';
+    // }    
+
+  private function verify_shares_points($story_id) {
+
+    $shares_count = $this->common_model->data_exists( 'story_user_shares', array('story_id' => $story_id) );
+
+    $points = 0;
+
+    if ( $shares_count == 10 ) {
+      $points = POINTS_FOR_10_LIKES;
+    } else if ( $shares_count == 20 ) {
+      
+      $points = POINTS_FOR_20_LIKES;
+    } else if ( $shares_count == 30 ) {
+      
+      $points = POINTS_FOR_30_LIKES;
+    }
+
+    if ( $points > 0 ) {
+      // get author from story
+      $story = $this->common_model->get_story_author($story_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($story->author_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $story->author_id,
+        'points'    => $points,
+        'milestone' => $shares_count,
+        'activity'  => 'shares',
+        'selector'  => 'story',
+        'selector_id'  => $story_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  }
+
+  function time_elapsed_string($datetime, $full = false) {
+        // added hours to match mysql time with server
+        $datetime = date( "Y-m-d H:i:s", 
+          strtotime('+5 hours', strtotime($datetime)) );
+        
+        $now = new DateTime();
+        $ago = new DateTime($datetime);
+        
+        $diff = $now->diff($ago);
+        
         $diff->w = floor($diff->d / 7);
         $diff->d -= $diff->w * 7;
 
@@ -1390,6 +1514,6 @@ class Api extends REST_Controller {
 
         if (!$full) $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
-    }    
+    } 
 
 }

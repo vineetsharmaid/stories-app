@@ -340,12 +340,14 @@ class Users extends REST_Controller {
         'story_id'  => $this->input->post('story_id'),
         'parent'    => $this->input->post('parent'),
         'user_id'   => $this->token_data->id,
-        'approved'  => COMMENT_STATUS_DRAFT,
+        'approved'  => COMMENT_STATUS_PUBLISHED,
       );
 
       if( $this->common_model->insert_entry('comments', $comment) ) {
             
           $comment_data = $this->common_model->get_comment_by_id( $this->db->insert_id() );
+
+          $comment_data->created = $this->time_elapsed_string($comment_data->created);
 
           // Set the response and exit
           $this->response(  
@@ -372,12 +374,14 @@ class Users extends REST_Controller {
         'answer_id'  => $this->input->post('answer_id'),
         'parent'    => $this->input->post('parent'),
         'user_id'   => $this->token_data->id,
-        'approved'  => COMMENT_STATUS_DRAFT,
+        'approved'  => COMMENT_STATUS_PUBLISHED,
       );
 
       if( $this->common_model->insert_entry('forum_answer_comments', $comment) ) {
             
           $comment_data = $this->common_model->get_answer_comment_by_id( $this->db->insert_id() );
+
+          $comment_data->created = $this->time_elapsed_string($comment_data->created);
           
           // Set the response and exit
           $this->response(  

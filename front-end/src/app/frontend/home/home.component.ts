@@ -172,6 +172,18 @@ export class HomeComponent implements OnInit {
     });    
   }
 
+  share(storyId, platform) {
+
+    console.log('platform', platform);
+    this.storiesService.shareStory(storyId, platform).subscribe((response: Array<Object>) => {
+
+      console.log('share response', response);
+    }, error => {
+      
+      console.log('share error', error);
+    });
+  }
+
 
   featuredLike(storyId, index) {
 

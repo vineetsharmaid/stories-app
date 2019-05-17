@@ -213,6 +213,8 @@ export class QuestionsComponent implements OnInit {
 
   			console.log('response', response);
   			this.questionData = response['data'];
+
+        this.questionData['profile_pic'] = this.questionData['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+this.questionData['profile_pic'];
         if( this.questionData['hasAnswered'] == 1) {
 
           this.getAnswerByUser(this.questionData['question_id']);

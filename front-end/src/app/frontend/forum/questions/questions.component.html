@@ -46,6 +46,22 @@
             <a class="full_que">
               {{questionData.title}}
             </a>
+            <!-- <div class="answered_wrap"> -->
+              <!-- <div class="ans_pic_wrap">
+                <img *ngIf="questionData.profile_pic.length > 0; else defaultDP" [src]="questionData.profile_pic" alt="">
+                <ng-template #defaultDP>
+                <img src="assets/img/forum/user_pic.png" alt="">
+                </ng-template>
+              </div> -->
+              <div class="ans_info">
+                <a [routerLink]="['/author', questionData.username]" >
+                  {{questionData.first_name}} {{questionData.last_name}}
+                </a>
+                <span>Asked {{questionData.created}}</span>
+              </div>
+            <!-- </div> -->
+            
+
             <span class="pull-right" *ngIf="allAnswers?.length > 0 && questionData?.hasAnswered == 0" (click)="questionData.showAnswerBox = true">
               <i class="fa fa-edit"></i>
               Answer

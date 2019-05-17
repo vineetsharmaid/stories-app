@@ -28,7 +28,9 @@
                     <td>
                       <a href="#" target="_blank" [routerLink]="['/story/', story.slug]" class="user_name"> {{story.preview_title | titlecase}} </a>
                       <br />
-                      {{story.total_likes}} Likes | 
+                      {{story['total_views']}} Views | {{story.total_likes}} Likes
+                      <br />
+                      {{story['total_shares']}} Shares | 
                       {{story.total_comments}} Comments
                     </td>
                     <td>                    

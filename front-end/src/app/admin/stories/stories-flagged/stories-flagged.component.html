@@ -9,7 +9,7 @@
 
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Published Stories</h4>
+            <h4 class="card-title">Flagged Stories</h4>
             <!-- <p class="card-story"> List of users.</p> -->            
           </div>
           <div class="card-body">
@@ -28,7 +28,9 @@
                     <td>
                       <a href="#" target="_blank" [routerLink]="['/story/', story.slug]" class="user_name"> {{story.preview_title | titlecase}} </a>
                       <br />
-                      {{story.total_likes}} Likes | 
+                      {{story['total_views']}} Views | {{story.total_likes}} Likes
+                      <br />
+                      {{story['total_shares']}} Shares | 
                       {{story.total_comments}} Comments
                     </td>
                     <td>                    
