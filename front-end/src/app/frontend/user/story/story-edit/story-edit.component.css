@@ -89,5 +89,6 @@
 .priev_gap{padding: 20px 0}
 .height_50{height: 50px}
 .theme_btn{width: auto;}
-.saveBtn { position: absolute; right: 15px; bottom: 26px; }
+.extra-btns { display: inline-block; position: absolute; bottom: 52px; right: 45px; }
+.extra-btns button { border: none; }
 .invalid-feedback { display: block !important; }

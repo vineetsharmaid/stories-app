@@ -20,6 +20,23 @@
 
     <div class="col-md-4">      
       <div class="form-group">
+        <mat-form-field>
+          <mat-label>Select Country</mat-label>
+          <mat-select [(ngModel)]="selectedCountry" (ngModelChange)="countryChanged($event)">
+            <mat-option [value]="">
+              Choose Country
+            </mat-option>
+            <mat-option *ngFor="let country of allCountries" [value]="country.name">
+              {{country.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+      </div>
+    </div>
+
+    <div class="col-md-4">      
+      <div class="form-group">
         <mat-form-field class="example-full-width">
           <input type="search" placeholder="Search By Tag" aria-label="tag" [(ngModel)]="searchTag" matInput [matAutocomplete]="auto" (ngModelChange)="tagSearchChanged($event)">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
@@ -28,19 +45,14 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-      </div>
-    </div>
-
-    <div class="col-md-4">      
-      <div class="form-group">
-        <mat-form-field class="example-full-width">
+        <!-- <mat-form-field class="example-full-width">
           <input type="search" placeholder="Search By Author" aria-label="author" [(ngModel)]="searchAuthor" matInput [matAutocomplete]="autoAuhtor" (ngModelChange)="authorSearchChanged($event)">
           <mat-autocomplete #autoAuhtor="matAutocomplete" [displayWith]="displayFnAuthor">
             <mat-option *ngFor="let author of filteredAuthors" [value]="author">
               {{author.first_name}} {{author.last_name}}
             </mat-option>
           </mat-autocomplete>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
     </div>    
   </div>

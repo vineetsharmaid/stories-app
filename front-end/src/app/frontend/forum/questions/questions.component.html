@@ -34,8 +34,8 @@
           <!-- CONTENT LOADER ENDS -->            
           
           
-          <div class="full_que_wrap" *ngIf="questionData['topics']?.length > 0 && dataLoading == false;">
-            <div class="que_header">
+          <div class="full_que_wrap" *ngIf="dataLoading == false;">
+            <div class="que_header" *ngIf="questionData['topics']?.length > 0">
               <ul>
                 <li>Answer</li>
                 <li *ngFor="let topic of questionData['topics']; let indx = index;">

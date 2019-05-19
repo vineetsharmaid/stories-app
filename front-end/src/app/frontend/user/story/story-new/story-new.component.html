@@ -1,75 +1,221 @@
 <div class="container-fluid user_info_wrap">
-    <div class="row1">
-    	<!-- <div class="col-sm-2"></div> -->
-    	<div class="container">
-    		<div class="row">
-    			<div class="col-md-8 offset-md-2" *ngIf="showNewForm" [@slideInOut]>
-    		<form [formGroup]="addStoryForm" (ngSubmit)="submitDraft()" class="add_story_form">
-    		<h5 class="heading-message mb-4">You're writing your story now...</h5>
-	    		<div class="form-group">
-	    			<div style="border-left: 1px solid #efefef; padding-left: 10px;">		        		
-		        		<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
-	    			</div>
-		    		
-		    		<div *ngIf="addStorySubmitted && addF.title.errors" class="invalid-feedback">
-	            <div *ngIf="addF.title.errors.required">Title is required</div>
-	          </div>
-	    		</div>
+	<div class="row1">
+		<!-- <div class="col-sm-2"></div> -->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-10 offset-md-1" *ngIf="showNewForm" [@slideInOut]>
+					<form [formGroup]="addStoryForm" (ngSubmit)="submitStory()" class="add_story_form">
+						<h5 class="heading-message mb-4">You're writing your story now...</h5>
+						<div class="form-group">
+							<div style="border-bottom: 1px solid #efefef;">
+								<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
+							</div>
+							
+							<div *ngIf="addStorySubmitted && addF.title.errors" class="invalid-feedback">
+								<div *ngIf="addF.title.errors.required">Title is required</div>
+							</div>
+						</div>
+						<!-- <hr> -->
+						<div class="form-group">
+							<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell us your story here..." formControlName="description"></textarea>
+							<div *ngIf="addStorySubmitted && addF.description.errors" class="invalid-feedback">
+								<div *ngIf="addF.description.errors.required">Story is required</div>
+							</div>
+						</div>
 
-	    		<!-- <hr> -->
 
-	    		<div class="form-group" style="border-left: 1px solid #efefef; padding-left: 10px;">
-	        		<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell us your story here..." formControlName="description"></textarea>
-	    				<div *ngIf="addStorySubmitted && addF.description.errors" class="invalid-feedback">
-		            <div *ngIf="addF.description.errors.required">Story is required</div>
-		          </div>
-	    		</div>
 
-	    		<div class="form-group">
-	    			<button class="theme_btn">Continue</button>
-	    		</div>
-    		</form>
-    		<button class="theme_btn saveBtn" (click)="updateDraft('manual')">Save Draft</button>
-    	</div>
-    		</div>
-    	</div>
-    	<div class="col-sm-8" *ngIf="showPreview" [@slideInOut]>
-    		<p>Story Preview</p>
-    		<form [formGroup]="previewForm" (ngSubmit)="savePreview()">
-	    		<div class="col-sm-4">
-		    		<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
-			    		<label class="image-upload-container btn btn-bwm">
-						  <span>Select Image</span>
-						  <input #imageInput
-						         type="file"
-						         accept="image/*"
-						         (change)="processFile(imageInput)" class="d-none">
+					<p class="text-muted mt-4 mb-2">
+						Upload Your Story's Cover Photo
+					</p>
+					<div class="featured-wrap p-0 m-sm-2 m-md-0 mb-md-4">
+						<label class="image-upload-container btn btn-bwm">
+							<span>Click here to upload image file</span>
+							<input #imageInput
+							type="file"
+							accept="image/*"
+							(change)="processFile(imageInput)" class="d-none">
 						</label>
 						<div *ngIf="filePath?.length > 0" class="featured-image">
 							<img [src]="filePath" style="width: 100%; height: 300px;">
 						</div>
 					</div>
+					<div class="form-group">
+						<input type="text" class="form-field preview-title-field" formControlName="previewTitle" placeholder="Write a preview title" [ngClass]="{'has-errors': previewSubmitted && addF.previewTitle.errors}">
+					</div>
+					<div class="form-group">
+						<textarea class="form-field" formControlName="previewSubtitle" placeholder="Write a preview subtitle...">
+						</textarea>
+					</div>			
 
-		    		<div class="form-group">
-		    			<input type="text" class="form-field preview-title-field" formControlName="previewTitle" placeholder="Write a preview title" [ngClass]="{'has-errors': previewSubmitted && pf.previewTitle.errors}">
-		    		</div>
+					<div class="form-group">
+						<label class="d-block mb-1">Type</label>
+						<mat-radio-group formControlName="previewType">
+						<mat-radio-button class="example-margin mr-2" color="primary" value="1">
+							Workplace Story {{previewType}}
+						</mat-radio-button>
+						
+						<mat-radio-button class="example-margin ml-2" color="primary" value="2">
+							Business Story
+						</mat-radio-button>
+						</mat-radio-group>						
+					</div>
 
-		    		<div class="form-group">
-		    			<textarea class="form-field" formControlName="previewSubtitle" placeholder="Write a preview subtitle...">
-		    			</textarea>
-		    		</div>
-	    		</div>
+					<div class="form-group">
+						<label class="d-block mb-1">
+							Do you wish to tag the story to any of the following organization?
+						</label>
+						<mat-radio-group formControlName="haveCompany">
+						<mat-radio-button class="example-margin mr-2" color="primary" value="1">
+							Yes
+						</mat-radio-button>
+						
+						<mat-radio-button class="example-margin ml-2" color="primary" value="0">
+							No
+						</mat-radio-button>
+						</mat-radio-group>
+					</div>
 
-	    		<button class="theme_btn">Submit for review</button>
-    		</form>
-	    	
-	    	<button class="theme_btn" (click)="toggleView()">Back</button>
+          <div class="form-group" *ngIf="addF.haveCompany.value == '1'">
+            <select class="form-control" formControlName="company">
+              <option value="0">Choose company</option>
+              <option *ngFor="let company of companies" value="{{company.company_id}}">
+                {{company.name}}
+              </option>
+            </select>
+          </div>
 
-    	</div>
-    	<div class="col-sm-2"></div>
+	      <div class="form-group">
+	        <!-- <mat-form-field class="example-full-width">
+	          <input type="search" placeholder="Select Country" aria-label="country" formControlName="country" matInput [matAutocomplete]="autoCountry">
+	          <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayFnCountry">
+	            <mat-option *ngFor="let country of filteredCountries" [value]="country">
+	              {{country.name}}
+	            </mat-option>
+	          </mat-autocomplete>
+	        </mat-form-field> -->
+	        <mat-form-field>
+					  <mat-label>Select Country</mat-label>
+					  <mat-select formControlName="country">
+					    <mat-option *ngFor="let country of filteredCountries" [value]="country.name">
+					      {{country.name}}
+					    </mat-option>
+					  </mat-select>
+					</mat-form-field>
+
+	      </div>				
+
+				<div class="">
+					<mat-form-field class="example-chip-list">
+					<mat-chip-list #chipList aria-label="tag selection">
+					<mat-chip
+					*ngFor="let tag of tags;let indx=index;"
+					[selectable]="selectable"
+					[removable]="removable"
+					(removed)="remove(tag,indx)">
+					{{tag.name}}
+					<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+					</mat-chip>
+					<input
+					placeholder="Add or change tags so readers know what your story is about"
+					#tagInput
+					formControlName="previewTags"
+					[matAutocomplete]="auto"
+					[matChipInputFor]="chipList"
+					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+					[matChipInputAddOnBlur]="addOnBlur"
+					(matChipInputTokenEnd)="add($event)">
+					</mat-chip-list>
+					<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+					<!-- <mat-option *ngFor="let tag of filteredTags" [value]="tag"> -->
+					<mat-option *ngFor="let tag of allTags" [value]="tag">
+					{{tag.name}}
+					</mat-option>
+					</mat-autocomplete>
+					</mat-form-field>
+				</div>
 
 
 
-    </div>
-    	
+
+						<button class="theme_btn story_continue_btn mt-2">
+							Submit for review
+						</button>
+						<!-- <div class="form-group">
+							<button class="theme_btn">Continue</button>
+						</div> -->
+					</form>
+					<div class="extra-btns">
+						<a class="theme_btn mr-5" [routerLink]="['/where-to-start']" target="_blank">Not sure where to start?</a>
+						<button class="theme_btn ml-3" (click)="submitStory(true)">Save Draft</button>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-sm-2"></div>
+	</div>
+	
+</div>
+
+
+
+
+<button #saveStoryError data-toggle="modal" data-target="#save-story-error" [hidden]="true"></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="save-story-error">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Note</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body">
+				<p *ngFor="let error of storyErrors">
+					{{error}}
+				</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal" #closeReviewSubmit>Close</button>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+
+<button #saveDraftResponse data-toggle="modal" data-target="#save-draft-response" [hidden]="true"></button>
+
+<!-- The Modal -->
+<div class="modal fade" id="save-draft-response">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Success</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body">
+				<p>Information saved to draft.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal" #closeReviewSubmit>Close</button>
+			</div>
+			
+		</div>
+	</div>
 </div>

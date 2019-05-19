@@ -682,6 +682,11 @@ class Api extends REST_Controller {
 
         $where['stories.author_id'] = $this->input->post('search_author');
       }
+      
+      if ( $this->input->post('search_country') != "" ) {
+
+        $where['stories.country'] = $this->input->post('search_country');
+      }
 
       if ( $this->input->post('search_text') != "" ) {
         

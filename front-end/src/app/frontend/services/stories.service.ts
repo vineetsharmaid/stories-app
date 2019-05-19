@@ -80,7 +80,8 @@ export class StoriesService {
       formData.append('search_tag', searchData['search_tag']);
       formData.append('search_type', searchData['search_type']);
       formData.append('search_text', searchData['search_text']);
-      formData.append('search_author', searchData['search_author']);
+      // formData.append('search_author', searchData['search_author']);
+      formData.append('search_country', searchData['search_country']);
 
 			return this.http.post(API_URL+'search_stories/'+limit+'/'+offset, formData,httpOptions)
 	    .pipe(
@@ -111,6 +112,19 @@ export class StoriesService {
 	      catchError(this.handleError)
 	    );
 		}
+
+  	getCountries(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get('assets/json/countries.json', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+		
 
   	getAuthor(authorId): Observable<any>{
 

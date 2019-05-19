@@ -1,10 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, RoutesRecognized } from '@angular/router';
 
 import { trigger, transition, animate, style } from '@angular/animations'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+
+import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
+import {FormControl} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+
+import { Observable }         from 'rxjs';
+import { map, startWith }     from 'rxjs/operators';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/pairwise';
+
 import { StoryService } from '../../../services/story.service';
+import { UserService } from '../../../services/user.service';
 
 import { environment } from '../../../../../environments/environment';
 const API_URL  =  environment.baseUrl+'/api/';
@@ -45,6 +56,29 @@ export class StoryNewComponent implements OnInit {
 	public filePath: string;
 	public previousUrl: string;
 	public storyId: number;
+
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public filteredTags: Observable<string[]>;
+  public tags: any = [];
+  public allTags: any = [];
+  public allCountries: Array<object>;
+  public filteredCountries: Array<object>;
+  public selectedCountry: any = "";
+  public companies: Array<object>;
+  public storyErrors: Array<string>;
+
+  visible    = true;
+  removable  = true;
+  addOnBlur  = true;
+  selectable = true;
+  fruitCtrl = new FormControl();
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;  
+  @ViewChild('saveStoryError') saveStoryError: ElementRef<HTMLInputElement>;
+  @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
+  @ViewChild('saveDraftResponse') saveDraftResponse: ElementRef<HTMLInputElement>;  
+
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -112,7 +146,10 @@ export class StoryNewComponent implements OnInit {
 		// toolbarVisibleWithoutSelection: true, // shows toolbar when click anywhere on editor
 	}
 
-  constructor(private formBuilder: FormBuilder, private storyService: StoryService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, 
+    private storyService: StoryService, 
+    private userService: UserService, 
+    private router: Router) {
 
 
     this.router.events
@@ -136,6 +173,14 @@ export class StoryNewComponent implements OnInit {
 
   		title: ['', Validators.required],
   		description: [' ', Validators.required],
+      previewTitle: ['', Validators.required],
+      previewSubtitle: ['', Validators.required],
+      previewType: ['1', Validators.required],
+      previewImage: [''],
+      previewTags: [''],
+      haveCompany: ['0'],
+      company: ['0'],
+      country: [''],
   	});
 
   	this.previewForm = this.formBuilder.group({
@@ -147,8 +192,35 @@ export class StoryNewComponent implements OnInit {
 
     // subscribe to changes on add story form
     this.onChanges();
+
+    this.getTags();
+    this.getCountries();
+    this.getCompanies();
+    this.subscribeToCountry();
+
   }
 
+  subscribeToCountry() {
+
+
+    this.addStoryForm.get('country').valueChanges.subscribe(val => {
+      
+        var searchedCountry = this.addStoryForm.get('country').value.toString().toLowerCase();
+        var countries;
+        if( searchedCountry.length > 0 ) {
+          
+          countries = this.allCountries.filter((country) => {
+            
+            return country['name'].toString().toLowerCase().includes(searchedCountry);
+          });
+        } else {
+          
+          countries = this.allCountries;
+        }
+
+        this.filteredCountries = countries.length == 1 ? this.allCountries : countries;
+    });
+  }
 
   /*****SAVE PREVIEW FORM FIELDS ON CHANGE******/ 
   onChanges(): void {
@@ -168,123 +240,204 @@ export class StoryNewComponent implements OnInit {
   get addF() { return this.addStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
-  saveDraft() {
 
-    var draftStory = {
-			title: this.addStoryForm.get('title').value,
-			description: this.addStoryForm.get('description').value,
-			username: localStorage.getItem('username')
-		};
+  getCountries() {
 
-		let description = this.addStoryForm.get('description').value;
-		let subTitle 		= description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+    this.storyService.getCountries().subscribe((response) => {
 
-		this.previewForm.patchValue({	
+      this.filteredCountries = this.allCountries = response;
+    }, (error) => {
 
-			previewTitle: this.addStoryForm.get('title').value,
-			previewSubtitle: subTitle,
-		});
-
-    // stop here if form is invalid
-    if (this.addStoryForm.invalid) {
-
-    	console.log('Validation error.');
-      return;
-    } else {
-
-    	this.storyService.saveDraft(draftStory).subscribe((response) => {
-
-				console.log('Data saved to draft');
-    		
-    		this.storyId = response['data']['story'];
-
-    	}, (error) => {
-
-    		console.log(error);
-    	});
-
-		}
-  }
-
-  updateDraft() {
-
-    let description = this.addStoryForm.get('description').value;
-    let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
-
-    this.previewForm.patchValue({  
-
-      previewTitle: this.addStoryForm.get('title').value,
-      previewSubtitle: subTitle,
+      this.filteredCountries = this.allCountries = [];
+      console.log('error', error);
     });
-
-    var draftStory = {
-      story_id: this.storyId,
-      title: this.addStoryForm.get('title').value,
-      description: this.addStoryForm.get('description').value,
-      previewTitle: this.previewForm.get('previewTitle').value,
-      previewSubtitle: this.previewForm.get('previewSubtitle').value,
-      username: localStorage.getItem('username'),
-    };
-
-    // stop here if form is invalid
-    if (this.addStoryForm.invalid) {
-
-      console.log('Validation error.');
-      return;
-    } else {
-
-      this.storyService.updateDraft(draftStory).subscribe((response) => {
-
-        console.log('Data updated in draft');        
-        this.storyId = response['data']['story']['story_id'];
-
-      }, (error) => {
-
-        console.log(error);
-      });
-
-    }
   }
 
+  getCompanies() {
 
-  submitDraft() {
+    this.userService.getCompanies().subscribe((response) => {
+
+      this.companies = response['data'];
+    }, (error) => {
+      
+      this.companies = [];
+      console.log('error', error);
+    });
+  }
+
+  getTags() {
+
+    this.storyService.getTags().subscribe((response) => {
+            
+      this.allTags = response['data'];
+
+    }, (error) => {
+
+      this.allTags = [];
+      console.log('error', error);
+    });
+  }
+
+  // saveDraft() {
+
+  //   var draftStory = {
+		// 	title: this.addStoryForm.get('title').value,
+		// 	description: this.addStoryForm.get('description').value,
+		// 	username: localStorage.getItem('username')
+		// };
+
+		// let description = this.addStoryForm.get('description').value;
+		// let subTitle 		= description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+
+		// // this.previewForm.patchValue({	
+
+		// // 	previewTitle: this.addStoryForm.get('title').value,
+		// // 	previewSubtitle: subTitle,
+		// // });
+
+  //   // stop here if form is invalid
+  //   if (this.addStoryForm.invalid) {
+
+  //   	console.log('Validation error.');
+  //     return;
+  //   } else {
+
+  //   	this.storyService.saveDraft(draftStory).subscribe((response) => {
+
+		// 		console.log('Data saved to draft');
+    		
+  //   		this.storyId = response['data']['story'];
+
+  //   	}, (error) => {
+
+  //   		console.log(error);
+  //   	});
+
+		// }
+  // }
+
+  // updateDraft() {
+
+  //   let description = this.addStoryForm.get('description').value;
+  //   let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+
+  //   this.previewForm.patchValue({  
+
+  //     previewTitle: this.addStoryForm.get('title').value,
+  //     previewSubtitle: subTitle,
+  //   });
+
+  //   var draftStory = {
+  //     story_id: this.storyId,
+  //     title: this.addStoryForm.get('title').value,
+  //     description: this.addStoryForm.get('description').value,
+  //     previewTitle: this.previewForm.get('previewTitle').value,
+  //     previewSubtitle: this.previewForm.get('previewSubtitle').value,
+  //     username: localStorage.getItem('username'),
+  //   };
+
+  //   // stop here if form is invalid
+  //   if (this.addStoryForm.invalid) {
+
+  //     console.log('Validation error.');
+  //     return;
+  //   } else {
+
+  //     this.storyService.updateDraft(draftStory).subscribe((response) => {
+
+  //       console.log('Data updated in draft');        
+  //       this.storyId = response['data']['story']['story_id'];
+
+  //     }, (error) => {
+
+  //       console.log(error);
+  //     });
+
+  //   }
+  // }
+
+
+  submitStory(draft = false) {
 
     this.addStorySubmitted = true;
+    this.storyErrors = [];
 
     let description = this.addStoryForm.get('description').value;
-    let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
 
-    this.previewForm.patchValue({  
+    let tag_ids = [];
+    this.tags.forEach((tag) => {
 
-      previewTitle: this.addStoryForm.get('title').value,
-      previewSubtitle: subTitle,
+      tag_ids.push(tag.tag_id) 
     });
+
+    var customInValid = false;
+    if ( this.addStoryForm.get('title').value == "" ) {
+
+      customInValid = true;
+      this.storyErrors.push("Story Title is required.");
+    }
+
+    if(description.length < 201) {
+
+      customInValid = true;
+      this.storyErrors.push("Story content should have at least 200 characters.");
+    }
+    
+    if ( this.addStoryForm.get('previewTitle').value == "" ) {
+      
+        this.addStoryForm.patchValue({  
+
+          previewTitle: this.addStoryForm.get('title').value,
+        });      
+    }
+
+    if ( this.addStoryForm.get('previewSubtitle').value == "" ) {
+          
+        // let description = this.editStoryForm.get('description').value;
+        let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+        
+        this.addStoryForm.patchValue({  
+
+          previewSubtitle: subTitle,
+        });
+    }
 
     var draftStory = {
       title: this.addStoryForm.get('title').value,
       description: this.addStoryForm.get('description').value,
-      previewTitle: this.previewForm.get('previewTitle').value,
-      previewSubtitle: this.previewForm.get('previewSubtitle').value,
-      story: this.storyId,
+      previewTitle: this.addStoryForm.get('previewTitle').value,
+      previewSubtitle: this.addStoryForm.get('previewSubtitle').value,
+      previewType: this.addStoryForm.get('previewType').value,
+      previewImage: this.addStoryForm.get('previewImage').value,
+      previewTags: tag_ids,
+      haveCompany: this.addStoryForm.get('haveCompany').value,
+      company: this.addStoryForm.get('company').value,
+      country: this.addStoryForm.get('country').value,
+      draft: draft,
+      // story: this.storyId,
       username: localStorage.getItem('username')
     };
 
-    console.log('draftStory', draftStory);    
+    console.log('draftStory', draftStory);
 
     // stop here if form is invalid
-    if (this.addStoryForm.invalid) {
+    if (this.addStoryForm.invalid || customInValid) {
 
+      this.saveStoryError.nativeElement.click();
       console.log('Validation error.');
       return;
     } else {
 
       this.storyService.saveDraft(draftStory).subscribe((response) => {
 
-        console.log('Data saved to draft');
-        
         this.storyId = response['data']['story'];
+        if( draft ) {
+          
+          this.saveDraftResponse.nativeElement.click();
+        } else {
 
-        this.router.navigate(["/user/story/edit/"+this.storyId, {'new': 'true'}]);
+          this.router.navigate(["/user/story/list/"]);
+        }
         // this.toggleView();
       }, (error) => {
 
@@ -340,20 +493,95 @@ export class StoryNewComponent implements OnInit {
 
       this.selectedFile = new ImageSnippet(event.target.result, file);
       this.filePath = this.selectedFile.src;
-      console.log('this.selectedFile', this.selectedFile);
+      
+      this.storyService.uploadImage(this.selectedFile.file, 0).subscribe(
+        (response) => {
 
-      // this.imageService.uploadImage(this.selectedFile.file).subscribe(
-      //   (res) => {
-        
-      //   },
-      //   (err) => {
-        
-      //   })
+          this.addStoryForm.controls['previewImage'].setValue(response['data']);
+        },
+        (err) => {
+          
+          console.log('err', err);
+        })
     });
 
     reader.readAsDataURL(file);
   }  
 
+
+  add(event: MatChipInputEvent): void {
+    
+    // Add tag only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matAutocomplete.isOpen) {    
+
+      const input = event.input;
+      const value = event.value;
+
+      // Add our fruit
+      if ((value || '').trim()) {
+        
+        console.log('event.value', event.value);
+
+        this.tags.push({
+          tag_id:"",
+          name:value.trim()
+        });
+
+      }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+      
+      // this.addStoryForm.controls['previewTags'].setValue(null);
+    }
+
+  }
+
+  remove(tag, indx): void {
+    
+    this.tags.splice(indx, 1);
+    this.allTags.push(tag);
+    // this.addStoryForm.controls['previewTags'].setValue(null);
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    
+    this.tags.push(event.option.value);
+
+    this.allTags = this.allTags.filter((tag) => { return tag.tag_id != event.option.value.tag_id })
+    
+    this.tagInput.nativeElement.value = '';
+    // this.addStoryForm.controls['previewTags'].setValue(null);
+
+    // save form fields
+    // this.storyService.addTagToStory(event.option.value.tag_id, this.story['story_id']).subscribe((response) => {
+
+    //   console.log('response', response);
+    // }, (error) => {
+
+    //   console.log('error', error);
+    // });
+  }
+
+  displayFnCountry(country): Object | undefined {
+    
+    console.log('display country', country);
+
+    this.selectedCountry = country.name;
+
+    return country ? country.name : undefined;
+  }
+
+
+  private _filterTags(value: string): string[] {
+    
+    const filterValue = value.toString().toLowerCase();
+    
+    return this.allTags.filter( tag => tag.name.toLowerCase().startsWith(filterValue) );
+  }
 
   ngOnDestroy() {
 

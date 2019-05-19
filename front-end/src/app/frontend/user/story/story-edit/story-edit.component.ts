@@ -46,6 +46,7 @@ export class StoryEditComponent implements OnInit {
 
 	public showNewForm: boolean;
 	public showPreview: boolean;
+  public editFormSubmitted: boolean = false;
 	public previewSubmitted: boolean = false;
   public previewIsTouched: boolean = false;
   public storyTitle;
@@ -84,6 +85,7 @@ export class StoryEditComponent implements OnInit {
   @ViewChild('confirmReviewSubmit') confirmReviewSubmit: ElementRef<HTMLInputElement>;
   @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
   @ViewChild('saveDraftResponse') saveDraftResponse: ElementRef<HTMLInputElement>;
+  @ViewChild('saveStoryError') saveStoryError: ElementRef<HTMLInputElement>;
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -161,30 +163,31 @@ export class StoryEditComponent implements OnInit {
 
   		title: ['', Validators.required],
   		description: [' ', Validators.required],
-  	});
-
-  	this.previewForm = this.formBuilder.group({
-
-  		previewTitle: [''],
-  		previewSubtitle: [''],
+      previewTitle: [''],
+      previewSubtitle: [''],
       previewTags: [''],
       previewType: [''],
       haveCompany: ['0'],
       company: ['0'],
       country: [''],
-  		// previewImage: ['', Validators.required],
   	});
+
+  	// this.previewForm = this.formBuilder.group({
+
+  	// 	previewTitle: [''],
+  	// 	previewSubtitle: [''],
+   //    previewTags: [''],
+   //    previewType: [''],
+   //    haveCompany: ['0'],
+   //    company: ['0'],
+   //    country: [''],
+  	// 	// previewImage: ['', Validators.required],
+  	// });
 
     const routeParams = this.activatedRoute.snapshot.params;
     this.isNewStory = routeParams['new'] == "true" ? true : false;
 
     this.getStory();
-
-    // this.filteredTags = this.previewForm.controls['previewTags'].valueChanges.pipe(
-    //     startWith(''),        
-    //     map((tag: string | null) => tag ? this._filterTags(tag) : [])
-    // );
-
 
     this.userService.getCompanies().subscribe((response) => {
 
@@ -202,9 +205,9 @@ export class StoryEditComponent implements OnInit {
   subscribeToCountry() {
 
 
-    this.subPreviewForm = this.previewForm.get('country').valueChanges.subscribe(val => {
+    this.subPreviewForm = this.editStoryForm.get('country').valueChanges.subscribe(val => {
       
-        var searchedCountry = this.previewForm.get('country').value.toString().toLowerCase();
+        var searchedCountry = this.editStoryForm.get('country').value.toString().toLowerCase();
         var countries
         if( searchedCountry.length > 0 ) {
           
@@ -243,19 +246,19 @@ export class StoryEditComponent implements OnInit {
 
         if ( this.story['type'] == "" || this.story['type'] == 0 ) {
           
-          this.previewForm.patchValue({  
+          this.editStoryForm.patchValue({  
 
             previewType: '1',
           });
         } else {
 
-          this.previewForm.patchValue({  
+          this.editStoryForm.patchValue({  
 
             previewType: this.story['type'],
           });  
         }
 
-        this.previewForm.patchValue({  
+        this.editStoryForm.patchValue({  
 
           company: this.story['company_id'],
           haveCompany: this.story['have_company'],
@@ -284,7 +287,7 @@ export class StoryEditComponent implements OnInit {
           /****SET FORM FIELDS VALUE****/ 
           // if ( this.story['preview_title'] == "" && this.story['preview_subtitle'] == "" ) { }
            
-            this.previewForm.patchValue({  
+            this.editStoryForm.patchValue({  
 
               previewTitle: this.story['preview_title'] == "" ? this.story['title'] : this.story['preview_title'],
               previewSubtitle: this.story['preview_subtitle'] == "" ? subTitle : this.story['preview_subtitle'],
@@ -296,7 +299,7 @@ export class StoryEditComponent implements OnInit {
           this.showPreview = false;
 
           /****SET FORM FIELDS VALUE****/ 
-          this.previewForm.patchValue({  
+          this.editStoryForm.patchValue({  
 
             previewTitle: this.story['preview_title'],
             previewSubtitle: this.story['preview_subtitle'],
@@ -362,39 +365,87 @@ export class StoryEditComponent implements OnInit {
   get editF() { return this.editStoryForm.controls; }    
   get pf() { return this.previewForm.controls; }    
 
+  submitStory(draft = false) {
 
+    this.editFormSubmitted = true;
+    this.storyErrors = [];
 
-  updateDraft(event) {
+    let description = this.editStoryForm.get('description').value;
+
+    let tag_ids = [];
+    this.tags.forEach((tag) => {
+
+      tag_ids.push(tag.tag_id) 
+    });
+
+    var customInValid = false;
+    if ( this.editStoryForm.get('title').value == "" ) {
+
+      customInValid = true;
+      this.storyErrors.push("Story Title is required.");
+    }
+
+    if(description.length < 201) {
+
+      customInValid = true;
+      this.storyErrors.push("Story content should have at least 200 characters.");
+    }
+    
+    if ( this.editStoryForm.get('previewTitle').value == "" ) {
+      
+        this.editStoryForm.patchValue({  
+
+          previewTitle: this.editStoryForm.get('title').value,
+        });      
+    }
+
+    if ( this.editStoryForm.get('previewSubtitle').value == "" ) {
+          
+        // let description = this.editStoryForm.get('description').value;
+        let subTitle     = description.replace(/<\/?.+?>/ig, ' ').replace(/\s+/g, " ").substring(0,140);
+        
+        this.editStoryForm.patchValue({  
+
+          previewSubtitle: subTitle,
+        });
+    }
 
     var draftStory = {
-      story_id: this.story['story_id'],
       title: this.editStoryForm.get('title').value,
       description: this.editStoryForm.get('description').value,
-      previewTitle: this.previewForm.get('previewTitle').value,
-      previewSubtitle: this.previewForm.get('previewSubtitle').value,
-      username: localStorage.getItem('username'),
+      previewTitle: this.editStoryForm.get('previewTitle').value,
+      previewSubtitle: this.editStoryForm.get('previewSubtitle').value,
+      previewType: this.editStoryForm.get('previewType').value,
+      previewTags: tag_ids,
+      haveCompany: this.editStoryForm.get('haveCompany').value,
+      company: this.editStoryForm.get('company').value,
+      country: this.editStoryForm.get('country').value,
+      draft: draft,
+      story_id: this.storyId,
+      username: localStorage.getItem('username')
     };
 
     console.log('draftStory', draftStory);
 
     // stop here if form is invalid
-    if (this.editStoryForm.invalid) {
+    if (this.editStoryForm.invalid || customInValid) {
 
+      this.saveStoryError.nativeElement.click();
       console.log('Validation error.');
       return;
     } else {
 
-      this.storyService.updateDraft(draftStory).subscribe((response) => {
-        
-        this.storyId = response['data']['story'];
-        console.log('event', event);
-        if( typeof event == 'undefined' ) {
-          
-          this.toggleView();
-        } else if(event == 'manual') {
+      this.storyService.updateStory(draftStory).subscribe((response) => {
 
-          this.saveDraftResponse.nativeElement.click();      
+        // this.storyId = response['data']['story'];
+        if( draft ) {
+          
+          this.saveDraftResponse.nativeElement.click();
+        } else {
+
+          this.router.navigate(["/user/story/list/"]);
         }
+        // this.toggleView();
       }, (error) => {
 
         console.log(error);
@@ -407,15 +458,15 @@ export class StoryEditComponent implements OnInit {
   /*****SAVE PREVIEW FORM FIELDS ON CHANGE******/ 
   onChanges(): void {  
     
-    this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
+    // this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
       
-        this.savePreview();        
-    });
+    //     this.savePreview();        
+    // });
 
-    this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
+    // this.subPreviewForm = this.previewForm.get('previewTitle').valueChanges.subscribe(val => {
       
-        this.savePreview();
-    });
+    //     this.savePreview();
+    // });
   }
 
   savePreview() {

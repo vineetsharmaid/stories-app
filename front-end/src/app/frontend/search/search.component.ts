@@ -23,6 +23,8 @@ export class SearchComponent implements OnInit {
 	public filteredTypes: Array<object>;
 	public filteredAuthors: Array<object>;
 	public allTypes: Array<object>;
+  public allCountries: Array<object>;
+  public selectedCountry: string;  	
 	public typingTimer: any;
 	public searchText: any;
 	public searchTag: any;
@@ -44,7 +46,7 @@ export class SearchComponent implements OnInit {
   			];
 
   		this.filteredTypes = this.allTypes;
-
+  		this.getCountries();
   		// Look for changes in the query params
   		this.trackQueryParams();
   	}
@@ -134,7 +136,8 @@ export class SearchComponent implements OnInit {
 	   		'search_tag': typeof this.selectedTag == 'undefined' ? "" : this.selectedTag,
 	   		'search_type': typeof this.selectedType == 'undefined' ? "" : this.selectedType, 
 	   		'search_text': typeof this.searchText == 'undefined' ? "" : this.searchText, 
-	   		'search_author': typeof this.selectedAuthor == 'undefined' ? "" : this.selectedAuthor,
+	   		// 'search_author': typeof this.selectedAuthor == 'undefined' ? "" : this.selectedAuthor,
+	   		'search_country': typeof this.selectedCountry == 'undefined' ? "" : this.selectedCountry,
 	   	};
   	
 	    this.storiesService.searchStories(searchData, limit, offset).subscribe((response: Array<Object>) => {
@@ -198,9 +201,28 @@ export class SearchComponent implements OnInit {
 
 
 	displayFnType(type): Object | undefined {
-		console.log('select type', type);
+		
 		return type ? type.name : undefined;
 	}
+
+  getCountries() {
+
+    this.storiesService.getCountries().subscribe((response) => {
+
+      this.allCountries = response;
+    }, (error) => {
+
+      this.allCountries = [];
+      console.log('error', error);
+    });
+  }
+
+  countryChanged(country) {
+    
+    this.selectedCountry = country;
+    this.limitOffset = 0;
+    this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+  }
 
   	tagSearchChanged(event: any) {
 
@@ -232,7 +254,6 @@ export class SearchComponent implements OnInit {
 
 	displayFn(tag): Object | undefined {
 		
-		console.log('display tag', tag);
 		return tag ? tag.name : undefined;
 	}
 

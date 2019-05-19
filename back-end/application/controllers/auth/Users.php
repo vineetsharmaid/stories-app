@@ -100,10 +100,10 @@ class Users extends REST_Controller {
 
       $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
       $title  = trim( strip_tags($post_data->title) );
-      $slug   = strtolower( str_replace(' ', '-', $title) );
-      
-      $description = $post_data->description;
-      
+      // $slug   = strtolower( str_replace(' ', '-', $title) );
+      $slug   = $this->slugify($title).'-'.strtotime(date('Y-m-d h:i:s'));
+      $description  = $post_data->description;
+
       // remove froala text
       if(strpos($description, '<p data-f-id="pbf"')) {
   
@@ -111,12 +111,25 @@ class Users extends REST_Controller {
       }
 
       $story = array(
-        'title'  => trim( strip_tags($post_data->title) ),
-        'slug'   => $slug,
-        'status' => 0,
-        'author_id' => $user[0]->user_id,
-        'description' => htmlEntities($description, ENT_QUOTES),
+        'title'            => trim( strip_tags($post_data->title) ),
+        'author_id'        => $user[0]->user_id,
+        'description'      => htmlEntities($description, ENT_QUOTES),
+        'company_id'       => $post_data->company,
+        'country'          => $post_data->country,
+        'have_company'     => $post_data->haveCompany,
+        'type'             => $post_data->previewType,
+        'preview_image'    => $post_data->previewImage,
+        'preview_title'    => trim( strip_tags($post_data->previewTitle) ),
+        'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
+        'slug'             => $slug,
+        'status'           => 0,
       );
+
+      // save as draft or submit for review
+      if ($post_data->draft == false) {
+        
+        $story['review'] =  2;
+      }
       
       // html_entity_decode($encodedHTML)
 
@@ -124,10 +137,73 @@ class Users extends REST_Controller {
 
             $story_id = $this->db->insert_id();
 
+            $tags = $post_data->previewTags;
+            $this->add_tag_to_story($story_id, $tags);
+
             // Set the response and exit
             $this->response([
                 'status' => TRUE,
                 'data' => array('story' => $story_id),
+                'message' => 'story_saved',
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'database_error',
+                'error' => array('Something went wrong, unable to save story.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+    function edit_story_post()
+    {
+
+      // convert json post data to array
+      $post_data = json_decode(file_get_contents("php://input"));
+
+      $user = $this->common_model->get_data('users', array('username' => $this->token_data->username));
+      $title  = trim( strip_tags($post_data->title) );
+      $description  = $post_data->description;
+
+      // remove froala text
+      if(strpos($description, '<p data-f-id="pbf"')) {
+  
+        $description = substr($description, 0, strpos($description, '<p data-f-id="pbf"'));
+      }
+
+      $story = array(
+        'title'            => trim( strip_tags($post_data->title) ),
+        'author_id'        => $user[0]->user_id,
+        'description'      => htmlEntities($description, ENT_QUOTES),
+        'company_id'       => $post_data->company,
+        'country'          => $post_data->country,
+        'have_company'     => $post_data->haveCompany,
+        'type'             => $post_data->previewType,
+        'preview_title'    => trim( strip_tags($post_data->previewTitle) ),
+        'preview_subtitle' => trim( strip_tags($post_data->previewSubtitle) ),
+        'status'           => 0,
+      );
+
+      // save as draft or submit for review
+      if ($post_data->draft == false) {
+        
+        $story['review'] =  2;
+      }
+      
+      // html_entity_decode($encodedHTML)
+      $where = array('story_id' => $post_data->story_id);
+
+      if( $this->common_model->update_entry('stories', $story, $where) ) {
+
+            $tags = $post_data->previewTags;
+            $this->add_tag_to_story($post_data->story_id, $tags);
+
+            // Set the response and exit
+            $this->response([
+                'status' => TRUE,
+                'data' => array('story' => $post_data->story_id),
                 'message' => 'story_saved',
             ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
       } else {
@@ -693,26 +769,36 @@ class Users extends REST_Controller {
             'preview_image' => $upload_data['raw_name'].$upload_data['file_ext'],
           );
           
-          $where = array('story_id' => $this->input->post('story_id'));
+          if ( $this->input->post('story_id') > 0 ) {
+            $where = array('story_id' => $this->input->post('story_id'));
+            if( $this->common_model->update_entry('stories', $story, $where) ) {
 
-          if( $this->common_model->update_entry('stories', $story, $where) ) {
 
+              // Set the response and exit
+              $this->response(  
+                array(
+                  'status' => TRUE,
+                  'data' => 'image_uploaded_updated',
+                ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+            } else {
 
+              // Set the response and exit
+              $this->response([
+                  'status'  => FALSE,
+                  'message' => 'not_updated_db_error',
+                  'error'   => 'Something went wrong, unable to update preview image.',
+              ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+            }                
+          } else {
+      
             // Set the response and exit
             $this->response(  
               array(
                 'status' => TRUE,
-                'data' => 'image_uploaded_updated',
+                'data' => $upload_data['raw_name'].$upload_data['file_ext'],
               ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
-          } else {
-
-            // Set the response and exit
-            $this->response([
-                'status'  => FALSE,
-                'message' => 'not_updated_db_error',
-                'error'   => 'Something went wrong, unable to update preview image.',
-            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
-          }          
+          }
+          
       }
 
     }
@@ -978,6 +1064,29 @@ class Users extends REST_Controller {
       }
     }
 
+    public function save_company_post()
+    {
+      $where = array('user_id' => $this->token_data->id);
+      
+      $data = array('company' => $this->input->post('name'), 'company_email' => $this->input->post('email') );
+
+      if( $this->common_model->update_entry('users', $data, $where) ) {
+
+        // Set the response and exit
+        $this->response(  
+          array( 'status' => TRUE, 'message' => 'Company Updated', ), 
+          REST_Controller::HTTP_OK
+        ); // OK (200) being the HTTP response code
+      } else {
+        
+        // Set the response and exit
+        $this->response(  
+          array( 'status' => FALSE, 'message' => 'Unable to update company', ), 
+          REST_Controller::HTTP_NOT_FOUND
+        ); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
     public function update_user_name_post() {
       
       $data  = array( 'first_name' => $this->input->post('first_name'), 'last_name' => $this->input->post('last_name') );
@@ -1025,6 +1134,23 @@ class Users extends REST_Controller {
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }
 
+    }
+
+    private function add_tag_to_story($story_id, $tags)
+    {
+
+      if ( !empty($tags) ) {
+        foreach ($tags as $tag_id) {
+          
+          $tag_data = array( 'story_id' => $story_id, 'tag_id' => $tag_id );
+
+          if( $this->common_model->data_exists( 'story_tags',  $tag_data) == 0 ) {
+
+            $this->common_model->insert_entry( 'story_tags', $tag_data );
+          }
+        }
+      }
+      
     }
 
     public function add_new_tag_to_story_post()

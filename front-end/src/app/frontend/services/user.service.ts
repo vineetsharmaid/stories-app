@@ -91,6 +91,23 @@ export class UserService {
 	    );
 		}
 
+  	saveCompany(company): Observable<any>{
+    	
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('name', company.name);
+      formData.append('email', company.email);
+
+			return this.http.post(USER_API_URL+'save_company/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	updateName(firstName, lastName): Observable<any>{
     	
 

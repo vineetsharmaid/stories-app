@@ -1,4 +1,5 @@
 import { Component, OnInit, ElementRef, ErrorHandler, Injectable, Injector, NgZone, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { UserService } from '../../services/user.service';
 import { StoriesService } from '../../services/stories.service'
@@ -26,18 +27,32 @@ export class ProfileComponent implements OnInit {
   public enableProfessionalInfoEdit: boolean = false;
   public coverPicFile: any;
   public profilePicFile: any;
+  public addCompanyForm: FormGroup;
+  public companyUpdated: boolean = false;
 
   @ViewChild('imageInput') imageInput: ElementRef;
   @ViewChild('imageInputProfile') imageInputProfile: ElementRef;
+  @ViewChild('saveCompanyModal') saveCompanyModal: ElementRef;
 
-  constructor(private userService: UserService, private storiesService : StoriesService) { }
+  constructor(private userService: UserService, 
+    private storiesService : StoriesService,
+    private formBuilder: FormBuilder) { }
  
   ngOnInit() {
+
+    this.addCompanyForm = this.formBuilder.group({
+
+      company: ['', Validators.required],
+      companyEmail: [' ', Validators.required],
+    });
 
   	this.getUserInfo();
     this.getUserStories();
     this.getUserStoriesCount();
   }
+
+  // convenience getter for easy access to form fields
+  get addC() { return this.addCompanyForm.controls; }
 
   getUserInfo() {
 
@@ -48,6 +63,11 @@ export class ProfileComponent implements OnInit {
       this.userInfo['cover_pic'] = this.userInfo['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['cover_pic'];
       this.userInfo['profile_pic'] = this.userInfo['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['profile_pic'];
       
+
+      this.addCompanyForm.patchValue({
+        company: this.userInfo['company'],
+        companyEmail: this.userInfo['company_email'],
+      });
   	}, (error) => {
 
   		console.log('error', error['code']);
@@ -194,6 +214,35 @@ export class ProfileComponent implements OnInit {
     });
 
     reader.readAsDataURL(file);
+
+  }
+
+  saveCompany() {
+
+        // stop here if form is invalid
+    if (this.addCompanyForm.invalid) {
+
+      console.log('Validation error.');
+      return;
+    } else {
+
+      var company = {
+        name: this.addCompanyForm.get('company').value,
+        email: this.addCompanyForm.get('companyEmail').value,
+      };
+
+      // this.saveCompanyModal.nativeElement.click();
+      this.userService.saveCompany(company).subscribe((response) => {
+
+        this.companyUpdated = true;
+        this.addCompanyForm.reset();
+        this.userInfo['company'] = company.name;
+        console.log('response', response);
+      }, (error) => {
+
+        console.log('error', error);
+      });
+    }
 
   }
 

@@ -1,214 +1,244 @@
 <!-- Section 1 -->
 <div class="container-fluid user_info_wrap">
-    <div class="row">
-        <div class="col-md-8 nopadding quick-edit">
-            
-            <img src="assets/img/user/intro.jpg" alt="" *ngIf="userInfo['cover_pic'] == ''">
-            <img [src]="userInfo['cover_pic']" alt="" *ngIf="userInfo['cover_pic'] != ''">
-
-            <button class="btn btn-sm btn-white edit" (click)="triggerUpload()">
-                <i class="fa fa-pencil"></i>
-            </button> 
-
-            <label class="image-upload-container">
-                <input #imageInput
-                type="file"
-                accept="image/*"
-                (change)="uploadCoverPic(imageInput)" class="d-none">
-            </label>
-        </div>
-        <div class="col-md-4 nopadding">
-            <div class="user_intro_box">
-                
-                <!-- <a href="" [routerLink]="['./story/new']" class="mr-2 mb-2">Add Story</a>
-                <a href="" [routerLink]="['./story/list']" class="mr-2 mb-2">Stories</a>
-                <a href="" [routerLink]="['/forum']">Community Discussions</a> -->
-
-                <div class="user_profile_pic_wrap quick-edit">
-                    <img *ngIf="userInfo['profile_pic']?.length > 0" [src]="userInfo['profile_pic']" alt="">
-                    <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/forum/user_pic.png" alt="">
-
-
-                    <button class="btn btn-sm btn-white edit" (click)="triggerProfilePicUpload()">
-                        <i class="fa fa-pencil"></i>
-                    </button> 
-
-                    <label class="image-upload-container">
-                        <input #imageInputProfile
-                        type="file"
-                        accept="image/*"
-                        (change)="uploadProfilePic(imageInputProfile)" class="d-none">
-                    </label>    
-                </div>
-                
-                <div class="quick-edit">                
-                    <h3 *ngIf="enableNameEdit == false">{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
-
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableNameEdit == false" (click)="enableNameEdit = true; enableShortInfoEdit = false; enableWebsiteEdit = false; firstNameValue = userInfo.first_name; lastNameValue = userInfo.last_name; enableProfessionalInfoEdit = false;">
-                        <i class="fa fa-pencil"></i>
-                    </button>                    
-                </div>
-
-
-                <div class="form-group quick-edit" *ngIf="enableNameEdit == true">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input #firstName [(ngModel)]="firstNameValue" name="firstName" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <input #lastName [(ngModel)]="lastNameValue" name="lastName" class="form-control">
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-
-                    <button class="btn btn-sm theme_btn cancel" (click)="enableNameEdit = false">
-                        <i class="fa fa-close"></i>
-                    </button>
-
-                    <button class="btn btn-sm btn-success save" (click)="updateName(firstNameValue, lastNameValue)">
-                        <i class="fa fa-save"></i>
-                    </button>
-                </div>
-
-
-                <!-- <div class="quick-edit mb-4">
-                    <p *ngIf="userInfo['professional_info']?.length > 0 && enableProfessionalInfoEdit == false">{{userInfo['professional_info']}}</p>
-
-                    <p *ngIf="(userInfo['professional_info'] == undefined || userInfo['professional_info'] == '' ) && enableProfessionalInfoEdit == false">Add profile credentials</p>
-                    
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableProfessionalInfoEdit == false" (click)="enableProfessionalInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; professionalInfoValue = userInfo['professional_info']">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                </div> -->
-
-
-                <!-- <div class="form-group quick-edit mb-4" *ngIf="enableProfessionalInfoEdit == true">
-                    <textarea #professionalInfo [(ngModel)]="professionalInfoValue" name="professionalInfo" class="form-control">{{userInfo.professional_info}}</textarea>
-                    
-                    <button class="btn btn-sm theme_btn cancel" (click)="enableProfessionalInfoEdit = false">
-                        <i class="fa fa-close"></i>
-                    </button>
-
-                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('professional_info', professionalInfoValue)">
-                        <i class="fa fa-save"></i>
-                    </button>
-                </div> -->
-
-                
-                <span class="mt-5 pointer" [routerLink]="['/user/points']">
-                    <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
-                </span>
-
-                <span class="mt-5">
-                    <strong>{{storiesCount}}</strong> Stories
-                </span>
-                
-
-                <div class="quick-edit">
-                    <p *ngIf="userInfo['short_info']?.length > 0 && enableShortInfoEdit == false">{{userInfo['short_info']}}</p>
-
-                    <p *ngIf="(userInfo['short_info'] == undefined || userInfo['short_info'] == '' ) && enableShortInfoEdit == false">Tell us more about yourself</p>
-                    
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableShortInfoEdit == false" (click)="enableShortInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; shortInfoValue = userInfo.short_info; enableProfessionalInfoEdit = false;">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                </div>
-
-                <div class="form-group quick-edit" *ngIf="enableShortInfoEdit == true">
-                    <textarea #shortInfo [(ngModel)]="shortInfoValue" name="shortInfo" class="form-control">{{userInfo.short_info}}</textarea>
-                    
-                    <button class="btn btn-sm theme_btn cancel" (click)="enableShortInfoEdit = false">
-                        <i class="fa fa-close"></i>
-                    </button>
-
-                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('short_info', shortInfoValue)">
-                        <i class="fa fa-save"></i>
-                    </button>
-                </div>
-
-                <div class="quick-edit">
-                    <p class="top20" *ngIf="userInfo['website']?.length > 0 && enableWebsiteEdit == false">
-                        <a [href]="'http://'+userInfo['website']" target="_blank">
-                            <strong>{{userInfo['website']}}</strong>
-                        </a>
-                    </p>
-
-                    <p class="top20" *ngIf="(userInfo['website'] == undefined || userInfo['website'] == '') && enableWebsiteEdit == false">
-                        <!-- <a href="#"> -->
-                            <strong>Add your LinkedIn profile URL</strong>
-                        <!-- </a> -->
-                    </p>
-
-                    <button class="btn btn-sm btn-white edit" *ngIf="enableWebsiteEdit == false" (click)="enableWebsiteEdit = true; enableShortInfoEdit = false; enableNameEdit = false; websiteValue = userInfo['website'];  enableProfessionalInfoEdit = false">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                </div>
-
-
-                <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
-                    <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo['website']}}</textarea> -->
-                    <input #website [(ngModel)]="websiteValue" name="website" class="form-control" placeholder="www.linkedprofile.com">
-                    <button class="btn btn-sm theme_btn cancel" (click)="enableWebsiteEdit = false">
-                        <i class="fa fa-close"></i>
-                    </button>
-
-                    <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('website', websiteValue)">
-                        <i class="fa fa-save"></i>
-                    </button>
-                </div>
-
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-md-8 nopadding quick-edit">
+      
+      <img src="assets/img/user/intro.jpg" alt="" *ngIf="userInfo['cover_pic'] == ''">
+      <img [src]="userInfo['cover_pic']" alt="" *ngIf="userInfo['cover_pic'] != ''">
+      <button class="btn btn-sm btn-white edit" (click)="triggerUpload()">
+      <i class="fa fa-pencil"></i>
+      </button>
+      <label class="image-upload-container">
+        <input #imageInput
+        type="file"
+        accept="image/*"
+        (change)="uploadCoverPic(imageInput)" class="d-none">
+      </label>
     </div>
-</div>
-<!-- Section 1 -->
-
-
-
-<!-- Section 2 -->
-<div class="container-fluid stories_wrap_full">
-    <div class="row" *ngIf="stories?.length > 0">
-
-        <div class="col-md-4" *ngFor="let story of stories">
-            <div class="full_story_box">
-                    <div class="image_wraper_out">
-                        <a href="#" [routerLink]="['/story/', story.slug]">
-                            <img [src]="story.preview_image" [alt]="story.preview_title">
-                        </a>
-                    </div>
-                <div class="right_inner_footer not_absolute">
-                    <div class="right_inner_footer_top">
-                        <a href="#" class="coubt">Russia</a>
-                        <!-- <a href="#" class="coubt2">Indigenous</a> -->
-                        <a *ngFor="let tag of story.tags" [routerLink]="['/tag/', tag.tag_id]" class="coubt2">{{tag.name}}</a>
-                    </div>
-                    <div class="right_line">
-                        <h3>{{story.preview_title}}</h3>
-                        <div class="inner_divider"></div>
-                        <p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
-                    </div>
-                    <div class="right_inner_footer_bottom">
-                        <ul>
-                            <li><img src="assets/img/like.png" alt=""> 1,003</li>
-                            <li class="bookmark">
-                                <div class="share_img_wrap">
-                                    <img src="assets/img/bookmark.png" alt="">
-                                    <div class="social_wrap">
-                                        <ul>
-                                            <li><a href="#"><img src="assets/img/facebook.png" alt=""></a></li>
-                                            <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
-                                            <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <div class="col-md-4 nopadding">
+      <div class="user_intro_box">
+        
+        <!-- <a href="" [routerLink]="['./story/new']" class="mr-2 mb-2">Add Story</a>
+        <a href="" [routerLink]="['./story/list']" class="mr-2 mb-2">Stories</a>
+        <a href="" [routerLink]="['/forum']">Community Discussions</a> -->
+        <div class="user_profile_pic_wrap quick-edit">
+          <img *ngIf="userInfo['profile_pic']?.length > 0" [src]="userInfo['profile_pic']" alt="">
+          <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/forum/user_pic.png" alt="">
+          <button class="btn btn-sm btn-white edit" (click)="triggerProfilePicUpload()">
+          <i class="fa fa-pencil"></i>
+          </button>
+          <label class="image-upload-container">
+            <input #imageInputProfile
+            type="file"
+            accept="image/*"
+            (change)="uploadProfilePic(imageInputProfile)" class="d-none">
+          </label>
         </div>
         
+        <div class="quick-edit">
+          <h3 *ngIf="enableNameEdit == false">{{userInfo.first_name}}  {{userInfo.last_name}}</h3>
+          <button class="btn btn-sm btn-white edit" *ngIf="enableNameEdit == false" (click)="enableNameEdit = true; enableShortInfoEdit = false; enableWebsiteEdit = false; firstNameValue = userInfo.first_name; lastNameValue = userInfo.last_name; enableProfessionalInfoEdit = false;">
+          <i class="fa fa-pencil"></i>
+          </button>
+        </div>
+        <div class="form-group quick-edit" *ngIf="enableNameEdit == true">
+          <div class="row">
+            <div class="col-md-6">
+              <input #firstName [(ngModel)]="firstNameValue" name="firstName" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <input #lastName [(ngModel)]="lastNameValue" name="lastName" class="form-control">
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <button class="btn btn-sm theme_btn cancel" (click)="enableNameEdit = false">
+          <i class="fa fa-close"></i>
+          </button>
+          <button class="btn btn-sm btn-success save" (click)="updateName(firstNameValue, lastNameValue)">
+          <i class="fa fa-save"></i>
+          </button>
+        </div>
+        <!-- <div class="quick-edit mb-4">
+          <p *ngIf="userInfo['professional_info']?.length > 0 && enableProfessionalInfoEdit == false">{{userInfo['professional_info']}}</p>
+          <p *ngIf="(userInfo['professional_info'] == undefined || userInfo['professional_info'] == '' ) && enableProfessionalInfoEdit == false">Add profile credentials</p>
+          
+          <button class="btn btn-sm btn-white edit" *ngIf="enableProfessionalInfoEdit == false" (click)="enableProfessionalInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; professionalInfoValue = userInfo['professional_info']">
+          <i class="fa fa-pencil"></i>
+          </button>
+        </div> -->
+        <!-- <div class="form-group quick-edit mb-4" *ngIf="enableProfessionalInfoEdit == true">
+          <textarea #professionalInfo [(ngModel)]="professionalInfoValue" name="professionalInfo" class="form-control">{{userInfo.professional_info}}</textarea>
+          
+          <button class="btn btn-sm theme_btn cancel" (click)="enableProfessionalInfoEdit = false">
+          <i class="fa fa-close"></i>
+          </button>
+          <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('professional_info', professionalInfoValue)">
+          <i class="fa fa-save"></i>
+          </button>
+        </div> -->
+        
+        <span class="mt-5 pointer" [routerLink]="['/user/points']">
+          <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
+        </span>
+        <span class="mt-5">
+          <strong>{{storiesCount}}</strong> Stories
+        </span>
+        
+        <div class="quick-edit">
+          <p *ngIf="userInfo['short_info']?.length > 0 && enableShortInfoEdit == false">{{userInfo['short_info']}}</p>
+          <p *ngIf="(userInfo['short_info'] == undefined || userInfo['short_info'] == '' ) && enableShortInfoEdit == false">Tell us more about yourself</p>
+          
+          <button class="btn btn-sm btn-white edit" *ngIf="enableShortInfoEdit == false" (click)="enableShortInfoEdit = true; enableNameEdit = false; enableWebsiteEdit = false; shortInfoValue = userInfo.short_info; enableProfessionalInfoEdit = false;">
+          <i class="fa fa-pencil"></i>
+          </button>
+        </div>
+        <div class="form-group quick-edit" *ngIf="enableShortInfoEdit == true">
+          <textarea #shortInfo [(ngModel)]="shortInfoValue" name="shortInfo" class="form-control">{{userInfo.short_info}}</textarea>
+          
+          <button class="btn btn-sm theme_btn cancel" (click)="enableShortInfoEdit = false">
+          <i class="fa fa-close"></i>
+          </button>
+          <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('short_info', shortInfoValue)">
+          <i class="fa fa-save"></i>
+          </button>
+        </div>
+
+        <div class="form-group quick-edit">
+          <p *ngIf="userInfo['company']?.length > 0; else addCompany;">
+            {{userInfo['company']}}
+          </p>
+
+          <ng-template #addCompany>
+            <p>Add Company</p>
+          </ng-template>
+
+          <button #saveCompanyModal data-toggle="modal" data-target="#save-company" (click)="companyUpdated = false" class="btn btn-sm btn-white edit">
+            <i class="fa fa-pencil"></i>
+          </button>
+        </div>
+
+        <div class="quick-edit">
+          <p class="top20" *ngIf="userInfo['website']?.length > 0 && enableWebsiteEdit == false">
+            <a [href]="'http://'+userInfo['website']" target="_blank">
+              <strong>{{userInfo['website']}}</strong>
+            </a>
+          </p>
+          <p class="top20" *ngIf="(userInfo['website'] == undefined || userInfo['website'] == '') && enableWebsiteEdit == false">
+            <!-- <a href="#"> -->
+            <strong>Add your LinkedIn profile URL</strong>
+            <!-- </a> -->
+          </p>
+          <button class="btn btn-sm btn-white edit" *ngIf="enableWebsiteEdit == false" (click)="enableWebsiteEdit = true; enableShortInfoEdit = false; enableNameEdit = false; websiteValue = userInfo['website'];  enableProfessionalInfoEdit = false">
+          <i class="fa fa-pencil"></i>
+          </button>
+        </div>
+        <div class="form-group quick-edit top20" *ngIf="enableWebsiteEdit == true">
+          <!-- <textarea #website [(ngModel)]="websiteValue" name="website" class="form-control">{{userInfo['website']}}</textarea> -->
+          <input #website [(ngModel)]="websiteValue" name="website" class="form-control" placeholder="www.linkedprofile.com">
+          <button class="btn btn-sm theme_btn cancel" (click)="enableWebsiteEdit = false">
+          <i class="fa fa-close"></i>
+          </button>
+          <button class="btn btn-sm btn-success save" (click)="updateMetaInfo('website', websiteValue)">
+          <i class="fa fa-save"></i>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+<!-- Section 1 -->
+<!-- Section 2 -->
+<div class="container-fluid stories_wrap_full">
+  <div class="row" *ngIf="stories?.length > 0">
+    <div class="col-md-4" *ngFor="let story of stories">
+      <div class="full_story_box">
+        <div class="image_wraper_out">
+          <a href="#" [routerLink]="['/story/', story.slug]">
+            <img [src]="story.preview_image" [alt]="story.preview_title">
+          </a>
+        </div>
+        <div class="right_inner_footer not_absolute">
+          <div class="right_inner_footer_top">
+            <a href="#" class="coubt">Russia</a>
+            <!-- <a href="#" class="coubt2">Indigenous</a> -->
+            <a *ngFor="let tag of story.tags" [routerLink]="['/tag/', tag.tag_id]" class="coubt2">{{tag.name}}</a>
+          </div>
+          <div class="right_line">
+            <h3>{{story.preview_title}}</h3>
+            <div class="inner_divider"></div>
+            <p [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>
+          </div>
+          <div class="right_inner_footer_bottom">
+            <ul>
+              <li><img src="assets/img/like.png" alt=""> 1,003</li>
+              <li class="bookmark">
+                <div class="share_img_wrap">
+                  <img src="assets/img/bookmark.png" alt="">
+                  <div class="social_wrap">
+                    <ul>
+                      <li><a href="#"><img src="assets/img/facebook.png" alt=""></a></li>
+                      <li><a href="#"><img src="assets/img/twtr.png" alt=""></a></li>
+                      <li><a href="#"><img src="assets/img/linkedIn.png" alt=""></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
 </div>
 <!-- Section 2 -->
 
+<!-- The Modal -->
+<div class="modal fade" id="save-company">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <form [formGroup]="addCompanyForm" (ngSubmit)="saveCompany()">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Company</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="companyUpdated == true">
+        <h4>Company updated successfully</h4>
+      </div>
+      <div class="modal-body" *ngIf="companyUpdated == false">
+          
+          <div class="form-group">
+            <div>
+              <input type="text" formControlName="company" class="form-control" placeholder="Company Name">
+            </div>
+            
+            <div *ngIf="addStorySubmitted && addC.company.errors" class="invalid-feedback">
+              <div *ngIf="addC.company.errors.required">Company Name is required</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div>
+              <input type="email" formControlName="companyEmail" class="form-control" placeholder="Company Email">
+            </div>
+            
+            <div *ngIf="addStorySubmitted && addC.companyEmail.errors" class="invalid-feedback">
+              <div *ngIf="addC.companyEmail.errors.required">Company Email is required</div>
+            </div>
+          </div>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" *ngIf="companyUpdated == false">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      </form>
+      
+    </div>
+  </div>
+</div>

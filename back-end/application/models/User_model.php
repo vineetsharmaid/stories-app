@@ -5,6 +5,7 @@ class User_model extends CI_Model {
     public function get_user_info($where) {
 
       $this->db->select("users.first_name, users.last_name, users.profile_pic, users.user_email, users.points, users.badge, users.user_type, users.username, users.cover_pic, 
+        users.company, users.company_email, 
         max(case when usermeta.meta_key='professional_info' then usermeta.meta_value end) as professional_info,
         max(case when usermeta.meta_key='short_info' then usermeta.meta_value end) as short_info,
         max(case when usermeta.meta_key='website' then usermeta.meta_value end) as website,

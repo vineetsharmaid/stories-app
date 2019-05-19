@@ -33,6 +33,18 @@ export class StoryService {
 	    );
 		}
 
+  	updateStory(story): Observable<any>{
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};    	
+
+			return this.http.post(USER_API_URL+'edit_story', story, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	updateDraft(story): Observable<any>{
 
 			let httpOptions = {
@@ -285,7 +297,7 @@ export class StoryService {
 	    );
 		}
 
-		public uploadImage(image: File, story_id): Observable<string> {
+		public uploadImage(image: File, story_id): Observable<object> {
 	    
 
  			const formData = new FormData();
@@ -294,10 +306,7 @@ export class StoryService {
 
       const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
       
-      return this.http.post(USER_API_URL+'image_upload', formData, {
-          headers,
-          responseType: 'text'
-      });	    
+      return this.http.post(USER_API_URL+'image_upload', formData, {headers});
 	  }
 
 
