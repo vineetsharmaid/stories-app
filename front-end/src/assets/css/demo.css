@@ -5,38 +5,10 @@
     animation-fill-mode: forwards;
 }*/
 
-.tim-typo{
-  padding-left: 25%;
-  margin-bottom: 40px;
-  position: relative;
-  width: 100%;
-}
-.tim-typo .tim-note{
-  bottom: 5px;
-  color: #c0c1c2;
-  display: block;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 15px;
-  left: 0;
-  margin-left: 20px;
-  position: absolute;
-  width: 260px;
-}
+.tim-typo{padding-left: 25%;margin-bottom: 40px;position: relative;width: 100%;}
+.tim-typo .tim-note{bottom: 5px;color: #c0c1c2;display: block;font-weight: 400; font-size: 13px;line-height: 15px;left: 0;margin-left: 20px;position: absolute;width: 260px;}
 .cdk-overlay-container { z-index: 9999 !important; }
-
 .single_page_content ol{padding-left: 20px;}
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*------------------------------Events PAge------------------------------*/
@@ -322,10 +294,18 @@ a{color:#f1663b}
 
 
 .fr-element.fr-view ul{padding-left: 20px}
-.fr-dropdown-wrapper ul li a{position: relative;}
-.fr-dropdown-wrapper ul li a[data-param1="circle"]:before{position: absolute;content: ""; width: 6px; height: 6px; border-radius: 6px; border: 1px solid #000; left: 10px; top: 50%; transform: translateY(-50%);}
-.fr-dropdown-wrapper ul li a[data-param1="default"]:before, .fr-dropdown-wrapper ul li a[data-param1="disc"]:before{position: absolute;content: ""; width: 6px; height: 6px; border-radius: 6px; border: 1px solid #000; left: 10px; top: 50%; transform: translateY(-50%); background: #000}
-.fr-dropdown-wrapper ul li a[data-param1="square"]:before{position: absolute;content: ""; width: 6px; height: 6px; border-radius: 0; border: 1px solid #000; left: 10px; top: 50%; transform: translateY(-50%); background: #000}
+#dropdown-menu-formatULOptions-1 ul li a{position: relative;}
+#dropdown-menu-formatULOptions-1 ul li a:before{position: absolute;content: ""; width: 6px; height: 6px; border: 1px solid #000; left: 10px; top: 50%; transform: translateY(-50%);}
+#dropdown-menu-formatULOptions-1 ul li a[data-param1="circle"]:before{border-radius: 6px;}
+#dropdown-menu-formatULOptions-1 ul li a[data-param1="default"]:before, #dropdown-menu-formatULOptions-1 ul li a[data-param1="disc"]:before{border-radius: 6px;background: #000}
+#dropdown-menu-formatULOptions-1 ul li a[data-param1="square"]:before{border: 1px solid #000; background: #000}
 
-#formatOLOptions-1 .fr-dropdown-wrapper ul li a[data-param1="default"]:before{display: none !important; opacity: 0 !important}
+#dropdown-menu-formatOLOptions-1 ul li a{position: relative; padding: 0 20px 0 40px}
+#dropdown-menu-formatOLOptions-1 ul li a:before{position: absolute; left: 10px; top: 50%; transform: translateY(-50%);}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="lower-alpha"]:before{content: "(a)"}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="upper-alpha"]:before{content: "(A)"}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="default"]:before{content: "(1)";}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="lower-greek"]:before{content: "(\03B1)"}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="upper-roman"]:before{content: "(\2160)"}
+#dropdown-menu-formatOLOptions-1 ul li a[data-param1="lower-roman"]:before{content: "(\2170)"}
 /*--------------Style for development--------------*/
