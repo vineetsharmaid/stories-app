@@ -838,6 +838,32 @@ class Api extends REST_Controller {
 
     }
 
+    public function get_tags_get() {
+
+      $tags = $this->common_model->get_data( 'tags',
+        array( 'tags.status'  => TAG_STATUS_PUBLISHED ) //where
+      );
+
+      // Check if the categories data store contains categories (in case the database result returns NULL)
+      if ( !empty($tags) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $tags,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+          // Set the response and exit
+          $this->response([
+              'status' => FALSE,
+              'message' => 'No tags were found'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function get_topic_get($topic_id) {
 
       $topics = $this->common_model->get_data( 'topics',

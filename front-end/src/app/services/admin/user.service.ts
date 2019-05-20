@@ -100,6 +100,25 @@ export class UserService {
 		}
 
 
+  	updateStatus(currentUser, setStatus): Observable<any>{
+    	
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('user_id', currentUser);
+      formData.append('status', setStatus);
+
+			return this.http.post(ADMIN_API_URL+'update_user_status/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+
+
 
 
 

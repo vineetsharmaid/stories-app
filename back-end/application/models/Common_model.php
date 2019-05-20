@@ -42,7 +42,7 @@ class Common_model extends CI_Model {
     public function get_users()
     {
 
-        $this->db->select('users.user_id, users.first_name, users.last_name, users.profile_pic, users.user_email, users.user_type, users.username, users.created, status.name as status');
+        $this->db->select('users.user_id, users.first_name, users.last_name, users.profile_pic, users.user_email, users.user_type, users.username, users.created, users.status as status_id, status.name as status');
         $this->db->from('users');
         $this->db->join('status', 'users.status = status.id', 'left');
         $this->db->where('users.user_type = "user"'); 

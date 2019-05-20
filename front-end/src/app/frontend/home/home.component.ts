@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   public filteredAuthors: Array<object>;
   public allTypes: Array<object>;
   public allCountries: Array<object>;
+  public allTags: Array<object>;
   public selectedCountry: string;
   public typingTimer: any;
   public searchText: any;
@@ -43,7 +44,8 @@ export class HomeComponent implements OnInit {
 
     this.isLoggedIn = localStorage.getItem('isLoggedIn');
     this.getFeaturedStories();
-  	this.getCountries();
+    this.getCountries();
+  	this.getTags();
   	// this.getStories();
 
 
@@ -213,6 +215,18 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  getTags() {
+
+    this.storiesService.getTags().subscribe((response) => {
+
+      this.allTags = this.filteredTags = response['data'];
+    }, (error) => {
+
+      this.allTags = this.filteredTags = [];
+      console.log('error', error);
+    });
+  }
+
   countryChanged(country) {
     
     this.selectedCountry = country;
@@ -247,33 +261,28 @@ export class HomeComponent implements OnInit {
     return type ? type.name : undefined;
   }
 
-    tagSearchChanged(event: any) {
+  tagSearchChanged(event: any) {
 
-      if ( typeof event == 'object' ) {
+    if ( typeof event == 'object' ) {
+      
+      this.selectedTag = event.tag_id;
+      this.limitOffset = 0;
+      this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+    } else {
+      // this.selectedTag  = "";
+      const filterValue = event.toString().toLowerCase();
+      if ( filterValue != '' ) {
         
-        this.selectedTag = event.tag_id;
-        this.limitOffset = 0;
-        this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+        this.filteredTags = this.allTags.filter((tag) => {
+
+          return tag['name'].toString().toLowerCase().includes(filterValue);
+        });
       } else {
 
-        this.selectedTag  = "";
-        const filterValue = this.searchTag.toString().toLowerCase();
-        if ( filterValue != '' ) {
-          
-          this.storiesService.searchTags(filterValue).subscribe((response) => {
-
-            this.filteredTags = response['data'];
-          }, (error) => {
-
-            console.log('error', error);
-            this.filteredTags = [];
-          });
-        } else {
-
-          this.filteredTags = [];
-        }
+        this.filteredTags = this.allTags;
       }
     }
+  }
 
   displayFn(tag): Object | undefined {
     

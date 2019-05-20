@@ -146,7 +146,7 @@
 						</div> -->
 					</form>
 					<div class="extra-btns">
-						<a class="theme_btn mr-5" [routerLink]="['/where-to-start']" target="_blank">Not sure where to start?</a>
+						<button class="theme_btn mr-5" data-toggle="modal" data-target="#where-to-start">Not sure where to start?</button>
 						<button class="theme_btn ml-3" (click)="submitStory(true)">Save Draft</button>
 					</div>
 
@@ -209,6 +209,31 @@
 			<!-- Modal body -->
 			<div class="modal-body">
 				<p>Information saved to draft.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal" #closeReviewSubmit>Close</button>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="where-to-start">
+	<div class="modal-dialog">
+		<div class="modal-content" *ngIf="(helpContent | json) != '{}'">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">{{helpContent.title}}</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body" [innerHtml]="helpContent.content">
 			</div>
 			
 			<!-- Modal footer -->

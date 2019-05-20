@@ -178,6 +178,7 @@
                 <div class="story_tag_wrap">
                   <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
                   <span class="dark_tag" *ngIf="story.type == 2">Business</span>
+                  <span *ngFor="let tag of story.tags" class="light_tag">{{tag.name}}</span>
                 </div>
                 <h3>{{story.preview_title}}</h3>
                 <p class="one_liner_content" [innerHtml]="(story.preview_subtitle?.length >=139) ? story.preview_subtitle+'...' : story.preview_subtitle"></p>

@@ -96,7 +96,7 @@ class Admin extends REST_Controller {
         if ($id === NULL) {
             
             $users = $this->common_model->get_users('users');
-
+            
             // Check if the users data store contains users (in case the database result returns NULL)
             if ( !empty($users) ) {
 
@@ -1372,6 +1372,33 @@ class Admin extends REST_Controller {
             $this->response([
                 'status' => FALSE,
                 'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function update_user_status_post() {
+
+      $updated = $this->common_model->update_entry( 'users',
+        array( 'status'    => $this->input->post('status') ),
+        array( 'user_id' => $this->input->post('user_id') )
+      );
+
+      if ( !empty($updated) ) {
+          
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => 'status_upadted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update status',
                 'error' => array('No data was found'),
             ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
       }

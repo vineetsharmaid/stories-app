@@ -4,11 +4,11 @@ import { Router } from '@angular/router'
 import { StoryService } from '../../services/story.service';
 
 @Component({
-  selector: 'app-privacy-policy',
-  templateUrl: './privacy-policy.component.html',
-  styleUrls: ['./privacy-policy.component.css'],
+  selector: 'app-terms-and-conditions',
+  templateUrl: './terms-and-conditions.component.html',
+  styleUrls: ['./terms-and-conditions.component.css'],
 })
-export class PrivacyPolicyComponent implements OnInit {
+export class TermsAndConditionsComponent implements OnInit {
 
   public dataLoading: boolean = true;
   public page: Object;
@@ -17,7 +17,7 @@ export class PrivacyPolicyComponent implements OnInit {
 
   ngOnInit() {
 
-    this.getPage('privacy-policy');
+    this.getPage('terms-and-conditions');
   }
 
   getPage(slug) {

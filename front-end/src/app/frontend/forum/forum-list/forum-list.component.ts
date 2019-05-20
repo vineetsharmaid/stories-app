@@ -30,6 +30,7 @@ export class ForumListComponent implements OnInit {
   public addQuestionForm: FormGroup;
   public addAnswerForm: FormGroup;
   public dataLoading: boolean = true;
+  public loggedIn: boolean = false;
   public currentUserId: string = localStorage.getItem('user_id');
 
 
@@ -111,6 +112,12 @@ export class ForumListComponent implements OnInit {
       private router: Router ) { }
  
   	ngOnInit() {
+
+
+      if( localStorage.getItem('isLoggedIn') == 'true' ) {
+
+        this.loggedIn = true;
+      }
 
 	  	this.getTopics();
       this.getSidebarTopics();

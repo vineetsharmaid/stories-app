@@ -80,12 +80,12 @@
                 
                 <p>Not answered yet.</p>
                 
-                <ul *ngIf="currentUserId != question.author_id">
+                <ul *ngIf="currentUserId != question.author_id && loggedIn == true">
                   <li (click)="question.showAnswerBox = true">
                     <span><i class="fa fa fa-edit"></i> Answer </span>
                   </li>
                 </ul>
-                <div class="answer-box" *ngIf="question.showAnswerBox == true">
+                <div class="answer-box" *ngIf="question.showAnswerBox == true && loggedIn == true">
                   <form (ngSubmit)="saveAnswer(question.question_id, questionIndex)">
                     <input type="hidden" [value]="question.question_id">
                     <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="question.tempAnswer" name="tempAnswer">

@@ -60,6 +60,7 @@ export class StoryEditComponent implements OnInit {
   public filePath: string;
   public previousUrl: string;
 	public storyId: number;
+  public helpContent: Object = {};
   public story: Object;
   public storyErrors: Array<string>;
   public companies: Array<object>;
@@ -202,6 +203,20 @@ export class StoryEditComponent implements OnInit {
 
   }
 
+
+  getHelpContent() {
+
+    this.storyService.getPage('not-sure-where-to-start').subscribe((reponse) => {
+
+      this.helpContent  = reponse['data'];
+      console.log('helpContent', this.helpContent);
+    }, (error) => {
+
+      console.log('error', error);
+    });
+  }
+
+
   subscribeToCountry() {
 
 
@@ -234,6 +249,7 @@ export class StoryEditComponent implements OnInit {
         this.story = response['data'][0];
 
         this.getTags();
+        this.getHelpContent();
         this.getCountries();
 
         // subscribe to changes on preview form

@@ -21,6 +21,7 @@ import { AboutComponent } from '../../frontend/static-pages/about/about.componen
 import { TeamComponent } from '../../frontend/static-pages/team/team.component';
 import { PrivacyPolicyComponent } from '../../frontend/static-pages/privacy-policy/privacy-policy.component';
 import { PartnerComponent } from '../../frontend/static-pages/partner/partner.component';
+import { TermsAndConditionsComponent } from '../../frontend/static-pages/terms-and-conditions/terms-and-conditions.component';
 import { ContactComponent } from '../../frontend/static-pages/contact/contact.component';
 
 import { UserService } from "../../frontend/services/user.service";
@@ -70,6 +71,7 @@ import {
     TeamComponent,
     PrivacyPolicyComponent,
     PartnerComponent,
+    TermsAndConditionsComponent,
     ContactComponent,
     TimeAgoPipe
   ],

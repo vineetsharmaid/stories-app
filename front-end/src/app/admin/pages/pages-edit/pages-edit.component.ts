@@ -114,7 +114,6 @@ export class PagesEditComponent implements OnInit {
   	getTag() {
 	   	
 	   	const pageID = +this.activatedRoute.snapshot.paramMap.get('pageID');
-	   	console.log('pageID', pageID);
 
 	    this.companiesService.getPage(pageID).subscribe((response: Array<Object>) => {
 

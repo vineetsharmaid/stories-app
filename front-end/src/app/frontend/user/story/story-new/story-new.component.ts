@@ -55,7 +55,8 @@ export class StoryNewComponent implements OnInit {
   public subAddForm: any;
 	public filePath: string;
 	public previousUrl: string;
-	public storyId: number;
+  public storyId: number;
+	public helpContent: Object = {};
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredTags: Observable<string[]>;
@@ -194,10 +195,23 @@ export class StoryNewComponent implements OnInit {
     this.onChanges();
 
     this.getTags();
+    this.getHelpContent();
     this.getCountries();
     this.getCompanies();
     this.subscribeToCountry();
 
+  }
+
+  getHelpContent() {
+
+    this.storyService.getPage('not-sure-where-to-start').subscribe((reponse) => {
+
+      this.helpContent  = reponse['data'];
+      console.log('helpContent', this.helpContent);
+    }, (error) => {
+
+      console.log('error', error);
+    });
   }
 
   subscribeToCountry() {

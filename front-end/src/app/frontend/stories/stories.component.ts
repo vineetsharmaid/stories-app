@@ -25,6 +25,7 @@ export class StoriesComponent implements OnInit {
   public filteredAuthors: Array<object>;
   public allTypes: Array<object>;
   public allCountries: Array<object>;
+  public allTags: Array<object>;
   public selectedCountry: string;  
   public typingTimer: any;
   public searchText: any;
@@ -44,6 +45,7 @@ export class StoriesComponent implements OnInit {
   		// this.getStories();
   		this.getFeaturedStories();
       this.getCountries();
+      this.getTags();
 
       this.allTypes = [
           {type_id: 1, name: 'Workplace Stories'},
@@ -227,6 +229,18 @@ export class StoriesComponent implements OnInit {
     });
   }
 
+  getTags() {
+
+    this.storiesService.getTags().subscribe((response) => {
+
+      this.allTags = this.filteredTags = response['data'];
+    }, (error) => {
+
+      this.allTags = this.filteredTags = [];
+      console.log('error', error);
+    });
+  }
+
   countryChanged(country) {
     
     this.selectedCountry = country;
@@ -235,33 +249,28 @@ export class StoriesComponent implements OnInit {
   }
 
 
-    tagSearchChanged(event: any) {
+  tagSearchChanged(event: any) {
 
-      if ( typeof event == 'object' ) {
+    if ( typeof event == 'object' ) {
+      
+      this.selectedTag = event.tag_id;
+      this.limitOffset = 0;
+      this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+    } else {
+      // this.selectedTag  = "";
+      const filterValue = event.toString().toLowerCase();
+      if ( filterValue != '' ) {
         
-        this.selectedTag = event.tag_id;
-        this.limitOffset = 0;
-        this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+        this.filteredTags = this.allTags.filter((tag) => {
+
+          return tag['name'].toString().toLowerCase().includes(filterValue);
+        });
       } else {
 
-        this.selectedTag  = "";
-        const filterValue = this.searchTag.toString().toLowerCase();
-        if ( filterValue != '' ) {
-          
-          this.storiesService.searchTags(filterValue).subscribe((response) => {
-
-            this.filteredTags = response['data'];
-          }, (error) => {
-
-            console.log('error', error);
-            this.filteredTags = [];
-          });
-        } else {
-
-          this.filteredTags = [];
-        }
+        this.filteredTags = this.allTags;
       }
     }
+  }
 
   displayFn(tag): Object | undefined {
     

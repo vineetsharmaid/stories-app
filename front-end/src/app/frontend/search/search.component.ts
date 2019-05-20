@@ -24,6 +24,7 @@ export class SearchComponent implements OnInit {
 	public filteredAuthors: Array<object>;
 	public allTypes: Array<object>;
   public allCountries: Array<object>;
+  public allTags: Array<object>;
   public selectedCountry: string;  	
 	public typingTimer: any;
 	public searchText: any;
@@ -47,6 +48,7 @@ export class SearchComponent implements OnInit {
 
   		this.filteredTypes = this.allTypes;
   		this.getCountries();
+  		this.getTags();
   		// Look for changes in the query params
   		this.trackQueryParams();
   	}
@@ -217,6 +219,18 @@ export class SearchComponent implements OnInit {
     });
   }
 
+  getTags() {
+
+    this.storiesService.getTags().subscribe((response) => {
+
+      this.allTags = this.filteredTags = response['data'];
+    }, (error) => {
+
+      this.allTags = this.filteredTags = [];
+      console.log('error', error);
+    });
+  }
+
   countryChanged(country) {
     
     this.selectedCountry = country;
@@ -224,33 +238,29 @@ export class SearchComponent implements OnInit {
     this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
   }
 
-  	tagSearchChanged(event: any) {
 
-  		if ( typeof event == 'object' ) {
-  			
-  			this.selectedTag = event.tag_id;
-  			this.limitOffset = 0;
-  			this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
-  		} else {
+  tagSearchChanged(event: any) {
 
-  			this.selectedTag  = "";
-		    const filterValue = this.searchTag.toString().toLowerCase();
-		    if ( filterValue != '' ) {
-		    	
-		    	this.storiesService.searchTags(filterValue).subscribe((response) => {
+    if ( typeof event == 'object' ) {
+      
+      this.selectedTag = event.tag_id;
+      this.limitOffset = 0;
+      this.getStories(DEFAULT_LISTING_COUNT , this.limitOffset, false);
+    } else {
+      // this.selectedTag  = "";
+      const filterValue = event.toString().toLowerCase();
+      if ( filterValue != '' ) {
+        
+        this.filteredTags = this.allTags.filter((tag) => {
 
-		    		this.filteredTags = response['data'];
-		    	}, (error) => {
+          return tag['name'].toString().toLowerCase().includes(filterValue);
+        });
+      } else {
 
-		    		console.log('error', error);
-		    		this.filteredTags = [];
-		    	});
-		    } else {
-
-		    	this.filteredTags = [];
-		    }
-  		}
-  	}
+        this.filteredTags = this.allTags;
+      }
+    }
+  }
 
 	displayFn(tag): Object | undefined {
 		

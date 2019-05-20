@@ -87,7 +87,7 @@
                               </div>
                               <div class="row">
                                 <div class="col-md-12 single_profile_wrap">
-                                  <div class="coFounder_top_img">
+                                  <div class="coFounder_top_img" [routerLink]="['/author/', storyData.username]">
                                     <img [src]="storyData.profile_pic" alt="">
                                   </div>
                                   <div class="coFounder_top_des">

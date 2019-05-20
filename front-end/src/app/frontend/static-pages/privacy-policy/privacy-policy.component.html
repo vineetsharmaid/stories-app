@@ -1,115 +1,44 @@
-<!-- Single story page title -->
-<div class="single_story_page_title">
+<div *ngIf="dataLoading == true" style="min-height: 80vh;">
+    <!-- Loading -->
+    <content-loader>
+      <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" />
+      <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" />
+      <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" />
+      <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" />
+      <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" />
+      <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" />
+      <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" />
+    </content-loader>
+</div>
+
+<!-- Page title -->
+<div class="single_story_page_title" *ngIf="dataLoading == false">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1 *ngIf="showPrivacyPolicy">Privacy Policy</h1>
-        <h1 *ngIf="showTermsAnsConditions">Terms and Conditions</h1>
+        
+        <h1>{{page.title}}</h1>
+        
       </div>
     </div>
   </div>
 </div>
-<!-- Single story page title -->
-
 
 <!-- Single story page section 2 -->
-<div class="container-fluid single_page_tagline_wrap" *ngIf="showPrivacyPolicy">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h4 class="welcome-terms"><span class="graf-dropCap">W</span>elcome to the <strong class="color-main">Privacy Policy</strong> standard dummy text ever since the 1500s, when an known printer took a galley of type and scrambled it to make a type specimen book.  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem.</h4>
-      </div>
-    </div>
-    <div class="row rowPolicy_content">
-      <div class="col-md-10 col-lg-10 offset-md-1">
+<div class="container-fluid about_page_wrap" *ngIf="dataLoading == false">
+    <div class="container">      
         <div class="row">
-          <div class="col-md-8">
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <p class="bold">Lorem Ipsum is simply dummy text of Sep 25, 2014.</p>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
-              <p class="quote-line"><em>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy <a href="#"><u>Terms of Service</u></a>.</em></p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
+            <div class="col-md-10 offset-md-1 single_page_content" [innerHtml]="page.content">
+                
             </div>
-            <h2 class="termCondition-headingOne">1. Using the Lorem Ipsum is simply dummy</h2>
-            <h3 class="termCondition-headingTwo">a. Eligibility</h3>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-            <h3 class="termCondition-headingTwo">b. Lorem Ipsum is simply dummy</h3>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-            <h2 class="termCondition-headingOne">2. Using the Lorem Ipsum is simply dummy</h2>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <p class="bold">Lorem Ipsum is simply dummy text of Sep 25, 2014.</p>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
-              <p class="quote-line"><em>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy <a href="#"><u>Terms of Service</u></a>.</em></p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-<!-- Single story page section 2 -->
-
-
-
-<!-- Single story page section 2 -->
-<div class="container-fluid single_page_tagline_wrap" *ngIf="showTermsAnsConditions">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h4 class="welcome-terms"><span class="graf-dropCap">W</span>elcome to the <strong class="color-main">Terms of Service</strong> standard dummy text ever since the 1500s, when an known printer took a galley of type and scrambled it to make a type specimen book.  but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem.</h4>
-      </div>
-    </div>
-    <div class="row rowPolicy_content">
-      <div class="col-md-12 col-lg-10 offset-1">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <p class="bold">Lorem Ipsum is simply dummy text of Sep 25, 2014.</p>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
-              <p class="quote-line"><em>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy <a href="#"><u>Privacy Policy</u></a>.</em></p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-            <h2 class="termCondition-headingOne">1. Using the Lorem Ipsum is simply dummy</h2>
-            <h3 class="termCondition-headingTwo">a. Eligibility</h3>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-            <h3 class="termCondition-headingTwo">b. Lorem Ipsum is simply dummy</h3>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-            <h2 class="termCondition-headingOne">2. Using the Lorem Ipsum is simply dummy</h2>
-            <div class="aside-termCondition">
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-              <p class="bold">Lorem Ipsum is simply dummy text of Sep 25, 2014.</p>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
-              <p class="quote-line"><em>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy <a href="#"><u>Privacy Policy</u></a>.</em></p>
-              <aside class="eta grey simply-put"> <b class="caps theta">Lorem Ipsum is,</b><br>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </aside>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 <!-- Single story page section 2 -->

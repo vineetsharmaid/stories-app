@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { StoryService } from '../../services/story.service'
+import { StoryService } from '../../services/story.service';
 
 @Component({
   selector: 'app-about',
@@ -23,7 +23,6 @@ export class AboutComponent implements OnInit {
 
 		this.storyService.getPage(slug).subscribe((reponse) => {
 
-			console.log('reponse', reponse);
 			this.dataLoading  = false;
 			this.page  = reponse['data'];
 		}, (error) => {
