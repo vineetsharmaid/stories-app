@@ -308,4 +308,33 @@ a{color:#f1663b}
 #dropdown-menu-formatOLOptions-1 ul li a[data-param1="lower-greek"]:before{content: "(\03B1)"}
 #dropdown-menu-formatOLOptions-1 ul li a[data-param1="upper-roman"]:before{content: "(\2160)"}
 #dropdown-menu-formatOLOptions-1 ul li a[data-param1="lower-roman"]:before{content: "(\2170)"}
+
+
+
+
+.mat-form-field-hide-placeholder .mat-select-placeholder{height: 29px}
+.navbar .dropdown.show .dropdown-menu, .navbar .dropdown .dropdown-menu{overflow-y: initial; height:auto;background: #fff}
+.badge-primary{min-width: 50px; margin-right: 20px}
+li.list-group-item span:last-of-type{min-width: 100px}
 /*--------------Style for development--------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 767px) {
+.form-group{margin: 0 !important; padding: 0 !important}
+
+.modal-title{font-size: 20px; margin-bottom: 10px !important}
+.login_social_wrap a{letter-spacing: 0px !important}
+.modal-backdrop, .modal{z-index: initial !important;}
+.top-right-nav{z-index: 9999 !important}
+}
