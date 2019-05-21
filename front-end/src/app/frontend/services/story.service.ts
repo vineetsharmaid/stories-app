@@ -100,8 +100,6 @@ export class StoryService {
 			formData.append('title', question.title);
       formData.append('topics', question.topics);
 
-      console.log('question.topics', question.topics);
-			
 			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
 
 			return this.http.post(USER_API_URL+'add_question', formData, {headers})

@@ -32,3 +32,4 @@ export class PartnerComponent implements OnInit {
 			this.dataLoading  = false;
 		});
 	}
+}

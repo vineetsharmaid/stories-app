@@ -27,8 +27,8 @@
                         <h4>EXPLORE</h4>
                         <ul>
                             <li><a href="#" [routerLink]="['/stories']">Stories</a></li>
-                            <li><a href="#" [routerLink]="['/search?type=1']">Workplace Stories</a></li>
-                            <li><a href="#" [routerLink]="['/search?type=2']">Business Stories</a></li>
+                            <li><a href="#" [routerLink]="['/search']" [queryParams]="{type: 1}">Workplace Stories</a></li>
+                            <li><a href="#" [routerLink]="['/search']" [queryParams]="{type: 2}">Business Stories</a></li>
                             <li><a href="#" [routerLink]="['/search']">Search Stories</a></li>
                         </ul>
                     </div>
