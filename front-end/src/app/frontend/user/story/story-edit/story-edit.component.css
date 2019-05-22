@@ -75,13 +75,9 @@
   padding: 10px 20px;
   font-size: 20px;
   position: absolute;
-  left: 30%;
-  top: 35%;
-
-  &:hover, &:focus, &:active {
-    border-color: #f44336 !important;
-    background-color: transparent !important;
-  }
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .featured-wrap { position: relative; height: 300px; border: 1px dashed #cacaca; }
@@ -92,3 +88,13 @@
 .extra-btns { display: inline-block; position: absolute; bottom: 52px; right: 45px; }
 .extra-btns button { border: none; }
 .invalid-feedback { display: block !important; }
+
+
+@media only screen and (max-width: 1199px){
+.theme_btn{width: 100% !important; margin: 0 !important; margin-bottom: 15px !important}
+.extra-btns{position: relative;display: block;padding: 35px; bottom: auto;right: auto;}
+}
+@media only screen and (max-width: 991px){
+.btn-bwm{font-size: 10px; padding: 10px}
+.theme_btn{font-size: 12px}
+}

@@ -150,3 +150,13 @@ span.search-section-heading { font-size: 15px; letter-spacing: .1em; text-transf
 .featured.right_inner_footer_bottom { position: absolute;bottom: 20px;width: 100%;left: 0;text-align: center;color: #fff;}
 .main_story_img_wrap img{transition: all .5s; transform: scale(1) translate(-50%, -50%);}
 .story_outer_wrap:hover .main_story_img_wrap img{transform: translate(-50%, -50%) scale(1.2)}
+
+
+
+
+@media only screen and (max-width: 991px) {
+.story_outer_wrap h3, .story_content_wrap h3{font-size: 18px;}
+.main_story_img_wrap{height: 300px}
+.one_liner_content{display: none;}
+.story_tag_wrap a, .story_tag_wrap span{font-size: 10px; letter-spacing: 0px; padding: 4px 10px}
+}
