@@ -122,6 +122,10 @@
 
 
 
+@media only screen and (max-width: 1300px){
+.right_inner h3{font-size: 24px; line-height: 34px}
+}
+
 @media only screen and (max-width: 767px){
 .main_story_img_wrap, .big_img_wrap{height: 270px}
 .section_2 .col-md-9{padding-left: 0}
@@ -159,4 +163,6 @@ span.search-section-heading { font-size: 15px; letter-spacing: .1em; text-transf
 .main_story_img_wrap{height: 300px}
 .one_liner_content{display: none;}
 .story_tag_wrap a, .story_tag_wrap span{font-size: 10px; letter-spacing: 0px; padding: 4px 10px}
+.hide_on_hover{display: none;}
+.story_outer_wrap:hover .story_text_block{-webkit-transform: translateY(-50%);transform: translateY(-50%);}
 }
