@@ -11,6 +11,7 @@ import {FormControl} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 import { ForumService } from '../../services/forum.service'
+import { SharedService } from "../../services/shared.service";
 
 import { environment } from '../../../../environments/environment';
 const APP_URL  =  environment.baseUrl;
@@ -108,6 +109,7 @@ export class ForumListComponent implements OnInit {
 
   	constructor( private formBuilder: FormBuilder, 
       private forumService : ForumService, 
+      private sharedService: SharedService,
       private activatedRoute : ActivatedRoute, 
       private router: Router ) { }
  
@@ -121,6 +123,7 @@ export class ForumListComponent implements OnInit {
 
 	  	this.getTopics();
       this.getSidebarTopics();
+      this.sharedService.currentMessage.subscribe(message => console.log('detail message', message) );
 
 	  	this.addQuestionForm = this.formBuilder.group({
 
@@ -387,4 +390,8 @@ export class ForumListComponent implements OnInit {
     	return this.allTopics.filter( topic => topic.name.toLowerCase().startsWith(filterValue) );
   	}
 
+  showLoginPopup() {
+
+    this.sharedService.changeMessage("show_login");
+  }
 }

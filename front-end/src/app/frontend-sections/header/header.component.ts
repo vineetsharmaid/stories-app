@@ -39,6 +39,8 @@ export class HeaderComponent implements OnInit {
 	public loginErrors: Array<string>;
   public forgotPassErrors: Array<string>;
   public passwordEmailSuccess: string;
+  public showConfirmCompany: boolean = false;
+  public errorCompanyEmail: boolean = false;
 
   public loading: any;
   public showHideLogin: any;
@@ -49,6 +51,7 @@ export class HeaderComponent implements OnInit {
 
 	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
   @ViewChild('closeLoginModal') closeLoginModal: ElementRef;
+  @ViewChild('registerSuccess') registerSuccess: ElementRef;
 	@ViewChild('showHideLoginBtn') showHideLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn') googleLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn2') googleLoginBtn2: ElementRef;
@@ -104,6 +107,7 @@ export class HeaderComponent implements OnInit {
           firstName: [ '', Validators.required ],
           lastName: [ '', Validators.required ],
           company: [ '' ],
+          companyEmail: [ '',   Validators.compose([Validators.email]) ],
           username: [ 
 	          '', // default value
 	          {
@@ -114,8 +118,33 @@ export class HeaderComponent implements OnInit {
           ],
           email: [ '',  Validators.compose([Validators.required, Validators.email]) ]
       });
+
+    this.registerForm.get('company').valueChanges.subscribe(val => {
+      
+      if( this.registerForm.get('company').value == "") {
+
+        this.showConfirmCompany = false;
+        this.errorCompanyEmail  = false;
+      } else {
+
+        this.showConfirmCompany = true;
+        this.errorCompanyEmail  = true;
+      }
+    });
   }
 
+  onBlurMethod() {
+
+    this.registerForm.get('companyEmail').value;
+    this.registerForm.get('company').value;
+    this.companies.forEach((company) => {
+
+      if( company['company_id'] == this.registerForm.get('company').value ) {
+        
+        this.errorCompanyEmail = (company['email'] == this.registerForm.get('companyEmail').value) ? false : true;
+      }
+    });
+  }
 
   getUserInfo() {
 
@@ -145,12 +174,9 @@ export class HeaderComponent implements OnInit {
   onSubmit() {
       
       this.submitted = true;
-      
-      console.log('Validation', this.registerForm);
-      console.log('Validation.invalid', this.registerForm.invalid);
 
       // stop here if form is invalid
-      if (this.registerForm.status === "VALID") {
+      if (this.registerForm.status === "VALID" && this.errorCompanyEmail == false) {
 
         var user = {  
           first_name: this.registerForm.get('firstName').value, 
@@ -222,12 +248,11 @@ export class HeaderComponent implements OnInit {
   		if ( response['status'] == 200 || user.loginBy == 'facebook' || user.loginBy == 'google' ) {
   			
   			// Close login modal
-  			this.closeLoginModal.nativeElement.click();
+        this.closeLoginModal.nativeElement.click();
+  			this.registerSuccess.nativeElement.click();
 				
   			// set user login
-				this.setUserLogin(response['data']['id'], response['data']['username'], response['token']);
-  			console.log('loggedIn', this.loggedIn);
-        console.log('token', response['token']);
+				this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], false);
   		}
 
   		// user already exists
@@ -244,7 +269,6 @@ export class HeaderComponent implements OnInit {
 
   	this.userService.loginUser(user).subscribe((response: Array<Object>) => {
 
-  		console.log('register response', response);
   		this.loginLoading = false;
 
   		if ( response['status'] == 200 ) {
@@ -295,7 +319,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  setUserLogin(id, username, jwtToken) {
+  setUserLogin(id, username, jwtToken, navigate = true) {
 
 		// set login
 		localStorage.setItem('isLoggedIn', 'true');
@@ -303,10 +327,12 @@ export class HeaderComponent implements OnInit {
     localStorage.setItem('username', username);
     localStorage.setItem('user_id', id);
     localStorage.setItem('jwtToken', jwtToken);
-    console.log('id', id);
-		this.loggedIn = true;
 
-		this.navigate('/user');
+		this.loggedIn = true;
+    if( navigate == true ) {
+      
+		  this.navigate('/user');
+    }
   }
 
 	// common function for redirecting to different module

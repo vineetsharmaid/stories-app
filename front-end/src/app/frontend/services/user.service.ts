@@ -36,7 +36,7 @@ export class UserService {
     	
     	// return  this.http.get(`${API_URL}`);
 
-			return this.http.post(API_URL+'register', User, httpOptions).pipe(
+			return this.http.post(API_URL+'register_user', User, httpOptions).pipe(
 				tap((newUser: Object) => console.log('newUser', newUser)),
 				catchError(this.handleError)
 			);

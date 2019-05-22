@@ -135,12 +135,23 @@
             </div>
             <div class="form-group">
               <select class="form-control" formControlName="company">
-                <option value="">Choose company</option>
+                <option value="">Choose company (Optional)</option>
                 <option *ngFor="let company of companies" value="{{company.company_id}}">
                   {{company.name}}
                 </option>
               </select>
             </div>
+
+            <div class="form-group" *ngIf="showConfirmCompany">
+              <input type="text" formControlName="companyEmail" placeholder="Confirm company's email" (blur)="onBlurMethod()" />
+              <div *ngIf="submitted && f.companyEmail.errors" class="invalid-feedback">
+                <div *ngIf="f.companyEmail.errors.email">Email must be valid</div>
+              </div>
+              <div *ngIf="errorCompanyEmail" class="invalid-feedback">
+                <div *ngIf="errorCompanyEmail">Confirm company email</div>
+              </div>
+            </div>
+
             <div class="form-group">
               <input type="text" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Username" />
               <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
@@ -206,3 +217,25 @@
   </div>
 </div>
 <!-- Popup for login -->
+
+
+<a data-toggle="modal" data-target="#registerSuccess" data-backdrop="static" data-keyboard="false" #registerSuccess [hidden]="true"></a>
+
+<!-- The Modal -->
+<div class="modal fade" id="registerSuccess">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content register-success">
+    
+      <!-- Modal body -->
+      <div class="modal-body">
+          <h4 class="mb-4">WELCOME TO SOA</h4>
+          <p>Thanks for signing up. You are now part of our community.</p>
+          <p>Your login details has been sent on your email.</p>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success" data-dismiss="modal" [routerLink]="['/user']">Continue</button>
+      </div>
+  </div>
+</div>
+</div>

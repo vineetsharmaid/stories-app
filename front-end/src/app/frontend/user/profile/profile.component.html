@@ -103,7 +103,7 @@
           </button>
         </div>
 
-        <div class="form-group quick-edit">
+        <!-- <div class="form-group quick-edit">
           <p *ngIf="userInfo['company']?.length > 0; else addCompany;">
             {{userInfo['company']}}
           </p>
@@ -115,7 +115,7 @@
           <button #saveCompanyModal data-toggle="modal" data-target="#save-company" (click)="companyUpdated = false" class="btn btn-sm btn-white edit">
             <i class="fa fa-pencil"></i>
           </button>
-        </div>
+        </div> -->
 
         <div class="quick-edit">
           <p class="top20" *ngIf="userInfo['website']?.length > 0 && enableWebsiteEdit == false">

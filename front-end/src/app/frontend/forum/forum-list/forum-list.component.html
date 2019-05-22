@@ -21,7 +21,7 @@
       </div>
       <div class="col-md-8 col-lg-9">
         <div class="right_questions_wrap">
-          <a data-toggle="modal" data-target="#askQuestion">
+          <a data-toggle="modal" data-target="#askQuestion" *ngIf="loggedIn; else notLoggedIn">
             <div class="post_que_wrap">
               <div class="profile_icon_wrap">
                 <img src="assets/img/forum/user_pic.png" alt="">
@@ -31,6 +31,17 @@
               </div>
             </div>
           </a>
+
+          <ng-template #notLoggedIn>
+            <div class="post_que_wrap" (click)="showLoginPopup()">
+              <div class="profile_icon_wrap">
+                <img src="assets/img/forum/user_pic.png" alt="">
+              </div>
+              <div class="what_is_your_que_wrap">
+                <h5>What is your question?</h5>
+              </div>
+            </div>
+          </ng-template>
 
           <!-- CONTENT LOADER STARTS -->
           <ng-template #contentLoader>

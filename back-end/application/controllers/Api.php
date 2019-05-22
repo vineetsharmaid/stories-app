@@ -94,7 +94,7 @@ class Api extends REST_Controller {
           }
     }
 
-    public function register_post() {
+    public function register_user_post() {
 
         $post_data = json_decode(file_get_contents("php://input"));
         
@@ -229,6 +229,31 @@ class Api extends REST_Controller {
       if ( $username !== NULL ) {
         
         $user_count = $this->common_model->data_exists( 'users', array('username' => $username) );
+        
+        $message = [
+            'message' => $user_count,
+            'status' => 200
+        ];
+      } else {
+        
+        $message = [
+            'message' => $user_count,
+            'status' => 200
+        ];        
+      }
+      // Set the response and exit
+      $this->response($message, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code            
+    }
+
+    public function check_company_email_get()
+    {
+      
+      $email   = $this->input->get('email');
+      $user_count = 0;
+
+      if ( $email !== NULL ) {
+        
+        $user_count = $this->common_model->data_exists( 'users', array('email' => $email) );
         
         $message = [
             'message' => $user_count,

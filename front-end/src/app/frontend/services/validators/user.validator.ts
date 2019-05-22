@@ -25,6 +25,17 @@ export class UserValidators {
       );
   }
 
+  searchCompanyEmail(text) {
+    // debounce
+    return timer(1000)
+      .pipe(
+        switchMap(() => {
+          // Check if username is available
+          return this.http.get<any>(`${API_URL}/check_company_email?email=${text}`)
+        })
+      );
+  }
+
   usernameValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
       return this.searchUser(control.value)
@@ -35,6 +46,24 @@ export class UserValidators {
             if (res.message > 0) {
               // return error
               return { 'userNameExists': true};
+            }
+          })
+        );
+    };
+
+  }
+
+  companyEmailValidator(company): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return this.searchCompanyEmail(control.value)
+        .pipe(
+          map(res => {
+            console.log('control.value', control.value);
+            console.log('company', company);
+            // if username is already taken
+            if (res.message > 0) {
+              // return error
+              return { 'emailConfirmed': true};
             }
           })
         );
