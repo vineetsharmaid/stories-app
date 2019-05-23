@@ -43,6 +43,17 @@ export class DashboardService {
 
 
 
+  getAvgEngagementData(): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+    	
+		return this.http.get(ADMIN_API_URL+'get_average_post_engagement/', httpOptions);
+	}
+
+
+
 
 
 

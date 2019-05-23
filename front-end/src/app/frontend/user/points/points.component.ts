@@ -21,7 +21,8 @@ export class PointsComponent implements OnInit {
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
   public points: Array<object> = [];
-  public userInfo = Object;
+  public userInfo: Object;
+  public avgEngagement: Array<object>;
 
   constructor( public location: Location, 
     private router: Router, 
@@ -31,6 +32,7 @@ export class PointsComponent implements OnInit {
 
     this.pointsLog();
     this.getUserInfo();
+    this.getAvgEngagementData();
   }
 
   pointsLog() {
@@ -63,6 +65,18 @@ export class PointsComponent implements OnInit {
     });
   }
 
+  getAvgEngagementData() {
+
+    this.userService.getAvgEngagementData().subscribe((response) => {
+      
+      this.avgEngagement = response['data'];
+      console.log('avgEngagement', this.avgEngagement);
+    } , (error) => {
+
+      this.avgEngagement = [];
+      console.log(error);
+    });
+  }
 
   ngAfterViewInit() {
 

@@ -119,12 +119,14 @@
 					<input
 					placeholder="Add or change tags so readers know what your story is about"
 					#tagInput
+					class="tag-input"
 					formControlName="previewTags"
 					[matAutocomplete]="auto"
 					[matChipInputFor]="chipList"
 					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
 					[matChipInputAddOnBlur]="addOnBlur"
 					(matChipInputTokenEnd)="add($event)">
+					<div class="mat-select-arrow-wrapper tag-input-arrow"><div class="mat-select-arrow" (click)="triggerTagInput()"></div></div>
 					</mat-chip-list>
 					<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
 					<!-- <mat-option *ngFor="let tag of filteredTags" [value]="tag"> -->

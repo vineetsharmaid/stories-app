@@ -901,6 +901,71 @@ class Users extends REST_Controller {
       }
     }
 
+    public function get_average_post_engagement_get() {
+
+      $user_id = $this->token_data->id;
+      if ( !empty($user_id) ) {
+          
+        $this->db->select('count(distinct stories.story_id) as stories, count(story_user_likes.story_id) as likes');
+        $this->db->from('stories');
+        $this->db->join('story_user_likes', 'story_user_likes.story_id = stories.story_id', 'left');
+        $this->db->where( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.author_id' => $user_id) );
+        $likes_data = $this->db->get()->result();
+
+        $avg_stories = [];
+        $avg_stories['type'] = 'Stories';
+        $avg_stories['data'] = $likes_data[0]->stories;
+
+        $avg_likes = [];
+        $avg_likes['type'] = 'Likes';
+        $avg_likes['data'] = round($likes_data[0]->likes/$likes_data[0]->stories);
+
+
+        $this->db->select('count(distinct stories.story_id) as stories, count(story_user_shares.story_id) as shares');
+        $this->db->from('stories');
+        $this->db->join('story_user_shares', 'story_user_shares.story_id = stories.story_id', 'left');
+        // $this->db->join('comments', 'comments.story_id = stories.story_id', 'left');
+        $this->db->where( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.author_id' => $user_id) );
+        $shares_data = $this->db->get()->result();
+        
+        $avg_shares = [];
+        $avg_shares['type'] = 'Shares';
+        $avg_shares['data'] = round($shares_data[0]->shares/$shares_data[0]->stories);
+
+        $this->db->select('count(distinct stories.story_id) as stories, count(comments.story_id) as comments');
+        $this->db->from('stories');
+        $this->db->join('comments', 'comments.story_id = stories.story_id', 'left');
+        $this->db->where( array('stories.status' => STORY_STATUS_PUBLISHED, 'stories.author_id' => $user_id) );
+        $comments_data = $this->db->get()->result();
+        
+        $avg_comments = [];
+        $avg_comments['type'] = 'Comments';
+        $avg_comments['data'] = round($comments_data[0]->comments/$comments_data[0]->stories);
+
+        $data[] = $avg_stories;
+        $data[] = $avg_likes;
+        $data[] = $avg_shares;
+        $data[] = $avg_comments;
+      }
+
+      if ( !empty($data) ) {
+        // Set the response and exit
+        $this->response(
+          array(
+            'status' => TRUE,
+            'data' => $data,
+          ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+      } else {
+
+        // Set the response and exit
+        $this->response([
+            'status' => FALSE,
+            'message' => 'No data were found'
+        ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+
+    }
+
     public function get_user_points_get() {
 
       $points = $this->user_model->get_user_points( $this->token_data->id );

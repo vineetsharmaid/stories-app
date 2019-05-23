@@ -88,6 +88,8 @@
 .extra-btns button { border: none; }
 .user_profile_pic_wrap{margin-left: 30px}
 .invalid-feedback { display: block !important; }
+.tag-input { z-index: 9999; cursor: pointer; }
+.tag-input-arrow { position: absolute; right: 0; }
 
 @media only screen and (max-width: 1199px){
 .theme_btn{width: 100% !important; margin: 0 !important; margin-bottom: 15px !important}

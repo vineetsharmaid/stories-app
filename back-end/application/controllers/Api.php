@@ -780,7 +780,6 @@ class Api extends REST_Controller {
       }
     }
 
-
     public function search_tags_get($search_tag)
     {
 
