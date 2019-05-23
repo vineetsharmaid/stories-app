@@ -105,7 +105,7 @@ h4.welcome-terms{ margin-bottom:50px; }
 
 /*17-04-2019*/
 h1, h2, h3, h4, h5, h6{font-family: 'Playfair Display', serif; font-weight: bold;}
-.contact_address_wrap ul li{ display: flex; -webkit-display: flex; -moz-display: flex; -o-display: flex; margin: 10px 0; align-items: center; font-size: 16px}
+.contact_address_wrap ul li{ display: flex; -webkit-display: flex; -moz-display: flex; -o-display: flex; margin: 10px 0; align-items: flex-start; font-size: 16px}
 .contact_address_wrap ul li .address_icon{width: 40px;min-width: 40px; max-width: 40px; text-align: center; margin-right: 10px;}
 .header_right_wrap .team_social_list{margin-top: 0; margin-left: 20px; display: inline-block;}
 .header_right_wrap .team_social_list li{margin: 0 10px}
@@ -314,7 +314,7 @@ a{color:#f1663b}
 
 .mat-form-field-hide-placeholder .mat-select-placeholder{height: 29px}
 .navbar .dropdown.show .dropdown-menu, .navbar .dropdown .dropdown-menu{overflow-y: initial; height:auto;background: #fff}
-.badge-primary{min-width: 50px; margin-right: 20px}
+.badge-primary{min-width: 50px; margin-right: 20px; margin-left: 20px}
 li.list-group-item span:last-of-type{min-width: 100px}
 /*--------------Style for development--------------*/
 
@@ -322,7 +322,7 @@ li.list-group-item span:last-of-type{min-width: 100px}
 
 
 
-
+span.ng-tns-c8-2.ng-star-inserted {font-size: 21px !important;font-weight: 600;margin-bottom: 2px !important;display: inline-block;}
 
 
 
@@ -472,5 +472,10 @@ h2.singleStory_title{font-size: 20px}
 /*.modal-backdrop, .modal{z-index: initial !important;}*/
 .top-right-nav{z-index: 9999 !important}
 .right_inner_footer{position: relative !important;}
+h3{font-size: 22px}
+.form-row{margin: 0 !important}
+.fr-popup .fr-command.fr-btn, .fr-toolbar .fr-command.fr-btn{width: 22px; height: 22px}
+.fr-toolbar .fr-command.fr-btn i, .fr-popup .fr-command.fr-btn i, .fr-toolbar .fr-command.fr-btn svg, .fr-popup .fr-command.fr-btn svg{margin: 6px !important}
+.fr-toolbar .fr-command.fr-btn.fr-dropdown::after, .fr-popup .fr-command.fr-btn.fr-dropdown::after{top: 12px}
 }
 /*------------------------------Responsive------------------------------*/
