@@ -140,13 +140,21 @@ class Api extends REST_Controller {
                   'user_type'     => 'user',
                   'status'        => 1,
                   'user_email'    => $post_data->email,
-                  'company_id'    => $company,
                   'profile_pic'   => '',
                   'password'      => $password_hashed
               );
 
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
+
+
+                $user =  new stdClass();
+                $user->user_id   = $this->db->insert_id();
+                $user->username  = $user_data['username'];
+                $user->user_type = $user_data['user_type'];
+
+                $jwt_token = $this->_generate_jwt_token($user);
+                
 
                 $from_name = 'Stories Of Asia';
                 $from_email = CONTACT_EMAIL;
@@ -157,13 +165,23 @@ class Api extends REST_Controller {
                 $subject    = 'WELCOME ABOARD';
                 $to_email   = $post_data->email;
                 $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+
+                $code_check = $this->_randomPassword();
                 
-                $user =  new stdClass();
-                $user->user_id   = $this->db->insert_id();
-                $user->username  = $user_data['username'];
-                $user->user_type = $user_data['user_type'];
-                
-                $jwt_token = $this->_generate_jwt_token($user);
+                $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_email_code', 'meta_value' => $code_check, 'user_id' => $user->user_id) );
+
+                $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_company', 'meta_value' => $company, 'user_id' => $user->user_id) );
+
+                $email_check = base_url().'/welcome/email_confirm/?q='.$code_check;
+
+                $from_name = 'Stories Of Asia';
+                $from_email = CONTACT_EMAIL;
+                $message    = "Confirm your company's email.<br /><br /> 
+                  <a href=".$email_check.">Confirm</a>
+                  <br />";
+                $subject    = 'Confirm company on SOA';
+                $to_email   = $post_data->company_email;
+                $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
 
 
                 $result = $this->mailchimp->post("lists/".$this->mailchimpListIdUser."/members", [
@@ -633,6 +651,11 @@ class Api extends REST_Controller {
 
       // Check if the categories data store contains categories (in case the database result returns NULL)
       if ( !empty($companies) ) {
+
+          foreach ($companies as $company) {
+            
+            $company->domain = substr($company->email, strpos($company->email, '@'));
+          }
 
           // Set the response and exit
           $this->response(  

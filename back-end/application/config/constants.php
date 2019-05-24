@@ -118,3 +118,4 @@ define('QUESTION_PUBLISH_POINTS',10);
 define('ANSWER_PUBLISH_POINTS',30);
 
 define('CONTACT_EMAIL','soa@storiesofasia.co');
+define('APP_URL','http://soastaging.com/app/');

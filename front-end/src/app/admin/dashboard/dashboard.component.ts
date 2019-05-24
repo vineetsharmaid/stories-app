@@ -122,9 +122,11 @@ export class DashboardComponent implements OnInit {
     categoryAxis.renderer.minGridDistance = 1;
 
     categoryAxis.renderer.labels.template.adapter.add("dy", function(dy, target) {
-      if (target.dataItem && target.dataItem.index & 2 == 2) {
-        return dy + 25;
-      }
+      // if (target.dataItem && (target.dataItem.index & 2 == 2) ) {
+      // let num:number = 2;
+      // if (target.dataItem && target.dataItem.index & 2 == num ) {
+      //   return dy + 25;
+      // }
       return dy;
     });
 

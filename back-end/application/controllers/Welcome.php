@@ -23,8 +23,30 @@ class Welcome extends CI_Controller {
 		$this->load->view('welcome_message');
 	}
 
-	public function check()
+	public function email_confirm()
 	{
-		echo CI_VERSION;
+	
+		$usermeta = $this->db->get_where('usermeta', array('meta_value' => $_GET['q']))->row();
+		
+		if ( isset($usermeta->user_id) ) {
+		
+			$user_company = $this->db->get_where('usermeta', array('meta_key' => 'confirm_company', 'user_id' => $usermeta->user_id))->row();
+			
+			$this->common_model->update_entry('users', 
+				array('company_id' => $user_company->meta_value), 
+				array('user_id' => $usermeta->user_id));
+			
+			$this->db->where(array('meta_value' => $_GET['q']));
+			$this->db->delete('usermeta');
+
+			$this->db->where(array('meta_key' => 'confirm_company', 'user_id' => $usermeta->user_id));
+			$this->db->delete('usermeta');
+
+			$this->load->view('email_confirmed');
+		} else {
+		
+			redirect(APP_URL, 'refresh');
+		}
+		
 	}
 }

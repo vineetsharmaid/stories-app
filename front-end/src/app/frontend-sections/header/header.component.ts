@@ -140,8 +140,9 @@ export class HeaderComponent implements OnInit {
     this.companies.forEach((company) => {
 
       if( company['company_id'] == this.registerForm.get('company').value ) {
+        let email = this.registerForm.get('companyEmail').value;
         
-        this.errorCompanyEmail = (company['email'] == this.registerForm.get('companyEmail').value) ? false : true;
+        this.errorCompanyEmail = ( company['domain'] == email.substring(email.indexOf('@')) ) ? false : true;
       }
     });
   }
@@ -184,6 +185,7 @@ export class HeaderComponent implements OnInit {
           username: this.registerForm.get('username').value,
           email: this.registerForm.get('email').value,
           company: this.registerForm.get('company').value,
+          company_email: this.registerForm.get('companyEmail').value,
         };
 
 				this.registerUser(user);
