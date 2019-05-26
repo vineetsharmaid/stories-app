@@ -3,13 +3,13 @@
     <div class="row">
       <div class="col-md-12">
 
-        <button class="btn btn-md btn-danger mr-2" [routerLink]="['/admin/answers/pending']">Unpublished</button>
+        <button class="btn btn-md btn-current mr-2" [routerLink]="['/admin/answers/pending']">Unpublished</button>
         <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/answers/published']">Published</button>
-        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/answers/flagged']">Flagged</button>
+        <button class="btn btn-md btn-danger ml-2" [routerLink]="['/admin/answers/flagged']">Flagged</button>
 
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">Unpublished Answers</h4>
+            <h4 class="card-title">Flagged answers</h4>
             <!-- <p class="card-story"> List of users.</p> -->            
           </div>
           <div class="card-body">
@@ -18,7 +18,8 @@
                 <thead class=" text-primary">
                   <th width="20%">Answer </th>
                   <th width="20%">Question </th>
-                  <th width="20%">Author </th>
+                  <th width="10%">Author </th>
+                  <th width="10%">Reporter </th>
                   <th width="10%">Created </th>
                   <th width="10%">Action </th>
                 </thead>
@@ -27,23 +28,31 @@
                     <td>
                       <a href="#" class="user_name" routerLink="/forum/answer/{{answer.slug}}"></a>
                       <p [innerHtml]="answer.answer"></p>
-                    </td>   
+                    </td>
                     <td>
                       <p>{{answer.title | titlecase}}</p>
                     </td>                    
                     <td>
-                      <a href="#" class="user_name">
-                        {{ answer.first_name | titlecase }} {{answer.last_name | titlecase }}
+                      <a href="#" class="user_name" [routerLink]="['/admin/user-list', answer.author_id]">
+                        {{ answer.author_first_name | titlecase }} {{answer.author_last_name | titlecase }}
                       </a>
                       <p class="user_name text-muted">
-                        @{{answer.username}}
+                        @{{answer.author_username}}
+                      </p>
+                    </td>
+                    <td>
+                      <a href="#" class="user_name" [routerLink]="['/admin/user-list', answer.reporter_id]">
+                        {{ answer.reporter_first_name | titlecase }} {{answer.reporter_last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{answer.reporter_username}}
                       </p>
                     </td>
                     <td>{{answer.created | date: 'mediumDate'}}</td>
                     <td>
-                      <button class="btn btn-sm btn-success" (click)="publishAnswer(answer.answer_id, answer.author_id, indx)">
-                        Publish
-                      </button>
+                      <!-- <button class="btn btn-sm btn-success" (click)="unPublishAnswer(answer.answer_id, answer.author_id, indx)">
+                        Unpublish
+                      </button> -->
                       <button class="btn btn-sm btn-danger" (click)="deleteAnswer(answer.answer_id, indx)">
                         Delete
                       </button>
@@ -54,7 +63,7 @@
                 <tbody *ngIf="answers?.length == 0">
                   <tr>
                     <td colspan="6" class="empty-list">
-                      No abswer found.                      
+                      No answer found.                      
                     </td>
                   </tr>
                 </tbody>

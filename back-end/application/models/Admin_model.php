@@ -148,6 +148,35 @@ class Admin_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_flagged_answers($where='')
+    {
+
+        $this->db->select('forum_answers.*, forum_questions.title, authorUser.first_name as author_first_name, authorUser.last_name as author_last_name, authorUser.username as author_username, reporterUser.first_name as reporter_first_name, reporterUser.last_name as reporter_last_name, reporterUser.username as reporter_username, forum_answer_user_flagged.user_id as reporter_id');
+        $this->db->from('forum_answers');
+        // get answer author information
+        $this->db->join('forum_questions', 'forum_questions.question_id = forum_answers.question_id');
+        $this->db->join('forum_answer_user_flagged', 'forum_answer_user_flagged.answer_id = forum_answers.answer_id');
+        $this->db->join('users as reporterUser', 'reporterUser.user_id = forum_answer_user_flagged.user_id');
+        $this->db->join('users as authorUser', 'authorUser.user_id = forum_answers.author_id');
+        $this->db->group_by('forum_answers.answer_id');        
+        return $this->db->get()->result();
+    }
+
+    public function get_flagged_comments($where='')
+    {
+
+
+        $this->db->select('forum_answer_comments.*, authorUser.first_name as author_first_name, authorUser.last_name as author_last_name, authorUser.username as author_username, authorUser.user_id as author_id, reporterUser.first_name as reporter_first_name, reporterUser.last_name as reporter_last_name, reporterUser.username as reporter_username, forum_comments_user_flagged.user_id as reporter_id, forum_answers.subject as answer, forum_questions.title as question, forum_questions.slug, forum_questions.question_id');
+        $this->db->from('forum_answer_comments');
+        $this->db->join('forum_answers', 'forum_answers.answer_id = forum_answer_comments.answer_id');
+        $this->db->join('forum_comments_user_flagged', 'forum_comments_user_flagged.comment_id = forum_answer_comments.comment_id');
+        $this->db->join('users as authorUser', 'authorUser.user_id = forum_answer_comments.user_id');
+        $this->db->join('users as reporterUser', 'reporterUser.user_id = forum_comments_user_flagged.user_id');
+        $this->db->join('forum_questions', 'forum_questions.question_id = forum_answers.question_id');
+        $this->db->group_by( 'forum_answer_comments.comment_id' );
+        return $this->db->get()->result();
+    }
+
     public function get_user_register_data() {
 
         $this->db->select('count(users.user_id) as count, users.created');

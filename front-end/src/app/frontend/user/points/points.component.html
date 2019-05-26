@@ -17,6 +17,12 @@
           <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
       </span>
 
+      <span class="mt-5">
+        <button class="btn btn-sm btn-success" *ngIf="userInfo['points'] > 1" data-toggle="modal" data-target="#transfer-popup-form">
+					Transfer Points
+				</button>
+      </span>
+
       <ul class="list-group list-group-flush mt-4" *ngIf="avgEngagement?.length > 0;">
       	<li class="list-group-item text-center">
       		<h5 class="m-2">Average Engagement</h5>
@@ -39,7 +45,7 @@
 					<span *ngIf="point.activity == 'likes'">
 						Your 
 						<a [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
-						has been recommended by {{point.milestone}} readers.
+						recommended by {{point.milestone}} readers.
 					</span>
 					<span *ngIf="point.activity == 'approved'">
 						Your 
@@ -49,7 +55,7 @@
 						
 						<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
 
-						has been approved by the SOA Team.
+						 approved by the SOA Team.
 					</span>
 					<span *ngIf="point.activity == 'comments'">
 						Your 
@@ -59,9 +65,39 @@
 						got {{point.milestone}} {{point.activity}} from readers.
 					</span>
 
-					<span class="badge badge-primary badge-pill">
-						+{{point.points}}
+					<!-- <span *ngIf="point.activity == 'helpful' && point.selector == 'comment'">
+						Your comment marked as helpful.
+					</span> -->
+
+					<span *ngIf="point.activity == 'reported'">
+						Your {{point.selector}} reported as inappropriate.
 					</span>
+					
+					<span *ngIf="point.activity == 'helpful'">
+						Your {{point.selector}} marked as helpful.
+					</span>
+
+					<span *ngIf="point.activity == 'transfered'">
+						You transfered points.
+					</span>
+
+					<span *ngIf="point.activity == 'received'">
+						You received points.
+					</span>
+
+					<!-- <span *ngIf="point.activity == 'reported' && point.selector == 'answer'">
+						Your answer reported as inappropriate.
+					</span> -->
+
+					<span class="badge badge-primary badge-pill" *ngIf="point.activity == 'reported' || point.activity == 'transfered'; else postivePoints">
+						{{point.points}}
+					</span>
+
+					<ng-template #postivePoints>
+						<span class="badge badge-primary badge-pill">
+							+{{point.points}}
+						</span>
+					</ng-template>
 					
 					<span> {{point.created | date: 'mediumDate'}} </span>
 				</li>
@@ -74,6 +110,61 @@
 					</li>
 				</ul>
 			</ng-template>
+		</div>
+	</div>
+</div>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="transfer-popup-form">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Transfer Points</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<form [formGroup]="pointTransferForm" (ngSubmit)="transferPoints()" class="col-sm-12" *ngIf="transferSuccess == false">
+			<!-- Modal body -->
+			<div class="modal-body">
+	      
+	      <div class="form-group">
+	        <label for="points">Points</label>
+	        <input type="number" formControlName="points" class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.points.errors }" id="points" />
+	        <div *ngIf="submitted && fields.points.errors" class="invalid-feedback">
+	          <div *ngIf="fields.points.errors.required">Points are required</div>
+	          <div *ngIf="fields.points.errors.max">Maximum {{maxTransferPoints}} can be transfered</div>
+	        </div>
+	      </div>
+	      <div class="form-group">
+	        <label for="username">Username</label>
+	        <input type="username" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.username.errors }" />
+	        <div *ngIf="submitted && fields.username.errors" class="invalid-feedback">
+	          <div *ngIf="fields.username.errors.required">Username is required</div>
+	        </div>
+	        <div *ngIf="submitted && transferErrors?.length > 0" class="invalid-feedback">
+	          <div *ngFor="let error of transferErrors">
+	          	{{error}}
+	          </div>
+	        </div>
+	      </div>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button [disabled]="loading" type="submit" class="btn btn-success">Confirm</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" #closeTransferPopup>Close</button>
+			</div>
+	    </form>	
+
+	    <div class="modal-body" *ngIf="transferSuccess == true">
+	    	<p class="mb-5">
+					Points transfered successfully
+	    	</p>
+	    </div>
+			
 		</div>
 	</div>
 </div>

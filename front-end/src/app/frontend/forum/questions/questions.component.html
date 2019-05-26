@@ -135,6 +135,27 @@
                       </ng-template>
                       {{answerByUser.likes}}
                     </li>
+                    <li (click)="changeHelpfulStatus(answerByUser.answer_id, answerIndex, true)">
+                      <span *ngIf="answerByUser.user_helpful == undefined || answerByUser.user_helpful == 0; else userHelpful">
+                        <i class="fa fa-thumbs-o-up fa-2x"></i>
+                      </span>
+                      <ng-template #userHelpful>
+                      <span *ngIf="answerByUser.user_helpful == 1">
+                        <i class="fa fa-thumbs-up fa-2x"></i>
+                      </span>
+                      </ng-template>
+                      {{answerByUser.helpful}}
+                    </li>
+                    <li (click)="reportForumAnswer(answerByUser.answer_id, answerIndex, true)">
+                      <span *ngIf="answerByUser.flagged == false; else answerByFlagged">
+                        <i class="fa fa-flag-o fa-2x"></i>
+                      </span>
+                      <ng-template #answerByFlagged>
+                      <span *ngIf="answerByUser.flagged == true">
+                        <i class="fa fa-flag fa-2x"></i>
+                      </span>
+                      </ng-template>
+                    </li>
                     <li><img src="assets/img/forum/eye.png" alt="">{{answerByUser.views}}</li>
                     <li (click)="loadCommentsUserAnswer(answerByUser.answer_id, answerIndex)">
                       <i class="fa fa-comments" aria-hidden="true"></i>
@@ -174,12 +195,12 @@
                 <div class="container">
                   <div class="row" *ngIf="answerByUser?.comments?.length > 0; else noComments;">
                     <ul class="media-list">
-                      <ng-template #commentsList let-comments>
+                      <ng-template #commentsList let-comments="comments" let-parentIndex="parentIndex">
                       <li class="media" *ngFor="let comment of comments; let commentIndex = index">
                         <a href="#" class="pull-left pr-3">
-                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle userimg" src="{{comment.profile_pic}}">
                           <ng-template #defaultImage>
-                          <!-- <img class="rounded-circle" src="assets/img/default-user-image.jpg"> -->
+                          <!-- <img class="rounded-circle userimg" src="assets/img/default-user-image.jpg"> -->
                           <div class="user-imageholder">
                             <span class="name-letter" [routerLink]="['/author/', comment.username]">
                               {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
@@ -194,12 +215,34 @@
                           <strong class="text-success" [routerLink]="['/author/', comment.username]">{{comment.first_name}} {{comment.last_name}}</strong>
                           
                           <p> {{comment.content}} </p>
+                          <p (click)="changeCommentHelpfulStatus(comment.comment_id, answerIndex, commentIndex, parentIndex,  'userAnswer')" class="comment-activity">
+                            <span *ngIf="comment.user_helpful == undefined || comment.user_helpful == 0; else userCommentHelpful">
+                              <i class="fa fa-thumbs-o-up fa-2x"></i>
+                            </span>
+                            
+                            <ng-template #userCommentHelpful>
+                            <span *ngIf="comment.user_helpful == 1">
+                              <i class="fa fa-thumbs-up fa-2x"></i>
+                            </span>
+                            </ng-template>
+                            {{comment.helpful}}
+                          </p>
+                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'userAnswer')" class="comment-activity ml-2">
+                            <span *ngIf="comment.flagged == false || comment.flagged == undefined; else userCommentReported">
+                              <i class="fa fa-flag-o fa-2x"></i>
+                            </span>
+                            <ng-template #userCommentReported>
+                            <span *ngIf="comment.flagged == true">
+                              <i class="fa fa-flag fa-2x"></i>
+                            </span>
+                            </ng-template>
+                          </p>
                           
                           <p *ngIf="comment.approved == 0">
                             <small class="text-muted">(Pending Approval)</small>
                           </p>
                           <ul *ngIf="comment?.children?.length > 0">
-                            <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
+                            <ng-container *ngTemplateOutlet="commentsList; context:{parentIndex: commentIndex, comments: comment.children }"></ng-container>
                           </ul>
                           
                           <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
@@ -220,7 +263,7 @@
                         </div>
                       </li>
                       </ng-template>
-                      <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: answerByUser.comments }"></ng-container>
+                      <ng-container *ngTemplateOutlet="commentsList; context:{ parentIndex: -1, comments: answerByUser.comments }"></ng-container>
                     </ul>
                   </div>
                   <ng-template #noComments>
@@ -281,6 +324,27 @@
                       </ng-template>
                       {{answer.likes}}
                     </li>
+                    <li (click)="changeHelpfulStatus(answer.answer_id, answerIndex)">
+                      <span *ngIf="answer.user_helpful == undefined || answer.user_helpful == 0; else userAnswerHelpful">
+                        <i class="fa fa-thumbs-o-up fa-2x"></i>
+                      </span>
+                      <ng-template #userAnswerHelpful>
+                      <span *ngIf="answer.user_helpful == 1">
+                        <i class="fa fa-thumbs-up fa-2x"></i>
+                      </span>
+                      </ng-template>
+                      {{answer.helpful}}
+                    </li>
+                    <li (click)="reportForumAnswer(answer.answer_id, answerIndex)">
+                      <span *ngIf="answer.flagged == false; else answerFlagged">
+                        <i class="fa fa-flag-o fa-2x"></i>
+                      </span>
+                      <ng-template #answerFlagged>
+                      <span *ngIf="answer.flagged == true">
+                        <i class="fa fa-flag fa-2x"></i>
+                      </span>
+                      </ng-template>
+                    </li>
                     <li><img src="assets/img/forum/eye.png" alt="">{{answer.views}}</li>
                     <li (click)="loadComments(answer.answer_id, answerIndex)">
                       <i class="fa fa-comments" aria-hidden="true"></i>
@@ -320,12 +384,12 @@
                 <div class="container">
                   <div class="row" *ngIf="answer?.comments?.length > 0; else noComments;">
                     <ul class="media-list">
-                      <ng-template #commentsList let-comments>
+                      <ng-template #commentsList let-comments="comments" let-parentIndex="parentIndex">
                       <li class="media" *ngFor="let comment of comments; let commentIndex = index">
                         <a href="#" class="pull-left pr-3">
-                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle" src="{{comment.profile_pic}}">
+                          <img *ngIf="comment.profile_pic; else defaultImage" class="rounded-circle userimg" src="{{comment.profile_pic}}">
                           <ng-template #defaultImage>
-                          <!-- <img class="rounded-circle" src="assets/img/default-user-image.jpg"> -->
+                          <!-- <img class="rounded-circle userimg" src="assets/img/default-user-image.jpg"> -->
                           <div class="user-imageholder">
                             <span class="name-letter" [routerLink]="['/author/', comment.username]">
                               {{(comment.first_name | slice:0:1)}}{{(comment.last_name | slice:0:1)}}
@@ -340,12 +404,33 @@
                           <strong class="text-success" [routerLink]="['/author/', comment.username]">{{comment.first_name}} {{comment.last_name}}</strong>
                           
                           <p> {{comment.content}} </p>
+                          <p (click)="changeCommentHelpfulStatus(comment.comment_id, answerIndex, commentIndex, parentIndex, 'publicAnswer')" class="comment-activity">
+                            <span *ngIf="comment.user_helpful == undefined || comment.user_helpful == 0; else userCommentHelpful">
+                              <i class="fa fa-thumbs-o-up fa-2x"></i>
+                            </span>
+                            <ng-template #userCommentHelpful>
+                            <span *ngIf="comment.user_helpful == 1">
+                              <i class="fa fa-thumbs-up fa-2x"></i>
+                            </span>
+                            </ng-template>
+                            {{comment.helpful}}
+                          </p>
+                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'publicAnswer')" class="comment-activity ml-2">
+                            <span *ngIf="comment.flagged == false || comment.flagged == undefined; else userCommentReported">
+                              <i class="fa fa-flag-o fa-2x"></i>
+                            </span>
+                            <ng-template #userCommentReported>
+                            <span *ngIf="comment.flagged == true">
+                              <i class="fa fa-flag fa-2x"></i>
+                            </span>
+                            </ng-template>
+                          </p>
                           
                           <p *ngIf="comment.approved == 0">
                             <small class="text-muted">(Pending Approval)</small>
                           </p>
                           <ul *ngIf="comment?.children?.length > 0">
-                            <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: comment.children }"></ng-container>
+                            <ng-container *ngTemplateOutlet="commentsList; context:{ parentIndex: commentIndex, comments: comment.children }"></ng-container>
                           </ul>
                           
                           <a class="alink" *ngIf="comment.parent == 0 && isLoggedIn == 'true'" (click)="comment.addReply = 'true'">Reply</a>
@@ -366,7 +451,7 @@
                         </div>
                       </li>
                       </ng-template>
-                      <ng-container *ngTemplateOutlet="commentsList; context:{ $implicit: answer.comments }"></ng-container>
+                      <ng-container *ngTemplateOutlet="commentsList; context:{ parentIndex: -1, comments: answer.comments }"></ng-container>
                     </ul>
                   </div>
                   <ng-template #noComments>

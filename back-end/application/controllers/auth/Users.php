@@ -406,7 +406,167 @@ class Users extends REST_Controller {
       
     }
 
+    public function change_helpful_status_post() {
+        
+        $data = array('answer_id' => $this->input->post('answer_id'), 'user_id' => $this->token_data->id);
+        if ($this->common_model->data_exists('forum_answer_user_helpful', $data) == 0) {
+          if ( $this->common_model->insert_entry('forum_answer_user_helpful', $data) ) {
 
+            $helpful_count = $this->common_model->data_exists( 'forum_answer_user_helpful', array('answer_id' => $this->input->post('answer_id')) );
+            
+            if ($helpful_count == 1) {
+              
+              $this->verify_answer_helpful_points($data['answer_id']);
+            }
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => 'Answer marked as helpful',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already marked by this user',
+                'error' => array('Already marked by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+    public function report_forum_answer_post() {
+        
+        $data = array('answer_id' => $this->input->post('answer_id'), 'user_id' => $this->token_data->id);
+        if ($this->common_model->data_exists('forum_answer_user_flagged', $data) == 0) {
+          if ( $this->common_model->insert_entry('forum_answer_user_flagged', $data) ) {
+
+            $report_count = $this->common_model->data_exists( 'forum_answer_user_flagged', array('answer_id' => $this->input->post('answer_id')) );
+            
+            if ($report_count == 1) {
+              
+              $this->verify_answer_report_points($data['answer_id']);
+            }
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => 'Answer reported',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already reported by this user',
+                'error' => array('Already reported by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
+    public function report_forum_comment_post() {
+        
+        $data = array('comment_id' => $this->input->post('comment_id'), 'user_id' => $this->token_data->id);
+        if ($this->common_model->data_exists('forum_comments_user_flagged', $data) == 0) {
+          if ( $this->common_model->insert_entry('forum_comments_user_flagged', $data) ) {
+
+            $report_count = $this->common_model->data_exists( 'forum_comments_user_flagged', array('comment_id' => $this->input->post('comment_id')) );
+            
+            if ($report_count == 1) {
+              
+              $this->verify_comment_report_points($data['comment_id']);
+            }
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => 'Comment reported',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already reported by this user',
+                'error' => array('Already reported by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
+
+
+    public function change_comment_helpful_status_post() {
+        
+        $data = array('comment_id' => $this->input->post('comment_id'), 'user_id' => $this->token_data->id);
+        if ($this->common_model->data_exists('forum_comments_user_helpful', $data) == 0) {
+          if ( $this->common_model->insert_entry('forum_comments_user_helpful', $data) ) {
+
+            $helpful_count = $this->common_model->data_exists( 'forum_comments_user_helpful', array('comment_id' => $this->input->post('comment_id')) );
+            
+            if ($helpful_count == 1) {
+              
+              $this->verify_comment_helpful_points($data['comment_id']);
+            }
+
+            // Set the response and exit
+            $this->response(  
+              array(
+                'status' => TRUE,
+                'data'   => 'Answer marked as helpful',
+              ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+          } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Unable to update in db',
+                'error' => array('Unable to update in db'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code            
+          }
+        } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Already marked by this user',
+                'error' => array('Already marked by this user'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+      
+    }
 
     public function add_story_comment_post()
     {
@@ -672,6 +832,85 @@ class Users extends REST_Controller {
                 'error' => array('Something went wrong, unable to add question.'),
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
       }
+    }
+
+    function transfer_points_post()
+    {
+
+      $points   = $this->input->post('points');
+      $username = $this->input->post('username');
+      
+      $user = $this->common_model->get_data('users', array('username' => $username));
+
+      if (!empty($user)) {
+        $user = $user[0];
+
+        // update and get total points of user
+        $gainer_points = $this->common_model->update_user_points($user->user_id, $points);
+
+        // points allocation data
+        $gainer_points_data = array(
+          'user_id'   => $user->user_id,
+          'points'    => $points,
+          'milestone' => 0,
+          'activity'  => 'received',
+          'selector'  => 'user',
+          'selector_id'  => $this->token_data->id,
+          'total_points' => $gainer_points->points,
+        );
+
+        // insert points allocation log
+        $this->common_model->insert_entry('points_allocation', $gainer_points_data);
+
+        // update and get total points of user
+        $donor_user_points = $this->common_model->deduct_user_points($this->token_data->id, $points);
+
+        // points allocation data
+        $donor_points_data = array(
+          'user_id'   => $this->token_data->id,
+          'points'    => '-'.$points,
+          'milestone' => 0,
+          'activity'  => 'transfered',
+          'selector'  => 'user',
+          'selector_id'  => $user->user_id,
+          'total_points' => $donor_user_points->points,
+        );
+
+        // insert points allocation log
+        $this->common_model->insert_entry('points_allocation', $donor_points_data);
+
+        $from_name = 'Stories Of Asia';
+        $from_email = CONTACT_EMAIL;
+        $message    = "Congrats!! You have reveived ".$points." points from user (@".$this->token_data->username.").<br /><br />";
+        $subject    = 'Points Received SOA';
+        $to_email   = $user->user_email;
+        $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+
+        // Set the response and exit
+        $this->response([
+            'status' => TRUE,
+            'data' => 'Points transfered successfully',
+            'message' => 'transfered',
+        ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+
+      } else {
+        // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'User not found with username '.$username,
+                'error' => array('Something went wrong, unable to add question.'),
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      }
+      
+      // } else {
+
+      //       // Set the response and exit
+      //       $this->response([
+      //           'status' => FALSE,
+      //           'message' => 'database_error',
+      //           'error' => array('Something went wrong, unable to add question.'),
+      //       ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR); // NOT_FOUND (404) being the HTTP response code
+      // }
     }
 
     public function get_user_questions_list_get($limit, $offset)
@@ -1690,5 +1929,160 @@ class Users extends REST_Controller {
     }
 
   } 
+
+  private function verify_answer_helpful_points($answer_id) {
+
+    $points = 0;
+
+    $helpful_count = 1;
+    $points = POINTS_HELPFUL_CONTENT;
+
+    if ( $points > 0 ) {
+      // get author from answer
+      $answer = $this->common_model->get_answer_author($answer_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($answer->author_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $answer->author_id,
+        'points'    => $points,
+        'milestone' => $helpful_count,
+        'activity'  => 'helpful',
+        'selector'  => 'answer',
+        'selector_id'  => $answer_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  } 
+
+  private function verify_comment_helpful_points($comment_id) {
+
+    $points = 0;
+
+    $helpful_count = 1;
+    $points = POINTS_HELPFUL_CONTENT;
+
+    if ( $points > 0 ) {
+      // get author from comment
+      $comment = $this->common_model->get_forum_comment_author($comment_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->update_user_points($comment->user_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $comment->user_id,
+        'points'    => $points,
+        'milestone' => $helpful_count,
+        'activity'  => 'helpful',
+        'selector'  => 'comment',
+        'selector_id'  => $comment_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  }
+
+  private function verify_answer_report_points($answer_id) {
+
+    $helpful_count = 1;
+    $points = (int)'-'.POINTS_HELPFUL_CONTENT;
+
+    if ( $points > 0 ) {
+      // get author from comment
+      $answer = $this->common_model->get_answer_author($answer_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->deduct_user_points($answer->author_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $answer->author_id,
+        'points'    => '-'.$points,
+        'milestone' => $helpful_count,
+        'activity'  => 'reported',
+        'selector'  => 'answer',
+        'selector_id'  => $answer_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  }
+
+  private function verify_comment_report_points($comment_id) {
+
+    $helpful_count = 1;
+    $points = (int)'-'.POINTS_HELPFUL_CONTENT;
+
+    if ( $points > 0 ) {
+      // get author from comment
+      $answer = $this->common_model->get_forum_comment_author($comment_id);
+      
+      // update and get total points of user
+      $user_points = $this->common_model->deduct_user_points($answer->user_id, $points);
+
+      // points allocation data
+      $points_data = array(
+        'user_id'   => $answer->user_id,
+        'points'    => '-'.$points,
+        'milestone' => $helpful_count,
+        'activity'  => 'reported',
+        'selector'  => 'comment',
+        'selector_id'  => $comment_id,
+        'total_points' => $user_points->points,
+      );
+
+      // insert points allocation log
+      $this->common_model->insert_entry('points_allocation', $points_data);
+
+    }
+
+  } 
+
+    private function send_mail($from_name, $from_email, $to_email, $subject, $message) {
+
+      $config = Array(
+          'protocol' => 'smtp',
+          'smtp_host' => 'ssl://smtp.googlemail.com',
+          'smtp_port' => 465,
+          'smtp_user' => 'dev.bizdesire@gmail.com',
+          'smtp_pass' => 'Bizdesire@789',
+          'mailtype'  => 'html', 
+          'charset'   => 'iso-8859-1'
+      );
+      $this->load->library('email', $config);
+      $this->email->set_newline("\r\n");
+
+      // Set to, from, message, etc.
+
+      $this->email->from($from_email, $from_name);
+      $this->email->to($to_email); 
+
+      $this->email->subject($subject);
+      $this->email->message($message);  
+
+      if( $this->email->send() ) {
+        
+        return true;
+      } else {
+
+        return false;
+      }
+    }
 
 }

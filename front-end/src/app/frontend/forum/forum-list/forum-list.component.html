@@ -88,26 +88,10 @@
                 {{question.title}}
               </a>
               <div class="ans_content not_answered mt-2" *ngIf="question.answer == null">
-                
                 <p>Not answered yet.</p>
-                
-                <ul *ngIf="currentUserId != question.author_id && loggedIn == true">
-                  <li (click)="question.showAnswerBox = true">
-                    <span><i class="fa fa fa-edit"></i> Answer </span>
-                  </li>
-                </ul>
-                <div class="answer-box" *ngIf="question.showAnswerBox == true && loggedIn == true">
-                  <form (ngSubmit)="saveAnswer(question.question_id, questionIndex)">
-                    <input type="hidden" [value]="question.question_id">
-                    <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="question.tempAnswer" name="tempAnswer">
-                    </textarea>
-                    
-                    <button type="button" class="btn btn-sm btn-danger" (click)="question.showAnswerBox = false">Cancel</button>
-                    <button type="submit" class="btn btn-sm btn-success">Submit</button>
-                  </form>
-                </div>
-                
               </div>
+
+                
               <div class="answered_wrap" *ngIf="question.answer?.length > 0">
                 <div class="ans_pic_wrap">
                   <img *ngIf="question.profile_pic.length > 0; else defaultDP" [src]="question.profile_pic" alt="">
@@ -138,6 +122,27 @@
                     </ng-template>
                     {{question.likes}}
                   </li>
+                  <li (click)="changeHelpfulStatus(question.answer_id, questionIndex)">
+                    <span *ngIf="question.user_helpful == undefined || question.user_helpful == 0; else userHelpful">
+                      <i class="fa fa-thumbs-o-up fa-2x"></i>
+                    </span>
+                    <ng-template #userHelpful>
+                    <span *ngIf="question.user_helpful == 1">
+                      <i class="fa fa-thumbs-up fa-2x"></i>
+                    </span>
+                    </ng-template>
+                    {{question.helpful}}
+                  </li>
+                  <li (click)="reportForumAnswer(question.answer_id, questionIndex)">
+                    <span *ngIf="question.flagged == false; else answerFlagged">
+                      <i class="fa fa-flag-o fa-2x"></i>
+                    </span>
+                    <ng-template #answerFlagged>
+                    <span *ngIf="question.flagged == true">
+                      <i class="fa fa-flag fa-2x"></i>
+                    </span>
+                    </ng-template>
+                  </li>
                   <li><img src="assets/img/forum/eye.png" alt="">{{question.views}}</li>
                   <li class="bookmark"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">
                   <div class="social_wrap">
@@ -163,11 +168,29 @@
                 </div>
               </li>
               </ul>
-              <ul class="fr">
+              <!-- <ul class="fr">
                 <li class="nomargin"><a href="#"><img class="nomargin" src="assets/img/forum/menu.png" alt=""></a></li>
-              </ul>
+              </ul> -->
               <div class="clear"></div>
             </div>
+
+              <div class="ans_content not_answered mt-2">
+                <ul *ngIf="currentUserId != question.author_id && loggedIn == true && question.user_answered == false">
+                  <li (click)="question.showAnswerBox = true">
+                    <span><i class="fa fa fa-edit"></i> Answer </span>
+                  </li>
+                </ul>
+                <div class="answer-box" *ngIf="question.showAnswerBox == true && loggedIn == true">
+                  <form (ngSubmit)="saveAnswer(question.question_id, questionIndex)">
+                    <input type="hidden" [value]="question.question_id">
+                    <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="question.tempAnswer" name="tempAnswer">
+                    </textarea>
+                    
+                    <button type="button" class="btn btn-sm btn-danger" (click)="question.showAnswerBox = false">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-success">Submit</button>
+                  </form>
+                </div>
+              </div>
             <!-- <div class="comment_footer_wrap" *ngIf="question.answer?.length > 0">
               <div class="profile_icon_wrap">
                 <img src="assets/img/forum/user_pic.png" alt="">

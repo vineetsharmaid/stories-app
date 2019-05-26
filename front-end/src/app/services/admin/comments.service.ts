@@ -30,6 +30,15 @@ export class CommentsService {
 		return this.http.get(ADMIN_API_URL+'get_comments/'+status, httpOptions);
 	}
 
+  	getFlaggedForumComments(status=false): Observable<any>{
+			
+		let httpOptions = {
+		  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};    	
+		
+		return this.http.get(ADMIN_API_URL+'get_flagged_comments/', httpOptions);
+	}
+
   	getForumComments(status): Observable<any>{
 			
 		let httpOptions = {

@@ -1,0 +1,81 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+
+        <button class="btn btn-md btn-current mr-2" [routerLink]="['/admin/forum-comments/pending']">Unpublished</button>
+        <button class="btn btn-md btn-current ml-2" [routerLink]="['/admin/forum-comments/published']">Published</button>
+        <button class="btn btn-md btn-danger ml-2" [routerLink]="['/admin/forum-comments/flagged']">Flagged</button>
+
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Flagged Forum Comments</h4>
+            <!-- <p class="card-story"> List of users.</p> -->            
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                  <th width="20%">Question </th>
+                  <th width="20%">Answer </th>
+                  <th width="20%">Comment </th>
+                  <th width="10%">Author </th>
+                  <th width="10%">Reporter </th>
+                  <th width="10%">Created </th>
+                  <th width="10%">Action </th>
+                </thead>
+                <tbody *ngIf="comments?.length > 0">
+                  <tr *ngFor="let comment of comments; let indx = index">
+                    <td>
+                      <a href="#" class="user_name"> {{comment.question | titlecase}} </a>
+                    </td>
+                    <td>                      
+                        <div [innerHtml]="comment.answer"></div>
+                    </td>
+                    <td>                    
+                     {{ comment.content }}
+                    </td>
+                    <td>
+                      <a href="#" class="user_name" [routerLink]="['/admin/user-list', comment.author_id]">
+                        {{ comment.author_first_name | titlecase }} {{comment.author_last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{comment.author_username}}
+                      </p>
+                    </td>
+                    <td>
+                      <a href="#" class="user_name" [routerLink]="['/admin/user-list', comment.reporter_id]">
+                        {{ comment.reporter_first_name | titlecase }} {{comment.reporter_last_name | titlecase }}
+                      </a>
+                      <p class="user_name text-muted">
+                        @{{comment.reporter_username}}
+                      </p>
+                    </td>
+                    <td>{{comment.created | date: 'mediumDate'}}</td>
+                    <td>
+                      <!-- <button class="btn btn-sm btn-success" (click)="unPublish(comment.comment_id, indx)">
+                        Unpublish
+                      </button> -->
+                      <button class="btn btn-sm btn-danger" (click)="delete(comment.comment_id, indx)">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody *ngIf="comments?.length == 0">
+                  <tr>
+                    <td colspan="6" class="empty-list">
+                      No comment found.
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

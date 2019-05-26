@@ -271,8 +271,6 @@ export class ForumListComponent implements OnInit {
 
       this.forumService.saveAnswer(answer).subscribe((response) => {
 
-      		console.log('response', response);
-      		console.log('Added question');
       		// Close login modal
   			this.closeQuestionModal.nativeElement.click();
       	this.router.navigateByUrl('/forum/question/'+response['data']['slug']);
@@ -286,10 +284,35 @@ export class ForumListComponent implements OnInit {
   changeLikeStatus(answerId, index) {
 
     this.forumService.changeLikeStatus(answerId).subscribe((response) => {
-	
-    	console.log('response', response);
-    	this.allQuestions[index]['likes'] = parseInt(this.allQuestions[index]['likes']) + 1;
-    	this.allQuestions[index]['user_liked'] = 1;
+  
+      
+      this.allQuestions[index]['likes'] = parseInt(this.allQuestions[index]['likes']) + 1;
+      this.allQuestions[index]['user_liked'] = 1;
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+
+  changeHelpfulStatus(answerId, index) {
+
+    this.forumService.changeHelpfulStatus(answerId).subscribe((response) => {
+  
+      
+      this.allQuestions[index]['helpful'] = parseInt(this.allQuestions[index]['helpful']) + 1;
+      this.allQuestions[index]['user_helpful'] = 1;
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+  reportForumAnswer(answerId, index) {
+
+    this.forumService.reportForumAnswer(answerId).subscribe((response) => {
+	  	
+    	this.allQuestions[index]['flagged'] = true;
     }, (error) => {
 
       console.log(error);
@@ -316,8 +339,8 @@ export class ForumListComponent implements OnInit {
 
       this.forumService.addQuestion(question).subscribe((response) => {
 
-      		console.log('response', response);
-      		console.log('Added question');
+      		
+      	
       		// Close login modal
   			this.closeQuestionModal.nativeElement.click();
       		this.router.navigateByUrl('/forum/question/'+response['data']['slug']);

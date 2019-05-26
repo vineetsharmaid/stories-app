@@ -1484,6 +1484,67 @@ class Admin extends REST_Controller {
       }
     }
 
+    public function get_flagged_answers_get() {
+
+      $answers = $this->admin_model->get_flagged_answers();
+
+      if ( !empty($answers) ) {
+          
+                  
+          foreach ($answers as $answer) {
+            
+            $answer->answer    = is_null($answer->subject) ? null : html_entity_decode($answer->subject);
+
+            // get in time ago format
+            $answer->answered_ago = time_elapsed_string($answer->created);
+          }
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $answers,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
+
+    public function get_flagged_comments_get() {
+
+      $comments = $this->admin_model->get_flagged_comments();
+      
+      if ( !empty($comments) ) {
+          
+          foreach ($comments as $comment) {
+            
+            $comment->answer = html_entity_decode($comment->answer);
+          }
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $comments,
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code        
+      } else {
+
+            // Set the response and exit
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No data was found',
+                'error' => array('No data was found'),
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+      }
+    }
+
 
     /**
      * get access token from header

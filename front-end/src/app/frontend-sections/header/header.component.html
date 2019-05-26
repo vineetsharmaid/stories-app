@@ -134,6 +134,12 @@
               </div>
             </div>
             <div class="form-group">
+              <input type="text" formControlName="profession" [ngClass]="{ 'is-invalid': submitted && f.profession.errors }" placeholder="Profession" />
+              <div *ngIf="submitted && f.profession.errors" class="invalid-feedback">
+                <div *ngIf="f.profession.errors.required">Profession is required</div>
+              </div>
+            </div>
+            <div class="form-group">
               <select class="form-control" formControlName="company">
                 <option value="">Choose company (Optional)</option>
                 <option *ngFor="let company of companies" value="{{company.company_id}}">
@@ -173,7 +179,7 @@
             </div>
             <div class="form-group">
               <button [disabled]="loading" class="btn-map">Register</button>
-              <a class="btn btn-link" (click)="showHideSignupForm = !showHideSignupForm">Cancel</a>
+              <a class="btn btn-link" (click)="showHideSignupForm = !showHideSignupForm; refershRegisterForm()">Cancel</a>
             </div>
           </form>
         </div>
@@ -207,7 +213,7 @@
         </ng-template>
         
         <!-- On click it hides the reset password form as well as the success message (if exists) -->
-        <a class="forgt_pass alink" (click)="showForgotPassword = !showForgotPassword; passwordEmailSent = false;">
+        <a class="forgt_pass alink" (click)="showForgotPassword = !showForgotPassword; passwordEmailSent = false; refreshForgotForm()">
           <span><i class="fa fa-arrow-left mr-2"></i></span>
           Back to login
         </a>

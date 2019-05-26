@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AnswersRoutes } from './answers.routing';
 import { AnswersPendingComponent } from './answers-pending/answers-pending.component';
 import { AnswersPublishedComponent } from './answers-published/answers-published.component';
-// import { StoriesViewComponent } from './questions-view/stories-view.component';
+import { AnswersFlaggedComponent } from './answers-flagged/answers-flagged.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -43,7 +43,7 @@ import {
   declarations: [
     AnswersPendingComponent,
     AnswersPublishedComponent,
-    // StoriesViewComponent,
+    AnswersFlaggedComponent,
   ],
   providers: [
     AuthGuard

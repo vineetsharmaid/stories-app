@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
 import 'rxjs/add/operator/filter';
 // import { NavbarComponent } from '../../components/navbar/navbar.component';
@@ -22,9 +23,20 @@ export class PointsComponent implements OnInit {
   private yScrollStack: number[] = [];
   public points: Array<object> = [];
   public userInfo: Object;
+  public maxTransferPoints: number;
   public avgEngagement: Array<object>;
 
-  constructor( public location: Location, 
+  public pointTransferForm: FormGroup;
+  public submitted: boolean = false;
+  public hideErrors: boolean = false;
+  public transferErrors: Array<string> = [];
+  public loading: any;
+  public transferSuccess: boolean = false;
+
+  @ViewChild('closeTransferPopup')  closeTransferPopup: ElementRef;
+
+  constructor( private formBuilder: FormBuilder,
+    public location: Location, 
     private router: Router, 
     private userService: UserService) {}
 
@@ -39,7 +51,6 @@ export class PointsComponent implements OnInit {
 
     this.userService.getUserPoints().subscribe((response) => {
 
-      console.log('pointsLog response', response);
       this.points = response['data'];
     }, (error) => {
 
@@ -47,14 +58,21 @@ export class PointsComponent implements OnInit {
     });
   }
 
+  // convenience getter for easy access to form fields
+  get fields() { return this.pointTransferForm.controls; }  
+
   getUserInfo() {
 
     this.userService.getUserInfo().subscribe( (response) => {
 
-      console.log('response', response);
       this.userInfo = response['data'][0];
       this.userInfo['cover_pic'] = this.userInfo['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['cover_pic'];
       this.userInfo['profile_pic'] = this.userInfo['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['profile_pic'];
+      this.maxTransferPoints = this.userInfo['points'];
+      this.pointTransferForm = this.formBuilder.group({
+        points: ['', Validators.compose( [Validators.required, Validators.min(1), Validators.max(this.maxTransferPoints)] ) ],
+        username: ['', Validators.required]
+      });
       
     }, (error) => {
 
@@ -70,13 +88,55 @@ export class PointsComponent implements OnInit {
     this.userService.getAvgEngagementData().subscribe((response) => {
       
       this.avgEngagement = response['data'];
-      console.log('avgEngagement', this.avgEngagement);
     } , (error) => {
 
       this.avgEngagement = [];
       console.log(error);
     });
   }
+
+
+  transferPoints() {
+
+      this.submitted = true;
+
+      // stop here if form is invalid
+      if (this.pointTransferForm.invalid) {
+
+        console.log('Validation error.');
+        return;
+      } else {
+
+        var transfer = {
+            points: this.pointTransferForm.get('points').value,
+            username: this.pointTransferForm.get('username').value,
+          };
+
+        this.loading = true;
+        this.userService.transferPoints(transfer).subscribe((response: Array<Object>) => {
+
+          this.loading = false;
+          this.submitted = false;
+          this.transferSuccess = true;
+
+          this.userInfo['points'] = this.userInfo['points'] - transfer.points;
+          this.pointTransferForm.reset();
+          // this.closeTransferPopup.nativeElement.click();
+          
+        }, error => {
+
+          console.log('error', error);
+          this.transferErrors = [];
+          // this.errorNewsletterBtn.nativeElement.click();
+          this.loading = false;
+          this.transferErrors.push(error['errorData']['message']);
+          
+        });
+
+      }
+
+    }
+
 
   ngAfterViewInit() {
 

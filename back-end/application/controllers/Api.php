@@ -136,6 +136,7 @@ class Api extends REST_Controller {
               $user_data = array(
                   'first_name'    => $post_data->first_name,
                   'last_name'     => $post_data->last_name,
+                  'profession'    => $post_data->profession,
                   'username'      => $username,
                   'user_type'     => 'user',
                   'status'        => 1,

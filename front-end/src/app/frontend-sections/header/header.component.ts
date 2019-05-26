@@ -106,6 +106,7 @@ export class HeaderComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
           firstName: [ '', Validators.required ],
           lastName: [ '', Validators.required ],
+          profession: [ '', Validators.required ],
           company: [ '' ],
           companyEmail: [ '',   Validators.compose([Validators.email]) ],
           username: [ 
@@ -182,6 +183,7 @@ export class HeaderComponent implements OnInit {
         var user = {  
           first_name: this.registerForm.get('firstName').value, 
           last_name: this.registerForm.get('lastName').value,
+          profession: this.registerForm.get('profession').value,
           username: this.registerForm.get('username').value,
           email: this.registerForm.get('email').value,
           company: this.registerForm.get('company').value,
@@ -298,12 +300,9 @@ export class HeaderComponent implements OnInit {
 
     this.userService.forgotPassword(user).subscribe((response: Array<Object>) => {
 
-      console.log('forgotPassword response', response);
       this.forgotPassLoading = false;
 
       if ( response['status'] == 200 ) {
-        
-        console.log('email sent');
         
         this.forgotPassForm.reset();
 
@@ -319,6 +318,21 @@ export class HeaderComponent implements OnInit {
       }
 
     });
+  }
+
+  refershRegisterForm() {
+
+    this.submitted = false;
+    this.registerForm.reset();
+    this.registerForm.patchValue({
+          company: [ '' ]
+    });
+
+  }
+
+  refreshForgotForm() {
+
+    this.forgotPassForm.reset();
   }
 
   setUserLogin(id, username, jwtToken, navigate = true) {

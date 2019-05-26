@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForumCommentsRoutes } from './forum-comments.routing';
 import { ForumCommentsPendingComponent } from './forum-comments-pending/forum-comments-pending.component';
 import { ForumCommentsPublishedComponent } from './forum-comments-published/forum-comments-published.component';
+import { ForumCommentsFlaggedComponent } from './forum-comments-flagged/forum-comments-flagged.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -42,6 +43,7 @@ import {
   declarations: [
     ForumCommentsPendingComponent,
     ForumCommentsPublishedComponent,
+    ForumCommentsFlaggedComponent,
     
   ],
   providers: [

@@ -93,6 +93,62 @@ export class ForumService {
 	    );
 		}
 
+  	changeHelpfulStatus(answerId): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('answer_id', answerId);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'change_helpful_status', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	reportForumAnswer(answerId): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('answer_id', answerId);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'report_forum_answer', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	reportAnswerComment(commentId): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('comment_id', commentId);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'report_forum_comment', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	changeCommentHelpfulStatus(commentId): Observable<any>{
+			
+			const formData = new FormData();
+    	
+			formData.append('comment_id', commentId);
+			
+			const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+			return this.http.post(USER_API_URL+'change_comment_helpful_status', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	addNewTopic(topic_name): Observable<any>{
     	
  			const formData = new FormData();

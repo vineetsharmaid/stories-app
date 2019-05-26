@@ -33,6 +33,15 @@ export class ForumService {
 			return this.http.post(ADMIN_API_URL+'get_questions', formData, httpOptions);
 		}
 
+  	getFlaggedanswers(): Observable<any>{
+			
+				let httpOptions = {
+				  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+				};
+
+			return this.http.get(ADMIN_API_URL+'get_flagged_answers', httpOptions);
+		}
+
   	getAnswers(status): Observable<any>{
 			
 				let httpOptions = {

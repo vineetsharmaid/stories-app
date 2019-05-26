@@ -162,10 +162,67 @@ class Common_model extends CI_Model {
         return $this->db->get()->row();
     }
 
+    public function get_answer_author($answer_id)
+    {
+        
+        $this->db->select('forum_answers.author_id');
+        $this->db->from('forum_answers');
+        $this->db->where( array('forum_answers.answer_id' => $answer_id) );
+        return $this->db->get()->row();
+    }
+
+    public function get_forum_comment_author($comment_id)
+    {
+        
+        $this->db->select('forum_answer_comments.user_id');
+        $this->db->from('forum_answer_comments');
+        $this->db->where( array('forum_answer_comments.comment_id' => $comment_id) );
+        return $this->db->get()->row();
+    }
+
     public function update_user_points($user_id, $points)
     {
       $this->db->where('user_id', $user_id);
       $this->db->set('points', 'points+'.$points, FALSE);
+      $this->db->update('users');
+
+      $this->db->select('users.points');
+      $this->db->from('users');
+      $this->db->where('user_id', $user_id);
+      $user_points = $this->db->get()->row();
+
+      if ( $user_points->points > 0 && $user_points->points <= 100 ) {
+        
+        $badge =  "Beginner";
+      } else if ( $user_points->points > 100 && $user_points->points <= 500 ) {
+        
+        $badge =  "Apprentice";
+      } else if ( $user_points->points > 500 && $user_points->points <= 1000 ) {
+        
+        $badge =  "Enthusiast";
+      } else if ( $user_points->points > 1000 && $user_points->points <= 2000 ) {
+        
+        $badge =  "Intermediate";
+      } else if ( $user_points->points > 2000 && $user_points->points <= 5000 ) {
+        
+        $badge =  "Pro";
+      } else if ( $user_points->points > 5000 ) {
+        
+        $badge =  "Master";
+      }
+
+      $this->update_entry('users', 
+        array('badge' => $badge), 
+        array('user_id' => $user_id)
+      );
+
+      return $user_points;
+    }
+
+    public function deduct_user_points($user_id, $points)
+    {
+      $this->db->where('user_id', $user_id);
+      $this->db->set('points', 'points-'.$points, FALSE);
       $this->db->update('users');
 
       $this->db->select('users.points');
@@ -295,10 +352,13 @@ class Common_model extends CI_Model {
 
     public function get_answer_comments($parent, $answer_id)
     {
-      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type, count(distinct forum_comments_user_helpful.user_id) as helpful');
       $this->db->from('forum_answer_comments');
       $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+      $this->db->join('forum_comments_user_helpful', 'forum_comments_user_helpful.comment_id = forum_answer_comments.comment_id', 'left');
       $this->db->where( array('forum_answer_comments.parent' => $parent, 'forum_answer_comments.answer_id' => $answer_id,'forum_answer_comments.approved' => 1) );
+      $this->db->group_by('forum_answer_comments.comment_id');
+      $this->db->having("forum_answer_comments.comment_id != 'NULL'");
       $comments = $this->db->get()->result();
 
       return $comments;
@@ -306,10 +366,15 @@ class Common_model extends CI_Model {
 
     public function get_answer_comments_for_user($parent, $answer_id, $user_id)
     {
-      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type');
+      $this->db->select('forum_answer_comments.*, users.first_name, users.last_name, users.username, users.username, users.profile_pic, users.user_type, count(distinct forum_comments_user_helpful.user_id) as helpful, count(distinct current_user_helpful.user_id) as user_helpful, count(distinct forum_comments_user_flagged.user_id) as flagged');
       $this->db->from('forum_answer_comments');
       $this->db->join('users', 'users.user_id = forum_answer_comments.user_id');
+      $this->db->join('forum_comments_user_helpful', 'forum_comments_user_helpful.comment_id = forum_answer_comments.comment_id', 'left');
+      $this->db->join('forum_comments_user_flagged', 'forum_comments_user_flagged.comment_id = forum_answer_comments.comment_id AND forum_comments_user_flagged.user_id ='.$user_id, 'left');
+      $this->db->join('forum_comments_user_helpful as current_user_helpful', 'current_user_helpful.comment_id = forum_answer_comments.comment_id AND current_user_helpful.user_id = '.$user_id, 'left');
       $this->db->where( "`forum_answer_comments.parent` = ".$parent." AND `forum_answer_comments.answer_id` = ".$answer_id." AND (`forum_answer_comments`.`approved` = 1 OR `forum_answer_comments`.`user_id` = ".$user_id." )" );
+      $this->db->group_by('forum_answer_comments.comment_id');
+      $this->db->having("forum_answer_comments.comment_id != 'NULL'");
       $comments = $this->db->get()->result();
 
       return $comments;
@@ -416,6 +481,7 @@ class Common_model extends CI_Model {
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
           count(distinct forum_answer_user_likes.user_id) as likes,          
+          count(distinct forum_answer_user_helpful.user_id) as helpful,          
           GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
           GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids');
         $this->db->from('forum_questions');
@@ -427,6 +493,8 @@ class Common_model extends CI_Model {
         $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');        
+        // get number of likes on answer
+        $this->db->join('forum_answer_user_helpful', 'forum_answer_user_helpful.answer_id = forum_answers.answer_id', 'left');
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->where( $where );
@@ -455,20 +523,30 @@ class Common_model extends CI_Model {
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
           count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct forum_answer_user_helpful.user_id) as helpful,
           count(distinct current_user_like.user_id) as user_liked,
+          count(distinct current_user_helpful.user_id) as user_helpful,
+          count(distinct forum_answer_user_flagged.user_id) as flagged,
+          count(distinct user_answer.author_id) as user_answered,
           GROUP_CONCAT(distinct topics.name ORDER BY topics.topic_id) as topics, 
           GROUP_CONCAT(distinct topics.topic_id ORDER BY topics.topic_id) as topic_ids');
         $this->db->from('forum_questions');
         // get top answer
         $this->db->join('forum_answers', 'forum_answers.question_id = forum_questions.question_id', 'left');
+        $this->db->join('forum_answer_user_flagged', 'forum_answer_user_flagged.answer_id = forum_answers.answer_id AND forum_answer_user_flagged.user_id = '.$user_id, 'left');
+        $this->db->join('forum_answers as user_answer', 'user_answer.question_id = forum_questions.question_id AND user_answer.author_id = '.$user_id, 'left');
         // get topics tagged with question
         $this->db->join('thread_topics', 'thread_topics.thread_id = forum_questions.question_id', 'left');
         // get names of topics
         $this->db->join('topics', 'topics.topic_id = thread_topics.topic_id', 'left');
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // get number of likes on answer
+        $this->db->join('forum_answer_user_helpful', 'forum_answer_user_helpful.answer_id = forum_answers.answer_id', 'left');
         // check if user liked an answer
         $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        // check if user liked an answer
+        $this->db->join('forum_answer_user_helpful as current_user_helpful', 'current_user_helpful.answer_id = forum_answers.answer_id AND current_user_helpful.user_id = '.$user_id, 'left');
         // get answer author information
         $this->db->join('users', 'users.user_id = forum_answers.author_id', 'left');
         $this->db->where( $where );
@@ -501,10 +579,13 @@ class Common_model extends CI_Model {
         $this->db->select('forum_answers.*, 
           users.first_name, users.last_name, users.username, users.profile_pic,
           count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct current_user_like.user_id) as helpful,
           count(distinct forum_answer_comments.comment_id) as comments_count');
         $this->db->from('forum_answers');
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // get number of helpful on answer
+        $this->db->join('current_user_like', 'current_user_like.answer_id = forum_answers.answer_id', 'left');
         // get number of comments
         $this->db->join('forum_answer_comments', 
           'forum_answer_comments.answer_id = forum_answers.answer_id AND 
@@ -525,13 +606,22 @@ class Common_model extends CI_Model {
         $this->db->select('forum_answers.*, 
           users.first_name, users.last_name, users.username, users.profile_pic,
           count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct current_user_like.user_id) as helpful,
+          count(distinct forum_answer_user_flagged.user_id) as flagged,
           count(distinct current_user_like.user_id) as user_liked,
+          count(distinct current_user_helpful.user_id) as user_helpful,
           count(distinct forum_answer_comments.comment_id) as comments_count');
         $this->db->from('forum_answers');
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // get number of helpful on answer
+        $this->db->join('forum_answer_user_helpful', 'forum_answer_user_helpful.answer_id = forum_answers.answer_id', 'left');
+        // get flagged answer
+        $this->db->join('forum_answer_user_flagged', 'forum_answer_user_flagged.answer_id = forum_answers.answer_id AND forum_answer_user_flagged.user_id ='.$user_id, 'left');
         // check if user liked an answer
         $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        // check if user liked an answer
+        $this->db->join('forum_answer_user_helpful as current_user_helpful', 'current_user_helpful.answer_id = forum_answers.answer_id AND current_user_helpful.user_id = '.$user_id, 'left');
         // get number of comments
         $this->db->join('forum_answer_comments', '(forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.approved = 1) OR 
           (forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.user_id = '.$user_id.')', 'left');
@@ -550,13 +640,22 @@ class Common_model extends CI_Model {
         $this->db->select('forum_answers.*, 
           users.first_name, users.last_name, users.username, users.profile_pic,
           count(distinct forum_answer_user_likes.user_id) as likes,
+          count(distinct forum_answer_user_helpful.user_id) as helpful,
+          count(distinct forum_answer_user_flagged.user_id) as flagged,
           count(distinct current_user_like.user_id) as user_liked,
+          count(distinct current_user_helpful.user_id) as user_helpful,
           count(distinct forum_answer_comments.comment_id) as comments_count');
         $this->db->from('forum_answers');
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
+        // get number of helpful on answer
+        $this->db->join('forum_answer_user_helpful', 'forum_answer_user_helpful.answer_id = forum_answers.answer_id', 'left');
+        // get flagged answer
+        $this->db->join('forum_answer_user_flagged', 'forum_answer_user_flagged.answer_id = forum_answers.answer_id AND forum_answer_user_flagged.user_id ='.$user_id, 'left');
         // check if user liked an answer
         $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id AND current_user_like.user_id = '.$user_id, 'left');
+        // check if user liked an answer
+        $this->db->join('forum_answer_user_helpful as current_user_helpful', 'current_user_helpful.answer_id = forum_answers.answer_id AND current_user_helpful.user_id = '.$user_id, 'left');
         // get number of comments
         $this->db->join('forum_answer_comments', '(forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.approved = 1) OR 
           (forum_answer_comments.answer_id = forum_answers.answer_id AND forum_answer_comments.user_id = '.$user_id.')', 'left');

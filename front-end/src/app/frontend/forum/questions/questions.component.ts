@@ -172,7 +172,6 @@ export class QuestionsComponent implements OnInit {
 
         this.forumService.addComment(comment).subscribe((response) => {
 
-            console.log('response', response);
             var comment = response['data'];
             comment['profile_pic'] = comment['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
 
@@ -211,7 +210,7 @@ export class QuestionsComponent implements OnInit {
 
   		this.forumService.getQuestionInfo(slug).subscribe((response) => {
 
-  			console.log('response', response);
+  			
   			this.questionData = response['data'];
 
         this.questionData['profile_pic'] = this.questionData['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+this.questionData['profile_pic'];
@@ -236,7 +235,7 @@ export class QuestionsComponent implements OnInit {
 
       this.forumService.getAnswerByUser(threadId).subscribe((response) => {
 
-        console.log('response', response);
+        
         var answer = response['data'];
       
         answer['tempAnswer'] = ""; // for frontend purpose
@@ -256,7 +255,7 @@ export class QuestionsComponent implements OnInit {
 
       this.forumService.getAnswers(threadId).subscribe((response) => {
 
-        console.log('response', response);
+        
         var answers = [];
         var i = 0;
         response['data'].forEach((answer) => {
@@ -285,7 +284,7 @@ export class QuestionsComponent implements OnInit {
 
       this.forumService.getComments(answerId).subscribe((response) => {
 
-        console.log('response', response);
+        
         var comments = response['data'];
         comments.forEach((comment) => {
 
@@ -310,7 +309,7 @@ export class QuestionsComponent implements OnInit {
 
       this.forumService.getComments(answerId).subscribe((response) => {
 
-        console.log('response', response);
+        
         var comments = response['data'];
         comments.forEach((comment) => {
 
@@ -421,10 +420,115 @@ export class QuestionsComponent implements OnInit {
   changeLikeStatus(answerId, index) {
 
     this.forumService.changeLikeStatus(answerId).subscribe((response) => {
-  
-      console.log('response', response);
+    
       this.allAnswers[index]['likes'] = parseInt(this.allAnswers[index]['likes']) + 1;
       this.allAnswers[index]['user_liked'] = 1;
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+  changeHelpfulStatus(answerId, index, byUser=false) {
+
+    this.forumService.changeHelpfulStatus(answerId).subscribe((response) => {
+      
+      if( byUser ) {
+
+        this.answerByUser['helpful'] = parseInt(this.answerByUser['helpful']) + 1;
+        this.answerByUser['user_helpful'] = 1;        
+      } else {
+
+        this.allAnswers[index]['helpful'] = parseInt(this.allAnswers[index]['helpful']) + 1;
+        this.allAnswers[index]['user_helpful'] = 1;
+      }       
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+  reportForumAnswer(answerId, index, byUser=false) {
+
+    this.forumService.reportForumAnswer(answerId).subscribe((response) => {
+      
+      if( byUser ) {
+
+        this.answerByUser['flagged'] = true;
+      } else {
+
+        this.allAnswers[index]['flagged'] = true;
+      }
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+  changeCommentHelpfulStatus(commentId, answerIndex, index, parentIndex, answerType) {
+
+    this.forumService.changeCommentHelpfulStatus(commentId).subscribe((response) => {
+      
+      if(answerType == 'userAnswer') {
+        
+        if(parentIndex >= 0) {
+          
+          this.answerByUser['comments'][parentIndex]['children'][index]['helpful'] = parseInt(this.answerByUser['comments'][parentIndex]['children'][index]['helpful']) + 1;
+          this.answerByUser['comments'][parentIndex]['children'][index]['user_helpful'] = 1;
+        } else {
+
+          this.answerByUser['comments'][index]['helpful'] = parseInt(this.answerByUser['comments'][index]['helpful']) + 1;
+          this.answerByUser['comments'][index]['user_helpful'] = 1;
+        }
+      }
+
+      if(answerType == 'publicAnswer') {
+        
+        if(parentIndex >= 0) {
+          
+          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful']) + 1;
+          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['user_helpful'] = 1;
+        } else {
+
+        this.allAnswers[answerIndex]['comments'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][index]['helpful']) + 1;
+        this.allAnswers[answerIndex]['comments'][index]['user_helpful'] = 1;
+        } 
+
+      }
+    }, (error) => {
+
+      console.log(error);
+    });
+  }
+
+  reportAnswerComment(commentId, answerIndex, index, parentIndex, answerType) {
+
+    this.forumService.reportAnswerComment(commentId).subscribe((response) => {
+      
+      if(answerType == 'userAnswer') {
+        
+        if(parentIndex >= 0) {
+          
+          this.answerByUser['comments'][parentIndex]['children'][index]['flagged'] = true;
+        } else {
+
+          this.answerByUser['comments'][index]['flagged'] = true;
+        }
+      }
+
+      if(answerType == 'publicAnswer') {
+        
+        if(parentIndex >= 0) {
+          
+          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful']) + 1;
+          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['user_helpful'] = 1;
+        } else {
+
+        this.allAnswers[answerIndex]['comments'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][index]['helpful']) + 1;
+        this.allAnswers[answerIndex]['comments'][index]['user_helpful'] = 1;
+        } 
+
+      }
     }, (error) => {
 
       console.log(error);

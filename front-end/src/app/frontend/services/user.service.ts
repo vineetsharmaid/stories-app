@@ -92,7 +92,6 @@ export class UserService {
 		}
 
   	saveCompany(company): Observable<any>{
-    	
 
 			let httpOptions = {
 			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
@@ -103,6 +102,22 @@ export class UserService {
       formData.append('email', company.email);
 
 			return this.http.post(USER_API_URL+'save_company/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
+  	transferPoints(transfer): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('points', transfer.points);
+      formData.append('username', transfer.username);
+
+			return this.http.post(USER_API_URL+'transfer_points/', formData, httpOptions)
 	    .pipe(
 	      catchError(this.handleError)
 	    );

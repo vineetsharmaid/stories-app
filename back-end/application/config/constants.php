@@ -113,9 +113,12 @@ define('POINTS_FOR_10_COMMENTS',10);
 define('POINTS_FOR_20_COMMENTS',20);
 define('POINTS_FOR_30_COMMENTS',50);
 
+define('POINTS_HELPFUL_CONTENT',10);
+
 define('STORY_PUBLISH_POINTS',100);
 define('QUESTION_PUBLISH_POINTS',10);
 define('ANSWER_PUBLISH_POINTS',30);
 
 define('CONTACT_EMAIL','soa@storiesofasia.co');
 define('APP_URL','http://soastaging.com/app/');
+
