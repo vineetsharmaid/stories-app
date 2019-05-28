@@ -879,8 +879,11 @@ class Users extends REST_Controller {
         // insert points allocation log
         $this->common_model->insert_entry('points_allocation', $donor_points_data);
 
+        $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
+
         $from_name = 'Stories Of Asia';
-        $from_email = CONTACT_EMAIL;
+        // $from_email = CONTACT_EMAIL;
+        $from_email = $contact_mail[0]->meta_value;
         $message    = "Congrats!! You have reveived ".$points." points from user (@".$this->token_data->username.").<br /><br />";
         $subject    = 'Points Received SOA';
         $to_email   = $user->user_email;

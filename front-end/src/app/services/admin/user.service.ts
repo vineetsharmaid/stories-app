@@ -28,6 +28,34 @@ export class UserService {
 
 			return this.http.get(ADMIN_API_URL+'get_users', httpOptions);
 		}
+		
+  	getSettings(): Observable<any>{
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_settings', httpOptions);
+		}
+
+  	updateSettings(settings): Observable<any>{
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('contact_email', settings.contact_email);
+			formData.append('email', settings.email);
+			formData.append('fb_url', settings.fb_url);
+			formData.append('insta_url', settings.insta_url);
+			formData.append('ln_url', settings.ln_url);
+
+			return this.http.post(ADMIN_API_URL+'update_settings/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
 
   	getSubscribers(): Observable<any>{
 			

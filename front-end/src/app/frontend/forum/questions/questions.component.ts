@@ -119,6 +119,7 @@ export class QuestionsComponent implements OnInit {
 
             var comment = response['data'];
             comment['profile_pic'] = comment['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
+            comment['helpful'] = 0;
 
             // Top level comment
             if ( typeof commentIndex == 'undefined' ) {
@@ -174,6 +175,7 @@ export class QuestionsComponent implements OnInit {
 
             var comment = response['data'];
             comment['profile_pic'] = comment['profile_pic'] == "" ? "" : APP_URL+'/assets/uploads/users/'+comment['profile_pic'];
+            comment['helpful'] = 0;
 
             // Top level comment
             if ( typeof commentIndex == 'undefined' ) {
@@ -450,6 +452,12 @@ export class QuestionsComponent implements OnInit {
 
   reportForumAnswer(answerId, index, byUser=false) {
 
+
+    if( this.answerByUser['author_id'] == this.currentUserId || this.allAnswers[index]['author_id'] == this.currentUserId ) {
+      
+      return;
+    }
+
     this.forumService.reportForumAnswer(answerId).subscribe((response) => {
       
       if( byUser ) {
@@ -466,6 +474,21 @@ export class QuestionsComponent implements OnInit {
   }
 
   changeCommentHelpfulStatus(commentId, answerIndex, index, parentIndex, answerType) {
+
+
+    let commentAuthor;
+    if(answerType == 'userAnswer') {
+      
+      commentAuthor = parentIndex >= 0 ? this.answerByUser['comments'][parentIndex]['children'][index]['user_id'] : this.answerByUser['comments'][index]['user_id'];
+    } else {
+
+      commentAuthor = parentIndex >= 0 ? this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['user_id'] : this.allAnswers[answerIndex]['comments'][index]['user_id'];
+    } 
+
+    if( commentAuthor == this.currentUserId ) {
+      
+      return;
+    }
 
     this.forumService.changeCommentHelpfulStatus(commentId).subscribe((response) => {
       
@@ -503,6 +526,20 @@ export class QuestionsComponent implements OnInit {
 
   reportAnswerComment(commentId, answerIndex, index, parentIndex, answerType) {
 
+    let commentAuthor;
+    if(answerType == 'userAnswer') {
+      
+      commentAuthor = parentIndex >= 0 ? this.answerByUser['comments'][parentIndex]['children'][index]['user_id'] : this.answerByUser['comments'][index]['user_id'];
+    } else {
+
+      commentAuthor = parentIndex >= 0 ? this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['user_id'] : this.allAnswers[answerIndex]['comments'][index]['user_id'];
+    } 
+
+    if( commentAuthor == this.currentUserId ) {
+      
+      return;
+    }
+
     this.forumService.reportAnswerComment(commentId).subscribe((response) => {
       
       if(answerType == 'userAnswer') {
@@ -520,12 +557,10 @@ export class QuestionsComponent implements OnInit {
         
         if(parentIndex >= 0) {
           
-          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['helpful']) + 1;
-          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['user_helpful'] = 1;
+          this.allAnswers[answerIndex]['comments'][parentIndex]['children'][index]['flagged'] = 1;
         } else {
 
-        this.allAnswers[answerIndex]['comments'][index]['helpful'] = parseInt(this.allAnswers[answerIndex]['comments'][index]['helpful']) + 1;
-        this.allAnswers[answerIndex]['comments'][index]['user_helpful'] = 1;
+        this.allAnswers[answerIndex]['comments'][index]['flagged'] = 1;
         } 
 
       }

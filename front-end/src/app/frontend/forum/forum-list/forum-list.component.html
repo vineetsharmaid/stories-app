@@ -131,7 +131,7 @@
                       <i class="fa fa-thumbs-up fa-2x"></i>
                     </span>
                     </ng-template>
-                    {{question.helpful}}
+                    Helpful ({{question.helpful}})
                   </li>
                   <li (click)="reportForumAnswer(question.answer_id, questionIndex)">
                     <span *ngIf="question.flagged == false; else answerFlagged">
@@ -142,6 +142,7 @@
                       <i class="fa fa-flag fa-2x"></i>
                     </span>
                     </ng-template>
+                    Report
                   </li>
                   <li><img src="assets/img/forum/eye.png" alt="">{{question.views}}</li>
                   <li class="bookmark"><div class="share_img_wrap"><img src="assets/img/bookmark.png" alt="">

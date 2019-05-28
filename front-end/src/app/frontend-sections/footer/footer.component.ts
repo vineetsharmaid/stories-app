@@ -15,6 +15,11 @@ export class FooterComponent implements OnInit {
 	public formSubmitted: boolean = false;
 	public formErrors: Array<string>;
 	public subscribeError: string;
+
+	public fbUrl: string;
+	public lnUrl: string;
+	public instaUrl: string;
+	
   test : Date = new Date();
 
 	@ViewChild('sucessNewsletterBtn')  sucessNewsletterBtn: ElementRef;
@@ -29,7 +34,19 @@ export class FooterComponent implements OnInit {
   			'lastName': ['', Validators.required],
   			'email': ['',  Validators.compose([Validators.required, Validators.email]) ],  			
   		})
-	}
+
+    this.getSettings();
+  }
+
+  getSettings() {
+    
+      
+    this.fbUrl = localStorage.getItem('fbUrl');
+    this.lnUrl = localStorage.getItem('instaUrl');
+    this.instaUrl = localStorage.getItem('lnUrl');
+
+  }
+
 
 	// convenience getter for easy access to form fields
 	get fields() { return this.newsletterForm.controls; }  

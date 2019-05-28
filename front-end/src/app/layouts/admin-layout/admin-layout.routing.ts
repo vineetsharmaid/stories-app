@@ -21,6 +21,7 @@ import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
 import { PagesComponent } from '../../admin/pages/pages.component';
+import { SettingsComponent } from '../../admin/settings/settings.component';
 import { 
   AuthGuardService as AuthGuard 
 } from '../../auth/auth-guard.service';
@@ -43,6 +44,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'notifications',  component: NotificationsComponent, canActivate: [AuthGuard] },
     { path: 'upgrade',        component: UpgradeComponent, canActivate: [AuthGuard] }, 
     { path: 'subscribers',    component: SubscribersComponent, canActivate: [AuthGuard] }, 
+    { path: 'settings',       component: SettingsComponent, canActivate: [AuthGuard] }, 
     // { path: 'category',        component: CategoriesComponent }, 
     {
         path: 'category',

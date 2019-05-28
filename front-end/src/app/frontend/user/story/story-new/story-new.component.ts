@@ -397,6 +397,12 @@ export class StoryNewComponent implements OnInit {
       this.storyErrors.push("Story content should have at least 200 characters.");
     }
     
+    if(typeof this.filePath == 'undefined' || this.filePath == "") {
+
+      customInValid = true;
+      this.storyErrors.push("Story cover photo is required.");
+    }
+    
     if ( this.addStoryForm.get('previewTitle').value == "" ) {
       
         this.addStoryForm.patchValue({  

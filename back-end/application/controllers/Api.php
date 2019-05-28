@@ -132,14 +132,15 @@ class Api extends REST_Controller {
               }
 
               $company = isset($post_data->company) ? $post_data->company : 0;
+              $profession = isset($post_data->profession) ? $post_data->profession : "";
 
               $user_data = array(
                   'first_name'    => $post_data->first_name,
                   'last_name'     => $post_data->last_name,
-                  'profession'    => $post_data->profession,
+                  'profession'    => $profession,
                   'username'      => $username,
                   'user_type'     => 'user',
-                  'status'        => 1,
+                  'status'        => isset($post_data->form_type) ? 0 : 1,
                   'user_email'    => $post_data->email,
                   'profile_pic'   => '',
                   'password'      => $password_hashed
@@ -148,6 +149,7 @@ class Api extends REST_Controller {
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
 
+                $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
 
                 $user =  new stdClass();
                 $user->user_id   = $this->db->insert_id();
@@ -158,32 +160,70 @@ class Api extends REST_Controller {
                 
 
                 $from_name = 'Stories Of Asia';
-                $from_email = CONTACT_EMAIL;
-                $message    = "Thanks for signing up, below are your login details.<br /><br />
+                // $from_email = CONTACT_EMAIL;
+                $from_email = $contact_mail[0]->meta_value;
+                
+                $message = "Greeting from SOA!<br><br>";
+                $message .= "Thanks for signing up, below are your login details.<br /><br />
                   Email: ".$post_data->email."
                   <br />
-                  Password: ".$password;
+                  Password: ".$password."<br><br>";
+                $message .= "Thank you from SOA!";
+
                 $subject    = 'WELCOME ABOARD';
                 $to_email   = $post_data->email;
                 $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
 
-                $code_check = $this->_randomPassword();
+
+                $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
+
+                if (isset($post_data->company_email)) {
+                  
+
+                  $code_check = $this->_randomPassword();
+
+                  $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_email_code', 'meta_value' => $code_check, 'user_id' => $user->user_id) );
+
+                  $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_company', 'meta_value' => $company, 'user_id' => $user->user_id) );
+
+                  $email_check = base_url().'/welcome/email_confirm/?q='.$code_check;
+
+                  $from_name = 'Stories Of Asia';
+                  // $from_email = CONTACT_EMAIL;
+                  $from_email = $contact_mail[0]->meta_value;
+                  
+                  $message    = "Greeting from SOA!<br><br>";
+                  $message    .= "Confirm your company's email.<br /><br /> 
+                    <a href=".$email_check.">Confirm</a><br><br>";
+                  $message    .= "Thank you from SOA!";
+
+                  $subject    = 'Confirm company on SOA';
+                  $to_email   = $post_data->company_email;
+                  $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+                }
                 
-                $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_email_code', 'meta_value' => $code_check, 'user_id' => $user->user_id) );
 
-                $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_company', 'meta_value' => $company, 'user_id' => $user->user_id) );
+                if (isset($post_data->form_type)) {
+                  
+                  $account_code_check = $this->_randomPassword();
 
-                $email_check = base_url().'/welcome/email_confirm/?q='.$code_check;
+                  $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'verify_account_code', 'meta_value' => $account_code_check, 'user_id' => $user->user_id) );
 
-                $from_name = 'Stories Of Asia';
-                $from_email = CONTACT_EMAIL;
-                $message    = "Confirm your company's email.<br /><br /> 
-                  <a href=".$email_check.">Confirm</a>
-                  <br />";
-                $subject    = 'Confirm company on SOA';
-                $to_email   = $post_data->company_email;
-                $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+                  $email_check = base_url().'/welcome/account_verify/?q='.$account_code_check;
 
+                  $from_name = 'Stories Of Asia';
+                  // $from_email = CONTACT_EMAIL;
+                  $from_email = $contact_mail[0]->meta_value;
+                  
+                  $message  = "Greeting from SOA!<br><br>";
+                  $message .= "You are receiving this e-mail because someone has used this e-mail to create an account on <a href=".APP_URL.">SOA</a><br><br>";
+                  $message .= "To confirm this is correct <a href=".$email_check.">Click Here</a><br><br>";
+                  $message .= "Thank you from SOA!";
+
+                  $subject    = 'Verify Your E-mail Address';
+                  $to_email   = $post_data->email;
+                  $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
+                }
 
                 $result = $this->mailchimp->post("lists/".$this->mailchimpListIdUser."/members", [
                         'email_address' => $post_data->email,
@@ -300,15 +340,19 @@ class Api extends REST_Controller {
         
         $user = $this->common_model->get_data( 'users', array('user_email' => $email) );
         
+        $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
+
         if ( !empty($user) ) {
           
           $password = $this->_randomPassword();
           $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
+
           $this->common_model->update_entry( 'users', array('password' => $password_hashed), array('user_id' => $user[0]->user_id) );
 
           $from_name = "Stories Of Asia";
-          $from_email = CONTACT_EMAIL;
+          // $from_email = CONTACT_EMAIL;
+          $from_email = $contact_mail[0]->meta_value;
           $message    = "Hi ".$user[0]->first_name .' '.$user[0]->last_name."<br/><br/><br/>";
           $message    .= "Somebody (hoperfully you) requested a new password for the SOA account for ".$email."<br/><br/>";
           $message    .= "You can login to your account using a new password as below - <br/><br/>";
@@ -322,7 +366,8 @@ class Api extends REST_Controller {
 
 
           $from_name = "Stories Of Asia";
-          $from_email = CONTACT_EMAIL;
+          // $from_email = CONTACT_EMAIL;
+          $from_email = $contact_mail[0]->meta_value;
           $message    = "Hi there,<br/><br/><br/>";
           $message    .= "Somebody (hoperfully you) requested a new password for the SOA account for ".$email."<br/><br/>";
           $message    .= "Unfortunately we can not find any account on SOA with email ".$email."<br/><br/><br/>";
@@ -1200,6 +1245,37 @@ class Api extends REST_Controller {
     }
 
 
+    public function get_settings_get() {
+
+      $this->db->select('meta_key, meta_value');
+      $this->db->where_in( 'meta_key', array('contact_email', 'email', 'fb_url', 'insta_url', 'ln_url') );
+      $settings_data = $this->db->get('usermeta')->result();
+
+      // create key value pair
+      $settings = array_combine( array_column($settings_data, 'meta_key'), array_column($settings_data, 'meta_value') );
+      
+
+        if ( empty($settings) )
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to get settings'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'data' => $settings,
+              'message'   => 'Settings updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+
     public function get_answers_get($question_id) {
 
 
@@ -1302,11 +1378,14 @@ class Api extends REST_Controller {
 
     function submit_contact_form_post() {
 
+      $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'contact_email'));
+
       $from_name = $this->input->post('first_name').' '.$this->input->post('last_name');
       $from_email = $this->input->post('email');
       $message    = $this->input->post('message');
       $subject    = 'SOA Contact Form';
-      $to_email   = CONTACT_EMAIL;
+      // $to_email   = CONTACT_EMAIL;
+      $from_email = $contact_mail[0]->meta_value;
       $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
 
       if( $mail ) {
@@ -1407,6 +1486,7 @@ class Api extends REST_Controller {
       );
       $this->load->library('email', $config);
       $this->email->set_newline("\r\n");
+      $this->email->set_mailtype("html");
 
       // Set to, from, message, etc.
 

@@ -9,12 +9,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
-      <li class="nav-item"><a class="nav-link" (click)="navigate('/')">Home</a></li>
-      <li class="nav-item"><a class="nav-link" (click)="navigate('/stories')">Stories</a></li>
-      <li class="nav-item"><a class="nav-link" (click)="navigate('/about')">About Us</a></li>
-      <li class="nav-item nik_logo"><a class="nav-link" href="#"><img src="assets/img/custom_logo.png" alt=""></a></li>
-      <li><a class="nav-link" (click)="navigate('/forum')">Community Discussions</a></li>
-      <li class="nav-item"><a class="nav-link" (click)="navigate('/contact')">Contact Us</a></li>
+      <li class="nav-item"><a class="nav-link" href="" [routerLink]="['/']">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="" [routerLink]="['/stories']">Stories</a></li>
+      <li class="nav-item"><a class="nav-link" href="" [routerLink]="['/about']">About Us</a></li>
+      <li class="nav-item nik_logo"><a class="nav-link" href="" [routerLink]="['/']"><img src="assets/img/custom_logo.png" alt=""></a></li>
+      <li><a class="nav-link" href="" [routerLink]="['/forum']">Community Discussions</a></li>
+      <li class="nav-item"><a class="nav-link" href="" [routerLink]="['/contact']">Contact Us</a></li>
     </ul>
   </div>
   <!-- Header Navigation -->
@@ -45,9 +45,21 @@
     </div>
     <div class="main_social_wrap">
       <ul class="team_social_list">
-        <li><a href=""><img src="assets/img/fb.png" alt=""></a></li>
-        <li><a href=""><img src="assets/img/insta.png" alt=""></a></li>
-        <li><a href=""><img src="assets/img/linkedIn.png" alt=""></a></li>
+        <li>
+          <a [href]="fbUrl" target="_blank">
+            <img src="assets/img/fb.png" alt="">
+          </a>
+        </li>
+        <li>
+          <a [href]="lnUrl" target="_blank">
+            <img src="assets/img/insta.png" alt="">
+          </a>
+        </li>
+        <li>
+          <a [href]="instaUrl" target="_blank">
+            <img src="assets/img/linkedIn.png" alt="">
+          </a>
+        </li>
       </ul>
     </div>
   </div>
@@ -121,6 +133,7 @@
         </span>
         <div class="login_social_wrap" [hidden]="!showHideSignupForm">
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login_form">
+            <input type="hidden" formControlName="formType"/>
             <div class="form-group">
               <input type="text" formControlName="firstName" [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" placeholder="First name" />
               <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
@@ -237,6 +250,26 @@
           <h4 class="mb-4">WELCOME TO SOA</h4>
           <p>Thanks for signing up. You are now part of our community.</p>
           <p>Your login details have been sent to your email address.</p>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success" data-dismiss="modal" [routerLink]="['/user']">Continue</button>
+      </div>
+  </div>
+</div>
+</div>
+
+<a data-toggle="modal" data-target="#registerFormSuccess" data-backdrop="static" data-keyboard="false" #registerFormSuccess [hidden]="true"></a>
+
+<!-- The Modal -->
+<div class="modal fade" id="registerFormSuccess">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content register-success">
+    
+      <!-- Modal body -->
+      <div class="modal-body">
+          <h4 class="mb-4">Verify Your E-mail Address</h4>
+          <p>Thanks for signing up. We have sent an email to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.</p>
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">

@@ -42,6 +42,10 @@ export class HeaderComponent implements OnInit {
   public showConfirmCompany: boolean = false;
   public errorCompanyEmail: boolean = false;
 
+  public fbUrl: string;
+  public lnUrl: string;
+  public instaUrl: string;
+
   public loading: any;
   public showHideLogin: any;
   public showForgotPassword: any;
@@ -52,6 +56,7 @@ export class HeaderComponent implements OnInit {
 	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
   @ViewChild('closeLoginModal') closeLoginModal: ElementRef;
   @ViewChild('registerSuccess') registerSuccess: ElementRef;
+  @ViewChild('registerFormSuccess') registerFormSuccess: ElementRef;
 	@ViewChild('showHideLoginBtn') showHideLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn') googleLoginBtn: ElementRef;
 	@ViewChild('googleLoginBtn2') googleLoginBtn2: ElementRef;
@@ -76,7 +81,6 @@ export class HeaderComponent implements OnInit {
 
     this.sharedService.currentMessage.subscribe((message) => {
 
-      console.log('header message', message);
       if (message == 'show_login') {
         
         this.showLoginModal.nativeElement.click();
@@ -107,6 +111,7 @@ export class HeaderComponent implements OnInit {
           firstName: [ '', Validators.required ],
           lastName: [ '', Validators.required ],
           profession: [ '', Validators.required ],
+          formType: [ 'custom', Validators.required ],
           company: [ '' ],
           companyEmail: [ '',   Validators.compose([Validators.email]) ],
           username: [ 
@@ -132,7 +137,28 @@ export class HeaderComponent implements OnInit {
         this.errorCompanyEmail  = true;
       }
     });
+    
+    this.getSettings();
   }
+
+  getSettings() {
+    
+    this.userService.getSettings().subscribe((response: Array<Object>) => {
+
+      let settings = response['data'];
+      this.fbUrl = settings['fb_url']
+      this.lnUrl = settings['ln_url']
+      this.instaUrl = settings['insta_url']
+      
+      localStorage.setItem('fbUrl', this.fbUrl);
+      localStorage.setItem('instaUrl', this.lnUrl);
+      localStorage.setItem('lnUrl', this.instaUrl);
+    }, (error) => {
+
+      console.log('error', error);
+    });
+  }
+
 
   onBlurMethod() {
 
@@ -177,12 +203,13 @@ export class HeaderComponent implements OnInit {
       
       this.submitted = true;
 
-      // stop here if form is invalid
+      // check if form is valid
       if (this.registerForm.status === "VALID" && this.errorCompanyEmail == false) {
 
         var user = {  
           first_name: this.registerForm.get('firstName').value, 
           last_name: this.registerForm.get('lastName').value,
+          form_type: this.registerForm.get('formType').value,
           profession: this.registerForm.get('profession').value,
           username: this.registerForm.get('username').value,
           email: this.registerForm.get('email').value,
@@ -190,7 +217,7 @@ export class HeaderComponent implements OnInit {
           company_email: this.registerForm.get('companyEmail').value,
         };
 
-				this.registerUser(user);
+				this.registerUser(user, true);
       } else {
 
       	console.log('Validation error.');
@@ -245,7 +272,7 @@ export class HeaderComponent implements OnInit {
 
   }
 
-  registerUser(user) {
+  registerUser(user, registerForm=false) {
   	
   	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
 
@@ -253,10 +280,22 @@ export class HeaderComponent implements OnInit {
   			
   			// Close login modal
         this.closeLoginModal.nativeElement.click();
-  			this.registerSuccess.nativeElement.click();
-				
-  			// set user login
-				this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], false);
+        
+        if(registerForm) {
+          
+          this.submitted = false;
+          this.registerForm.reset();
+          this.registerForm.patchValue({
+                company: [ '' ]
+          });
+
+          this.registerFormSuccess.nativeElement.click();
+        } else {
+
+          this.registerSuccess.nativeElement.click();
+    			// set user login
+  				this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], false);
+        }
   		}
 
   		// user already exists

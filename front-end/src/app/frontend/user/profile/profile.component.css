@@ -74,3 +74,4 @@
 .user_intro_box a{ margin:0 10px !important; position: relative;}
 .user_intro_box a.mr-2.mb-2:after{position: absolute; width: 4px; height: 4px; border-radius: 4px; background: #f1663b; top: 50%; transform: translateY(-50%); content: ""; right: -12px}
 .invalid-feedback { display: block; }
+.linkedin-error { font-size: 12px !important; text-align: left; line-height: 1.2rem !important; color: red; }

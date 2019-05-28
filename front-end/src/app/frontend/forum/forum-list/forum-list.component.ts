@@ -297,6 +297,11 @@ export class ForumListComponent implements OnInit {
 
   changeHelpfulStatus(answerId, index) {
 
+    if( this.allQuestions[index]['answered_by'] == this.currentUserId ) {
+      
+      return;
+    }
+
     this.forumService.changeHelpfulStatus(answerId).subscribe((response) => {
   
       
@@ -310,6 +315,12 @@ export class ForumListComponent implements OnInit {
 
   reportForumAnswer(answerId, index) {
 
+
+    if( this.allQuestions[index]['answered_by'] == this.currentUserId ) {
+      
+      return;
+    }
+    
     this.forumService.reportForumAnswer(answerId).subscribe((response) => {
 	  	
     	this.allQuestions[index]['flagged'] = true;

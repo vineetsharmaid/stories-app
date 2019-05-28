@@ -9,17 +9,14 @@
                         <input type="text" matInput formControlName="firstName" placeholder="First Name">
                         
                         <input type="text" matInput formControlName="lastName" placeholder="Last Name">
-
                         <input type="email" matInput formControlName="email" placeholder="Email">
-
                         <input type="submit" value="Subscribe Now">
                     </form>
                     <div *ngIf="formSubmitted && (fields.firstName.errors || fields.lastName.errors || fields.email.errors)" class="invalid-feedback">
                         <div *ngIf="fields.firstName.errors?.required || fields.lastName.errors?.required || fields.email.errors?.required">All fields are required</div>
                     </div>
-
                     <div *ngIf="formSubmitted && fields.email.errors" class="invalid-feedback">
-                      <div *ngIf="fields.email.errors.email">Email must be valid</div>
+                        <div *ngIf="fields.email.errors.email">Email must be valid</div>
                     </div>
                 </div>
                 <div class="footer_link_wrap">
@@ -69,60 +66,66 @@
                     <div class="mobile_clear"></div>
                 </div>
                 <div class="col-md-12 text-center">
-                  <div class="main_social_wrap"><ul class="team_social_list">
-                        <li><a href=""><img src="assets/img/fb.png" alt=""></a></li>
-                        <li><a href=""><img src="assets/img/insta.png" alt=""></a></li>
-                        <li><a href=""><img src="assets/img/linkedIn.png" alt=""></a></li>
-                    </ul>
-                  </div>
+                    <div class="main_social_wrap">
+                        <ul class="team_social_list">
+                            <li>
+                                <a [href]="fbUrl" target="_blank">
+                                    <img src="assets/img/fb.png" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a [href]="lnUrl" target="_blank">
+                                    <img src="assets/img/insta.png" alt="">
+                                </a>
+                            </li>
+                            <li>
+                                <a [href]="instaUrl" target="_blank">
+                                    <img src="assets/img/linkedIn.png" alt="">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </footer>
 <!-- Footer -->
-
-
 <button data-toggle="modal" data-target="#newsletter-success" class="d-none" #sucessNewsletterBtn></button>
-
 <!-- The Modal -->
 <div class="modal fade" id="newsletter-success">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      
-      <!-- Modal body -->
-      <div class="modal-body">
-        <p class="p-2">Thank you for subscribing!</p>
-
-        <p class="p-2">Have a great day!</p>
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer p-2">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-      
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p class="p-2">Thank you for subscribing!</p>
+                <p class="p-2">Have a great day!</p>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            
+        </div>
     </div>
-  </div>
 </div>
-
 <button data-toggle="modal" data-target="#newsletter-error" class="d-none" #errorNewsletterBtn></button>
-
 <!-- The Modal -->
 <div class="modal fade" id="newsletter-error">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      
-      <!-- Modal body -->
-      <div class="modal-body" *ngIf="subscribeError?.length > 0">
-        <p class="p-2">{{subscribeError}}</p>
-      </div>
-      
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-      
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <!-- Modal body -->
+            <div class="modal-body" *ngIf="subscribeError?.length > 0">
+                <p class="p-2">{{subscribeError}}</p>
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            
+        </div>
     </div>
-  </div>
 </div>

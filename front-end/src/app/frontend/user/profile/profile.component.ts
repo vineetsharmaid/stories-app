@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
 	public userInfo: Object;
   public stories: Array<object>;
   public storiesCount: number;
+  public linkedInError: boolean = false;
   public enableNameEdit: boolean = false;
   public enableWebsiteEdit: boolean = false;
   public enableShortInfoEdit: boolean = false;
@@ -120,12 +121,19 @@ export class ProfileComponent implements OnInit {
   }
 
   updateMetaInfo(key, value) {
-
-    console.log('key - value', key+' - '+value);
     
-    this.userService.updateMetaInfo(key, value).subscribe((response) => {
+    if(key == 'website') {
+      let linkedIn = /www.linkedin.com/;
+      let match = value.match(linkedIn);
+      console.log('match', match);
+      if(match == null) {
+        this.linkedInError = true;
+        return;
+      }
+      this.linkedInError = false;
+    }
 
-      console.log('response', response);
+    this.userService.updateMetaInfo(key, value).subscribe((response) => {
 
       this.userInfo[key] = value;
       this.enableProfessionalInfoEdit = false;

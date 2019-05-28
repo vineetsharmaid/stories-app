@@ -477,7 +477,7 @@ class Common_model extends CI_Model {
       if ( $user_id == "" ) {
         
         $this->db->select('forum_questions.*, 
-          users.first_name, users.last_name, users.username, users.profile_pic, 
+          users.first_name, users.last_name, users.username, users.profile_pic, users.user_id as answered_by, 
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
           count(distinct forum_answer_user_likes.user_id) as likes,          
@@ -519,7 +519,7 @@ class Common_model extends CI_Model {
       } else {
 
         $this->db->select('forum_questions.*, 
-          users.first_name, users.last_name, users.username, users.profile_pic, 
+          users.first_name, users.last_name, users.username, users.profile_pic, users.user_id as answered_by, 
           forum_answers.created as answered_at, forum_answers.subject as answer, 
           forum_answers.views, forum_answers.answer_id, 
           count(distinct forum_answer_user_likes.user_id) as likes,
@@ -585,7 +585,7 @@ class Common_model extends CI_Model {
         // get number of likes on answer
         $this->db->join('forum_answer_user_likes', 'forum_answer_user_likes.answer_id = forum_answers.answer_id', 'left');
         // get number of helpful on answer
-        $this->db->join('current_user_like', 'current_user_like.answer_id = forum_answers.answer_id', 'left');
+        $this->db->join('forum_answer_user_likes as current_user_like', 'current_user_like.answer_id = forum_answers.answer_id', 'left');
         // get number of comments
         $this->db->join('forum_answer_comments', 
           'forum_answer_comments.answer_id = forum_answers.answer_id AND 

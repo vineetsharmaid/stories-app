@@ -385,7 +385,7 @@ export class StoryEditComponent implements OnInit {
 
     this.editFormSubmitted = true;
     this.storyErrors = [];
-
+    
     let description = this.editStoryForm.get('description').value;
 
     let tag_ids = [];
@@ -405,6 +405,12 @@ export class StoryEditComponent implements OnInit {
 
       customInValid = true;
       this.storyErrors.push("Story content should have at least 200 characters.");
+    }
+    
+    if(typeof this.filePath == 'undefined' || this.filePath == "") {
+
+      customInValid = true;
+      this.storyErrors.push("Story cover photo is required.");
     }
     
     if ( this.editStoryForm.get('previewTitle').value == "" ) {

@@ -1063,6 +1063,37 @@ class Admin extends REST_Controller {
         }
     }
 
+    public function update_settings_post() {
+
+        foreach ($_POST as $key => $value) {
+          
+          $this->common_model->update_entry( 
+              'usermeta', 
+              array('meta_value' => $this->input->post($key)), // set data
+              array('meta_key' => $key) // where
+            );
+        }
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            // generate an error... or use the log_message() function to log your error
+            // Set the response and exit
+            $this->response([
+                'status'  => FALSE,
+                'message' => 'Unable to update settings'
+            ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        } else {
+
+
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Settings updated',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        }
+    }
+    
     public function delete_answer_post() {
 
         $this->common_model->delete_entry(  'forum_answers', array('answer_id' => $this->input->post('answer_id')) );

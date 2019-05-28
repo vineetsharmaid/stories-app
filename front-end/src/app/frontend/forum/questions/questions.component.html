@@ -53,7 +53,7 @@
                 <img src="assets/img/forum/user_pic.png" alt="">
                 </ng-template>
               </div> -->
-              <div class="ans_info">
+              <div class="ans_info mb-2">
                 <a [routerLink]="['/author', questionData.username]" >
                   {{questionData.first_name}} {{questionData.last_name}}
                 </a>
@@ -62,7 +62,7 @@
             <!-- </div> -->
             
 
-            <span class="pull-right" *ngIf="allAnswers?.length > 0 && questionData?.hasAnswered == 0" (click)="questionData.showAnswerBox = true">
+            <span class="mt-2" *ngIf="allAnswers?.length > 0 && questionData?.hasAnswered == 0" (click)="questionData.showAnswerBox = true">
               <i class="fa fa-edit"></i>
               Answer
             </span>
@@ -144,10 +144,10 @@
                         <i class="fa fa-thumbs-up fa-2x"></i>
                       </span>
                       </ng-template>
-                      {{answerByUser.helpful}}
+                      Helpful ({{answerByUser.helpful}})
                     </li>
                     <li (click)="reportForumAnswer(answerByUser.answer_id, answerIndex, true)">
-                      <span *ngIf="answerByUser.flagged == false; else answerByFlagged">
+                      <span *ngIf="answerByUser.flagged == false || answerByUser.flagged == undefined; else answerByFlagged">
                         <i class="fa fa-flag-o fa-2x"></i>
                       </span>
                       <ng-template #answerByFlagged>
@@ -155,6 +155,7 @@
                         <i class="fa fa-flag fa-2x"></i>
                       </span>
                       </ng-template>
+                      Report
                     </li>
                     <li><img src="assets/img/forum/eye.png" alt="">{{answerByUser.views}}</li>
                     <li (click)="loadCommentsUserAnswer(answerByUser.answer_id, answerIndex)">
@@ -225,9 +226,9 @@
                               <i class="fa fa-thumbs-up fa-2x"></i>
                             </span>
                             </ng-template>
-                            {{comment.helpful}}
+                            Helpful ({{comment.helpful}})
                           </p>
-                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'userAnswer')" class="comment-activity ml-2">
+                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'userAnswer')" class="comment-activity ml-2 mr-2">
                             <span *ngIf="comment.flagged == false || comment.flagged == undefined; else userCommentReported">
                               <i class="fa fa-flag-o fa-2x"></i>
                             </span>
@@ -236,6 +237,7 @@
                               <i class="fa fa-flag fa-2x"></i>
                             </span>
                             </ng-template>
+                            Report
                           </p>
                           
                           <p *ngIf="comment.approved == 0">
@@ -333,10 +335,10 @@
                         <i class="fa fa-thumbs-up fa-2x"></i>
                       </span>
                       </ng-template>
-                      {{answer.helpful}}
+                      Helpful ({{answer.helpful}})
                     </li>
                     <li (click)="reportForumAnswer(answer.answer_id, answerIndex)">
-                      <span *ngIf="answer.flagged == false; else answerFlagged">
+                      <span *ngIf="answer.flagged == false || answer.flagged == undefined; else answerFlagged">
                         <i class="fa fa-flag-o fa-2x"></i>
                       </span>
                       <ng-template #answerFlagged>
@@ -344,6 +346,7 @@
                         <i class="fa fa-flag fa-2x"></i>
                       </span>
                       </ng-template>
+                      Report
                     </li>
                     <li><img src="assets/img/forum/eye.png" alt="">{{answer.views}}</li>
                     <li (click)="loadComments(answer.answer_id, answerIndex)">
@@ -413,9 +416,9 @@
                               <i class="fa fa-thumbs-up fa-2x"></i>
                             </span>
                             </ng-template>
-                            {{comment.helpful}}
+                            Helpful ({{comment.helpful}})
                           </p>
-                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'publicAnswer')" class="comment-activity ml-2">
+                          <p (click)="reportAnswerComment(comment.comment_id, answerIndex, commentIndex, parentIndex,  'publicAnswer')" class="comment-activity ml-2 mr-2">
                             <span *ngIf="comment.flagged == false || comment.flagged == undefined; else userCommentReported">
                               <i class="fa fa-flag-o fa-2x"></i>
                             </span>
@@ -424,6 +427,7 @@
                               <i class="fa fa-flag fa-2x"></i>
                             </span>
                             </ng-template>
+                            Report
                           </p>
                           
                           <p *ngIf="comment.approved == 0">

@@ -26,6 +26,7 @@ import { AnswersComponent } from '../../admin/answers/answers.component';
 import { CommentsComponent } from '../../admin/comments/comments.component';
 import { ForumCommentsComponent } from '../../admin/forum-comments/forum-comments.component';
 import { PagesComponent } from '../../admin/pages/pages.component';
+import { SettingsComponent } from '../../admin/settings/settings.component';
 
 import { 
   AuthGuardService as AuthGuard 
@@ -45,6 +46,7 @@ import {
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatRippleModule,
     MatFormFieldModule,
@@ -74,6 +76,7 @@ import {
     CommentsComponent,
     ForumCommentsComponent,
     PagesComponent,
+    SettingsComponent,
   ],
   providers: [
     AuthGuard,

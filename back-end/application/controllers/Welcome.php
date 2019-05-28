@@ -26,7 +26,7 @@ class Welcome extends CI_Controller {
 	public function email_confirm()
 	{
 	
-		$usermeta = $this->db->get_where('usermeta', array('meta_value' => $_GET['q']))->row();
+		$usermeta = $this->db->get_where('usermeta', array('meta_key' => 'confirm_email_code', 'meta_value' => $_GET['q']))->row();
 		
 		if ( isset($usermeta->user_id) ) {
 		
@@ -36,13 +36,35 @@ class Welcome extends CI_Controller {
 				array('company_id' => $user_company->meta_value), 
 				array('user_id' => $usermeta->user_id));
 			
-			$this->db->where(array('meta_value' => $_GET['q']));
+			$this->db->where(array('meta_key' => 'confirm_email_code', 'meta_value' => $_GET['q']));
 			$this->db->delete('usermeta');
 
 			$this->db->where(array('meta_key' => 'confirm_company', 'user_id' => $usermeta->user_id));
 			$this->db->delete('usermeta');
 
 			$this->load->view('email_confirmed');
+		} else {
+		
+			redirect(APP_URL, 'refresh');
+		}
+		
+	}
+
+	public function account_verify()
+	{
+	
+		$usermeta = $this->db->get_where('usermeta', array('meta_key' => 'verify_account_code', 'meta_value' => $_GET['q']))->row();
+		
+		if ( isset($usermeta->user_id) ) {
+		
+			$this->common_model->update_entry('users', 
+				array('status' => 1), 
+				array('user_id' => $usermeta->user_id));
+			
+			$this->db->where(array('meta_key' => 'verify_account_code', 'meta_value' => $_GET['q']));
+			$this->db->delete('usermeta');
+
+			$this->load->view('account_confirmed');
 		} else {
 		
 			redirect(APP_URL, 'refresh');

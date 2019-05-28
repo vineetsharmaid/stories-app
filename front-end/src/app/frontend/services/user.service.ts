@@ -20,6 +20,16 @@ export class UserService {
 	
   	constructor(private http: HttpClient) { }
 
+
+  	getSettings(): Observable<any>{
+			
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+			return this.http.get(API_URL+'get_settings', httpOptions);
+		}
+
   	verifyToken(): Observable<any>{
     	
 			let httpOptions = {

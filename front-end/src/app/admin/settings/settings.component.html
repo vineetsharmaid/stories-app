@@ -1,0 +1,95 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Settings</h4>
+            <!-- <p class="card-category">Complete your profile</p> -->
+          </div>
+          <div class="card-body">
+            <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+
+              <div class="row">
+                <div class="col mt-2 mb-4">
+                  <h4>Email Settings</h4>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <label class="settings-label">
+                    Contact Email
+                    <small>(Used in contact form)</small>
+                  </label>
+                  <input matInput class="settings-input" formControlName="contactEmail" [ngClass]="{ 'is-invalid': submitted && f.contactEmail.errors }">
+                  <div *ngIf="submitted && f.contactEmail.errors" class="invalid-feedback">
+                    <div *ngIf="f.contactEmail.errors.required">Contact Email is required</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="settings-label">
+                    Email
+                    <small>(Used for sending emails to users)</small>
+                  </label>
+                  <input matInput class="settings-input" formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col mt-5 mb-4">
+                  <h4>Social Media Settings</h4>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <label class="settings-label">
+                    Facebook URL
+                  </label>
+                  <input matInput class="settings-input" formControlName="fbUrl" [ngClass]="{ 'is-invalid': submitted && f.fbUrl.errors }">
+                  <div *ngIf="submitted && f.fbUrl.errors" class="invalid-feedback">
+                    <div *ngIf="f.fbUrl.errors.required">Facebook URL is required</div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="settings-label">
+                    Instagram URL
+                  </label>
+                  <input matInput class="settings-input" formControlName="instaUrl" [ngClass]="{ 'is-invalid': submitted && f.instaUrl.errors }">
+                  <div *ngIf="submitted && f.instaUrl.errors" class="invalid-feedback">
+                    <div *ngIf="f.instaUrl.errors.required">Instagram URL is required</div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="settings-label">
+                    LinkedIn URL
+                  </label>
+                  <input matInput class="settings-input" formControlName="lnUrl" [ngClass]="{ 'is-invalid': submitted && f.lnUrl.errors }">
+                  <div *ngIf="submitted && f.lnUrl.errors" class="invalid-feedback">
+                    <div *ngIf="f.lnUrl.errors.required">LinkedIn URL is required</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row" [hidden]="true">
+                <div class="col-md-12">
+                  <label>About Me</label>
+                  <mat-form-field class="example-full-width">
+                  <textarea matInput placeholder="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."></textarea>
+                  </mat-form-field>                  
+                </div>
+              </div>
+              <button mat-raised-button type="submit" class="btn btn-danger mt-5">Update Profile</button>
+
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
