@@ -149,7 +149,6 @@ class Api extends REST_Controller {
               // Insert user in database
               if ($this->common_model->insert_entry('users', $user_data)) {
 
-                $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
 
                 $user =  new stdClass();
                 $user->user_id   = $this->db->insert_id();
@@ -158,6 +157,8 @@ class Api extends REST_Controller {
 
                 $jwt_token = $this->_generate_jwt_token($user);
                 
+                
+                $contact_mail = $this->common_model->get_data('usermeta', array('meta_key' => 'email'));
 
                 $from_name = 'Stories Of Asia';
                 // $from_email = CONTACT_EMAIL;
@@ -181,7 +182,7 @@ class Api extends REST_Controller {
                   
 
                   $code_check = $this->_randomPassword();
-
+                  
                   $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_email_code', 'meta_value' => $code_check, 'user_id' => $user->user_id) );
 
                   $this->common_model->insert_entry( 'usermeta', array('meta_key' => 'confirm_company', 'meta_value' => $company, 'user_id' => $user->user_id) );

@@ -40,11 +40,20 @@ export class FooterComponent implements OnInit {
 
   getSettings() {
     
-      
-    this.fbUrl = localStorage.getItem('fbUrl');
-    this.lnUrl = localStorage.getItem('instaUrl');
-    this.instaUrl = localStorage.getItem('lnUrl');
+    this.userService.getSettings().subscribe((response: Array<Object>) => {
 
+      let settings = response['data'];
+      this.fbUrl = settings['fb_url']
+      this.lnUrl = settings['ln_url']
+      this.instaUrl = settings['insta_url']
+      
+      localStorage.setItem('fbUrl', this.fbUrl);
+      localStorage.setItem('instaUrl', this.lnUrl);
+      localStorage.setItem('lnUrl', this.instaUrl);
+    }, (error) => {
+
+      console.log('error', error);
+    });
   }
 
 

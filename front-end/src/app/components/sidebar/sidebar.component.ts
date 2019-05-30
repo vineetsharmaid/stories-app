@@ -58,8 +58,9 @@ export const ROUTES: RouteInfo[] = [
       class: '',
       expanded: false,
       children: [
-        { path: '/admin/answers/pending', title: 'Unpublished Answers', access: ['admin', 'superadmin'], letter:'UQ' },
-        { path: '/admin/answers/published', title: 'Published Answers', access: ['admin', 'superadmin'], letter:'PQ' },
+        { path: '/admin/answers/pending', title: 'Unpublished Answers', access: ['admin', 'superadmin'], letter:'UA' },
+        { path: '/admin/answers/published', title: 'Published Answers', access: ['admin', 'superadmin'], letter:'PA' },
+        { path: '/admin/answers/flagged', title: 'Flagged Answers', access: ['admin', 'superadmin'], letter:'FA' },
       ]
     }, { 
       path: '#', 
@@ -70,6 +71,7 @@ export const ROUTES: RouteInfo[] = [
       children: [
         { path: '/admin/forum-comments/pending', title: 'Unpublished Comments', access: ['admin', 'superadmin'], letter:'UC' },
         { path: '/admin/forum-comments/published', title: 'Published Comments', access: ['admin', 'superadmin'], letter:'PC' },
+        { path: '/admin/forum-comments/flagged', title: 'Flagged Comments', access: ['admin', 'superadmin'], letter:'FC' },
       ]
     },
     

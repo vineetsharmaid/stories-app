@@ -286,7 +286,8 @@ export class HeaderComponent implements OnInit {
           this.submitted = false;
           this.registerForm.reset();
           this.registerForm.patchValue({
-                company: [ '' ]
+                company: [ '' ],
+                formType: [ 'custom' ]
           });
 
           this.registerFormSuccess.nativeElement.click();
@@ -364,7 +365,8 @@ export class HeaderComponent implements OnInit {
     this.submitted = false;
     this.registerForm.reset();
     this.registerForm.patchValue({
-          company: [ '' ]
+          company: [ '' ],
+          formType: [ 'custom' ]
     });
 
   }
