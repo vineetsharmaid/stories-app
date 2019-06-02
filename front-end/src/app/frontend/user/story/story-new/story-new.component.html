@@ -16,11 +16,15 @@
 							</div>
 						</div>
 						<!-- <hr> -->
+						<!-- <div class="form-group"> 
+							 <textarea [froalaEditor]="editorStoryOptions" placeholder="Tell us your story here..." formControlName="description"></textarea> -->
+							<!-- <div *ngIf="addStorySubmitted && addF.description.errors" class="invalid-feedback"> -->
+								<!-- <div *ngIf="addF.description.errors.required">Story is required</div> -->
+							<!-- </div> -->
+						<!-- </div> -->
+
 						<div class="form-group">
-							<textarea [froalaEditor]="editorStoryOptions" placeholder="Tell us your story here..." formControlName="description"></textarea>
-							<div *ngIf="addStorySubmitted && addF.description.errors" class="invalid-feedback">
-								<div *ngIf="addF.description.errors.required">Story is required</div>
-							</div>
+							<quill-editor  formControlName="description" [styles]="{height: '400px'}" (onEditorCreated)="EditorCreated($event)"></quill-editor>
 						</div>
 
 

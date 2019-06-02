@@ -25,11 +25,16 @@
 										</mat-form-field>
 									</div>
 
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<textarea [froalaEditor]="editorPageOptions" placeholder="Content of the page" formControlName="content"></textarea>
 										<div *ngIf="formSubmitted && fields.content.errors" class="invalid-feedback">
 											<div *ngIf="fields.content.errors.required">Content is required</div>
 										</div>								
+									</div> -->
+
+
+									<div class="form-group">
+										<quill-editor placeholder="Content of the page" formControlName="content" [styles]="{height: '600px'}" (onEditorCreated)="EditorCreated($event)"></quill-editor>
 									</div>
 								
 									<button mat-raised-button type="submit" class="btn btn-danger pull-right">Save</button>

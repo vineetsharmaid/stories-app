@@ -25,7 +25,8 @@ export class QuestionsComponent implements OnInit {
   public isLoggedIn: string = 'false';
   public dataLoading: boolean = true;
   public currentUserId: string = localStorage.getItem('user_id');
-
+  public editor:any;
+  
   public editorAnswerOptions: Object = {
     // toolbarInline: true,  
     placeholderText: null,
@@ -576,5 +577,37 @@ export class QuestionsComponent implements OnInit {
   }
 
 
+  EditorCreated(quill) {
+
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.imageHandler.bind(this));
+      this.editor = quill;
+  }
+
+  imageHandler() {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file');
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image');
+
+    Imageinput.addEventListener('change', () =>  {
+      const file = Imageinput.files[0];
+      console.log('file', file);
+      if (Imageinput.files != null && Imageinput.files[0] != null) {
+          this.forumService.uploadAnswerImage(file).subscribe(res => {
+            
+            console.log('res', res);
+            this.pushImageToEditor(res['link']);
+          });
+      }
+  });
+
+    Imageinput.click();
+  }
+  pushImageToEditor(returnedURL) {
+    const range = this.editor.getSelection(true);
+    const index = range.index + range.length;
+    this.editor.insertEmbed(range.index, 'image', returnedURL, 'user');
+  }
 
 }

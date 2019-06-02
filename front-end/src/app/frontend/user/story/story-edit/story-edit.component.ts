@@ -57,6 +57,7 @@ export class StoryEditComponent implements OnInit {
 	public selectedFile: ImageSnippet;
 	public subPreviewForm: any;
   public subGetStory: any;
+  public editor:any;
   public filePath: string;
   public previousUrl: string;
 	public storyId: number;
@@ -87,6 +88,13 @@ export class StoryEditComponent implements OnInit {
   @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
   @ViewChild('saveDraftResponse') saveDraftResponse: ElementRef<HTMLInputElement>;
   @ViewChild('saveStoryError') saveStoryError: ElementRef<HTMLInputElement>;
+
+  editorModel = [{
+      attributes: {
+        font: 'roboto'
+      },
+      insert: 'test'
+    }]
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -747,5 +755,39 @@ export class StoryEditComponent implements OnInit {
     this.subPreviewForm.unsubscribe();
   }
     
+
+  EditorCreated(quill) {
+
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.imageHandler.bind(this));
+      this.editor = quill;
+  }
+
+  imageHandler() {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file');
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image');
+
+    Imageinput.addEventListener('change', () =>  {
+      const file = Imageinput.files[0];
+      console.log('file', file);
+      if (Imageinput.files != null && Imageinput.files[0] != null) {
+          this.storyService.uploadStoryImage(file).subscribe(res => {
+            
+            console.log('res', res);
+            this.pushImageToEditor(res['link']);
+          });
+      }
+  });
+
+    Imageinput.click();
+  }
+  pushImageToEditor(returnedURL) {
+    console.log('editor', this.editor);
+    const range = this.editor.getSelection(true);
+    const index = range.index + range.length;
+    this.editor.insertEmbed(range.index, 'image', returnedURL, 'user');
+  }
   
 }

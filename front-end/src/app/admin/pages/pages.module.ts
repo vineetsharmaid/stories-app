@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { QuillModule } from 'ngx-quill'
 
 import { PagesRoutes } from './pages.routing';
 import { PagesListComponent } from './pages-list/pages-list.component';
@@ -39,6 +40,7 @@ import {
     MatTooltipModule, 
     MatRadioModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+    QuillModule.forRoot(),
   ],
   declarations: [
     PagesListComponent,

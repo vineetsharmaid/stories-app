@@ -14,6 +14,7 @@ import { StoryEditComponent } from './story-edit/story-edit.component';
 import { StoryStatsComponent } from './story-stats/story-stats.component';
 
 import { StoryService } from '../../services/story.service';
+import { QuillModule } from 'ngx-quill'
 
 import {
   MatButtonModule,
@@ -48,6 +49,7 @@ import {
     MatCardModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     ContentLoaderModule,
+    QuillModule.forRoot(),
   ],
   declarations: [
     StoryListComponent,

@@ -84,8 +84,9 @@
             <div class="answer-box pb-5 pt-5" *ngIf="questionData.showAnswerBox == true">
               <form (ngSubmit)="saveAnswer(questionData.question_id)">
                 <input type="hidden" [value]="questionData.question_id">
-                <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="questionData.tempAnswer" name="tempAnswer">
-                </textarea>
+                <!-- <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="questionData.tempAnswer" name="tempAnswer">
+                </textarea> -->
+                <quill-editor placeholder="Write your answer" [(ngModel)]="questionData.tempAnswer" name="tempAnswer" [styles]="{height: '200px'}" (onEditorCreated)="EditorCreated($event)"></quill-editor>
                 
                 <button type="button" class="btn btn-sm btn-danger" (click)="questionData.showAnswerBox = false">Cancel</button>
                 <button type="submit" class="btn btn-sm btn-success">Submit</button>
@@ -117,8 +118,10 @@
                 <div class="answer-box" *ngIf="answerByUser.showAnswerEditBox == true">
                   <form (ngSubmit)="updateAnswer(answerByUser.answer_id, answerIndex)">
                     <input type="hidden" [value]="answerByUser.answer_id">
-                    <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="answerByUser.answer" name="answer">
-                    </textarea>
+                    <!-- <textarea [froalaEditor]="editorAnswerOptions" placeholder="Write your answer" [(ngModel)]="answerByUser.answer" name="answer">
+                    </textarea> -->
+
+                    <quill-editor placeholder="Write your answer" [(ngModel)]="answerByUser.answer" name="answer" [styles]="{height: '200px'}" (onEditorCreated)="EditorCreated($event)"></quill-editor>
                     
                     <button type="button" class="btn btn-sm btn-danger" (click)="answerByUser.showAnswerEditBox = false">Cancel</button>
                     <button type="submit" class="btn btn-sm btn-success">Submit</button>

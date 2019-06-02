@@ -8,6 +8,7 @@ import { ContentLoaderModule } from '@netbasal/content-loader';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 import { ForumRoutes } from './forum.routing';
+import { QuillModule } from 'ngx-quill'
 
 import { ForumListComponent } from './forum-list/forum-list.component';
 import { QuestionsComponent } from './questions/questions.component';
@@ -46,6 +47,7 @@ import {
     InfiniteScrollModule,
     ContentLoaderModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
+    QuillModule.forRoot(),
   ],
   declarations: [
     ForumListComponent,

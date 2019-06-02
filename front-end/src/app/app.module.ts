@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { SharedService } from "./frontend/services/shared.service";
+import { QuillModule } from 'ngx-quill'
 
 /************Social Media Login Starts****************
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
@@ -66,7 +67,8 @@ import { LinkedInSharingComponent } from './linkedin-sharing.component';
     InfiniteScrollModule,
     AgmCoreModule.forRoot({
       apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
-    })
+    }),
+    QuillModule.forRoot(),
   ],
   declarations: [
     AppComponent,

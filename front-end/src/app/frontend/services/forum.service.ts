@@ -63,6 +63,17 @@ export class ForumService {
 	    );
 		}
 
+		public uploadAnswerImage(image: File): Observable<object> {
+	    
+
+ 			const formData = new FormData();
+      formData.append('description_image', image);
+
+      const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+      
+      return this.http.post(API_URL+'story_description_image_upload', formData, {headers});
+	  }
+
   	updateAnswer(answer): Observable<any>{
 			
 			const formData = new FormData();

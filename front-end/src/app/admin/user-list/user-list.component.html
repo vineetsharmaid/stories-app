@@ -55,7 +55,7 @@
                       <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-status-change" (click)="setStatus = 2; currentUser = user['user_id']; currentIndex = indx;" *ngIf="user['status_id'] == 1">
                         Block
                       </button>
-                      <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#confirm-status-change" (click)="setStatus = 1; currentUser = user['user_id']; currentIndex = indx;" *ngIf="user['status_id'] == 2">
+                      <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#confirm-status-change" (click)="setStatus = 1; currentUser = user['user_id']; currentIndex = indx;" *ngIf="user['status_id'] == 2 || user['status_id'] == 0">
                         Unblock
                       </button>
                       <button class="btn btn-sm btn-success" [routerLink]="['./', user.user_id]">

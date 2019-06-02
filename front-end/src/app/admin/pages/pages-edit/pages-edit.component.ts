@@ -24,7 +24,7 @@ export class PagesEditComponent implements OnInit {
 	public editPagesForm: FormGroup;
 	public formSubmitted: boolean = false;
 	public formErrors: Array<string>;
-
+  public editor:any;
 
 	public editorPageOptions: Object = {
   	// toolbarInline: true,  
@@ -172,5 +172,38 @@ export class PagesEditComponent implements OnInit {
 		}
 
   	}
+
+
+  EditorCreated(quill) {
+
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.imageHandler.bind(this));
+      this.editor = quill;
+  }
+
+  imageHandler() {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file');
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image');
+
+    Imageinput.addEventListener('change', () =>  {
+      const file = Imageinput.files[0];
+      
+      if (Imageinput.files != null && Imageinput.files[0] != null) {
+          this.companiesService.uploadPageImage(file).subscribe(res => {
+            
+            this.pushImageToEditor(res['link']);
+          });
+      }
+  });
+
+    Imageinput.click();
+  }
+  pushImageToEditor(returnedURL) {
+    const range = this.editor.getSelection(true);
+    const index = range.index + range.length;
+    this.editor.insertEmbed(range.index, 'image', returnedURL, 'user');
+  }
 
 }

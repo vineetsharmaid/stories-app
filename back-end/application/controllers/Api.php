@@ -230,7 +230,8 @@ class Api extends REST_Controller {
                         'email_address' => $post_data->email,
                         'merge_fields' => [
                           'FNAME'=>$post_data->first_name, 
-                          'LNAME'=>$post_data->last_name
+                          'LNAME'=>$post_data->last_name,
+                          'PROFESSION'=>$profession
                         ],
                         'status'        => 'subscribed',
                     ]);

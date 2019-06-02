@@ -24,27 +24,49 @@ export class CompaniesService {
 	/** POST: get company from the database */
 	getCompanies (): Observable<any> {
 	  
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
 	  return this.http.get(ADMIN_API_URL+'get_companies/', httpOptions);
 	}
 
 	/** POST: get company by companyId from the database */
 	getCompany (companyId): Observable<any> {
 	  
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
 	  return this.http.get(ADMIN_API_URL+'get_company/'+companyId, httpOptions);
 	}
 
 	/** GET: get page from the database */
 	getPages (): Observable<any> {
 	  
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
 	  return this.http.get(ADMIN_API_URL+'get_pages/', httpOptions);
 	}
 	
 	/** GET: get page  by pageID from the database */
 	getPage (pageID): Observable<any> {
 	  
+		let httpOptions = {
+		  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+		};
 	  return this.http.get(ADMIN_API_URL+'get_pages/'+pageID, httpOptions);
 	}
 
+	public uploadPageImage(image: File): Observable<object> {
+    
+
+		const formData = new FormData();
+    formData.append('description_image', image);
+
+    const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+    
+    return this.http.post(API_URL+'story_description_image_upload', formData, {headers});
+  }
 	
 	/** POST: update page data in database */
 	editpage (page): Observable<any> {

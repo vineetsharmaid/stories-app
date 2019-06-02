@@ -44,6 +44,7 @@ export class ForumListComponent implements OnInit {
   public sidebarTopics: Array<object>;
   public allQuestions: Array<object>;
   public limitOffset: number = 0;
+  public editor:any;
 
 	public visible    = true;
 	public removable  = true;
@@ -53,6 +54,13 @@ export class ForumListComponent implements OnInit {
   @ViewChild('auto') matAutocomplete: MatAutocomplete;  
 	@ViewChild('closeQuestionModal') closeQuestionModal: ElementRef;
   @ViewChild('topicsInput') topicsInput: ElementRef<HTMLInputElement>;
+
+  editorModel = [{
+      attributes: {
+        font: 'roboto'
+      },
+      insert: 'test'
+    }]
 
   	public editorAnswerOptions: Object = {
   	// toolbarInline: true,  
@@ -428,4 +436,39 @@ export class ForumListComponent implements OnInit {
 
     this.sharedService.changeMessage("show_login");
   }
+
+
+  EditorCreated(quill) {
+
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.imageHandler.bind(this));
+      this.editor = quill;
+  }
+
+  imageHandler() {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file');
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image');
+
+    Imageinput.addEventListener('change', () =>  {
+      const file = Imageinput.files[0];
+      console.log('file', file);
+      if (Imageinput.files != null && Imageinput.files[0] != null) {
+          this.forumService.uploadAnswerImage(file).subscribe(res => {
+            
+            console.log('res', res);
+            this.pushImageToEditor(res['link']);
+          });
+      }
+  });
+
+    Imageinput.click();
+  }
+  pushImageToEditor(returnedURL) {
+    const range = this.editor.getSelection(true);
+    const index = range.index + range.length;
+    this.editor.insertEmbed(range.index, 'image', returnedURL, 'user');
+  }
+
 }

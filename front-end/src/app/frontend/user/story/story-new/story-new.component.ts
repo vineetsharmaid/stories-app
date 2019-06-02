@@ -3,6 +3,7 @@ import { Router, NavigationEnd, RoutesRecognized } from '@angular/router';
 
 import { trigger, transition, animate, style } from '@angular/animations'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import Quill from 'quill'
 
 
 import {MatAutocompleteSelectedEvent, MatChipInputEvent, MatAutocomplete} from '@angular/material';
@@ -24,6 +25,12 @@ const APP_URL  =  environment.baseUrl;
 class ImageSnippet {
   constructor(public src: string, public file: File) {}
 }
+
+
+const font = Quill.import('formats/font')
+// We do not add Aref Ruqaa since it is the default
+font.whitelist = ['mirza', 'roboto', 'aref', 'serif', 'sansserif', 'monospace']
+Quill.register(font, true)
 
 @Component({
   selector: 'app-story-new',
@@ -67,6 +74,7 @@ export class StoryNewComponent implements OnInit {
   public selectedCountry: any = "";
   public companies: Array<object>;
   public storyErrors: Array<string>;
+  public editor:any;
 
   visible    = true;
   removable  = true;
@@ -80,6 +88,12 @@ export class StoryNewComponent implements OnInit {
   @ViewChild('closeReviewSubmit') closeReviewSubmit: ElementRef<HTMLInputElement>;
   @ViewChild('saveDraftResponse') saveDraftResponse: ElementRef<HTMLInputElement>;  
 
+  editorModel = [{
+      attributes: {
+        font: 'roboto'
+      },
+      insert: 'test'
+    }]
 
 	public editorStoryOptions: Object = {
   	// toolbarInline: true,  
@@ -200,6 +214,28 @@ export class StoryNewComponent implements OnInit {
     this.getCompanies();
     this.subscribeToCountry();
 
+  }
+
+  blured = false
+  focused = false
+
+  created(event) {
+    // tslint:disable-next-line:no-console
+    console.log(event)
+  }
+
+  focus($event) {
+    // tslint:disable-next-line:no-console
+    console.log('focus', $event)
+    this.focused = true
+    this.blured = false
+  }
+
+  blur($event) {
+    // tslint:disable-next-line:no-console
+    console.log('blur', $event)
+    this.focused = false
+    this.blured = true
   }
 
   getHelpContent() {
@@ -513,7 +549,7 @@ export class StoryNewComponent implements OnInit {
 
       this.selectedFile = new ImageSnippet(event.target.result, file);
       this.filePath = this.selectedFile.src;
-      
+      console.log('this.selectedFile.file', this.selectedFile.file);
       this.storyService.uploadImage(this.selectedFile.file, 0).subscribe(
         (response) => {
 
@@ -608,5 +644,38 @@ export class StoryNewComponent implements OnInit {
     // this.subAddForm.unsubscribe();
   }
 
+  EditorCreated(quill) {
+
+      const toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', this.imageHandler.bind(this));
+      this.editor = quill;
+  }
+
+  imageHandler() {
+    const Imageinput = document.createElement('input');
+    Imageinput.setAttribute('type', 'file');
+    Imageinput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
+    Imageinput.classList.add('ql-image');
+
+    Imageinput.addEventListener('change', () =>  {
+      const file = Imageinput.files[0];
+      console.log('file', file);
+      if (Imageinput.files != null && Imageinput.files[0] != null) {
+          this.storyService.uploadStoryImage(file).subscribe(res => {
+            
+            console.log('res', res);
+            this.pushImageToEditor(res['link']);
+          });
+      }
+  });
+
+    Imageinput.click();
+  }
+  pushImageToEditor(returnedURL) {
+    const range = this.editor.getSelection(true);
+    const index = range.index + range.length;
+    this.editor.insertEmbed(range.index, 'image', returnedURL, 'user');
+    
+  }
 
 }
