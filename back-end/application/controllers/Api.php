@@ -1387,7 +1387,7 @@ class Api extends REST_Controller {
       $message    = $this->input->post('message');
       $subject    = 'SOA Contact Form';
       // $to_email   = CONTACT_EMAIL;
-      $from_email = $contact_mail[0]->meta_value;
+      $to_email = $contact_mail[0]->meta_value;
       $mail = $this->send_mail($from_name, $from_email, $to_email, $subject, $message);
 
       if( $mail ) {
