@@ -1860,8 +1860,8 @@ class Users extends REST_Controller {
 
     function time_elapsed_string($datetime, $full = false) {
         // added hours to match mysql time with server
-        $datetime = date( "Y-m-d H:i:s", 
-          strtotime('+5 hours', strtotime($datetime)) );
+        // $datetime = date( "Y-m-d H:i:s", 
+        //   strtotime('+5 hours', strtotime($datetime)) );
         
         $now = new DateTime();
         $ago = new DateTime($datetime);

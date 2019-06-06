@@ -117,7 +117,8 @@
           
         </form>
         <a class="forgt_pass alink" (click)="showForgotPassword = !showForgotPassword">Forgot password?</a>
-        <a href="#" class="forgt_pass alink mt-2" *ngIf="accountAlreadyExists">Sign up with another email address.</a>
+        <br>
+        <a href="#" (click)="showHideLogin = !showHideLogin; showForgotPassword = false; passwordEmailSent = false; accountAlreadyExists = false;" [hidden]="showHideLogin" class="forgt_pass alink mt-2" *ngIf="accountAlreadyExists">Sign up with another email address.</a>
       </div>
       <!----------- ENDS USER LOGIN FORM ------------>
       <!----------- STARTS USER REGISTERATION FORM ------------>
@@ -274,6 +275,22 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-sm btn-success" data-dismiss="modal" [routerLink]="['/user']">Continue</button>
+      </div>
+  </div>
+</div>
+</div>
+
+<a data-toggle="modal" data-target="#registerationError" data-backdrop="static" data-keyboard="false" #showRegisterationError [hidden]="true"></a>
+
+<!-- The Modal -->
+<div class="modal fade" id="registerationError">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content register-success">
+    
+      <!-- Modal body -->
+      <div class="modal-body p-5 text-left">
+          <p>Please enter your correct company email</p>
+          <button _ngcontent-c2="" class="close closeError" data-dismiss="modal" type="button">×</button>
       </div>
   </div>
 </div>

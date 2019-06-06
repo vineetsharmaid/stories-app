@@ -160,8 +160,10 @@
         </div>
         <div class="right_inner_footer not_absolute">
           <div class="right_inner_footer_top">
-            <a href="#" class="coubt">Russia</a>
+            <!-- <a href="#" class="coubt">Russia</a> -->
             <!-- <a href="#" class="coubt2">Indigenous</a> -->
+            <a class="coubt" *ngIf="story.type == 1">Workplace</a>
+            <a class="coubt" *ngIf="story.type == 2">Business</a>
             <a *ngFor="let tag of story.tags" [routerLink]="['/tag/', tag.tag_id]" class="coubt2">{{tag.name}}</a>
           </div>
           <div class="right_line">
@@ -171,7 +173,7 @@
           </div>
           <div class="right_inner_footer_bottom">
             <ul>
-              <li><img src="assets/img/like.png" alt=""> 1,003</li>
+              <li><img src="assets/img/like.png" alt=""> {{story.likes}}</li>
               <li class="bookmark">
                 <div class="share_img_wrap">
                   <img src="assets/img/bookmark.png" alt="">

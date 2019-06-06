@@ -53,7 +53,8 @@ export class HeaderComponent implements OnInit {
   public companies: Array<object>;
   public userInfo: Object;
 
-	@ViewChild('showLoginModal')  showLoginModal: ElementRef;
+  @ViewChild('showLoginModal')  showLoginModal: ElementRef;
+	@ViewChild('showRegisterationError')  showRegisterationError: ElementRef;
   @ViewChild('closeLoginModal') closeLoginModal: ElementRef;
   @ViewChild('registerSuccess') registerSuccess: ElementRef;
   @ViewChild('registerFormSuccess') registerFormSuccess: ElementRef;
@@ -178,7 +179,6 @@ export class HeaderComponent implements OnInit {
 
     this.userService.getUserInfo().subscribe( (response) => {
 
-      console.log('response', response);
       this.userInfo = response['data'][0];
       this.userInfo['cover_pic'] = this.userInfo['cover_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['cover_pic'];
       this.userInfo['profile_pic'] = this.userInfo['profile_pic'] == '' ? '' : APP_URL+'/assets/uploads/users/'+this.userInfo['profile_pic'];
@@ -203,6 +203,11 @@ export class HeaderComponent implements OnInit {
       
       this.submitted = true;
 
+      if( this.errorCompanyEmail == true ) {
+        
+        this.showRegisterationError.nativeElement.click();  
+        return;
+      }
       // check if form is valid
       if (this.registerForm.status === "VALID" && this.errorCompanyEmail == false) {
 

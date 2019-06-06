@@ -9,6 +9,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ContentLoaderModule } from '@netbasal/content-loader';
 
 import { FrontendLayoutRoutes } from './frontend-layout.routing';
+import { SafeHtmlPipe } from '../../pipes/safehtml.pipes';
 
 import { HomeComponent } from '../../frontend/home/home.component';
 import { ForumComponent } from '../../frontend/forum/forum.component';
@@ -62,6 +63,7 @@ import {
   ],
   declarations: [
     HomeComponent,
+    SafeHtmlPipe,
     ForumComponent,
     SearchComponent,
     StoriesComponent,

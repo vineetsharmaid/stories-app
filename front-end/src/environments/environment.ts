@@ -5,8 +5,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://soastaging.com/back-end',
-  webUrl: 'http://soastaging.com/app',
+  baseUrl: 'http://storiesofasia.co/back-end',
+  webUrl: 'http://storiesofasia.co/app',
   // baseUrl: 'http://localhost/stories-app/back-end',
   defaultListingCount: 4,
 };

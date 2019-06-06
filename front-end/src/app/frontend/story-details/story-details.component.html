@@ -125,7 +125,7 @@
                           <div class="container-fluid single_page_tagline_wrap single_page_content" *ngIf="displayStory == true">
                             <div class="container">
                               <div class="row">
-                                <div [innerHtml]="storyData.description"></div>
+                                <div [innerHtml]="storyData.description | safeHtml"></div>
                               </div>
                             </div>
                           </div>
