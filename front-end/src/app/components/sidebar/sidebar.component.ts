@@ -16,7 +16,7 @@ export const ROUTES: RouteInfo[] = [
     // { path: '/admin/user-profile', title: 'User Profile', access: ['admin', 'superadmin'],  icon:'person', class: '', expanded: false, children: [] },
     { path: '/admin/user-list', title: 'User List', access: ['admin', 'superadmin'],  icon:'content_paste', class: '', expanded: false, children: [] },
     { path: '/admin/companies', title: 'Companies', access: ['admin', 'superadmin'], icon:'content_paste', class: '', expanded: false, children: [] },
-    { path: '/admin/pages', title: 'Pages', access: ['superadmin'], icon:'content_paste', class: '', expanded: false, children: [] },
+    { path: '/admin/pages', title: 'Pages', access: ['admin', 'superadmin'], icon:'content_paste', class: '', expanded: false, children: [] },
     { 
       path: '#', 
       title: 'Stories', access: ['admin', 'superadmin'], 

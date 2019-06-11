@@ -21,7 +21,7 @@
                   <th width="10%">Action </th>
                 </thead>
                 <tbody *ngIf="companies?.length > 0">
-                  <tr *ngFor="let company of companies">
+                  <tr *ngFor="let company of companies; let indx = index">
                     <td>
                       {{company.name}}
                     </td>
@@ -38,6 +38,9 @@
                     <td>
                       <button class="btn btn-sm btn-info" routerLink="./edit/{{company.company_id}}">
                       Edit
+                      </button>
+                      <button class="btn btn-sm btn-danger" (click)="delete(company.company_id, indx)">
+                      Delete
                       </button>
                     </td>
                   </tr>

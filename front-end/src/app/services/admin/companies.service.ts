@@ -127,6 +127,15 @@ export class CompaniesService {
 	}
 
 
+	deleteCompany(companyId): Observable<any>{
+
+ 		const formData = new FormData();
+      	formData.append('company_id', companyId);
+			
+		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+		
+		return this.http.post(ADMIN_API_URL+'delete_company/', formData, {headers});
+	}
 
 
 

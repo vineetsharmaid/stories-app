@@ -40,4 +40,14 @@ export class CompaniesListComponent implements OnInit {
 	    });
   	}
 
+  	delete(companyId, index) {
+
+	    this.companiesService.deleteCompany(companyId).subscribe((response: Array<Object>) => {
+
+	    	this.companies.splice(index, 1);
+	    }, error => {
+	    	
+	    	console.log('deleteComment error', error);
+	    });
+  	}
 }

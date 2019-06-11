@@ -1227,6 +1227,29 @@ class Admin extends REST_Controller {
         }
     }
 
+    public function delete_company_post()
+    { 
+        $this->common_model->delete_entry( 'companies', array('company_id' => $this->input->post('company_id')) );
+
+        if ($this->db->affected_rows())
+        {
+          // Set the response and exit
+          $this->response(  
+            array(
+              'status' => TRUE,
+              'message'   => 'Company deleted',
+            ), REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
+        } else {
+
+          // generate an error... or use the log_message() function to log your error
+          // Set the response and exit
+          $this->response([
+              'status'  => FALSE,
+              'message' => 'Unable to delete company'
+          ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+    }
+
     public function get_forum_comments_get($status)
     { 
      
