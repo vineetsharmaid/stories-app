@@ -91,6 +91,30 @@
 .tag-input { z-index: 9999; cursor: pointer; }
 .tag-input-arrow { position: absolute; right: 0; }
 
+
+
+
+
+
+.featured-image.ng-star-inserted{position: relative;overflow: hidden; height: 350px}
+.featured-image.ng-star-inserted img{width: 100%;
+height: 100%;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+-webkit-transform: translate(-50%, -50%);
+-moz-transform: translate(-50%, -50%);
+-o-transform: translate(-50%, -50%);
+object-fit: cover;
+-webkit-object-fit: cover;
+-moz-object-fit: cover;
+-o-object-fit: cover;}
+
+.image-upload-container{z-index: 9999}
+
+
+
 @media only screen and (max-width: 1199px){
 .theme_btn{width: 100% !important; margin: 0 !important; margin-bottom: 15px !important}
 .extra-btns{position: relative;display: block;padding: 32px; bottom: 0;right: auto; margin-top: -194px}
