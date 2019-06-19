@@ -1477,16 +1477,20 @@ class Api extends REST_Controller {
 
     private function send_mail($from_name, $from_email, $to_email, $subject, $message) {
 
+      $this->load->library('email');
+
       $config = Array(
           'protocol' => 'smtp',
           'smtp_host' => 'ssl://smtp.googlemail.com',
           'smtp_port' => 465,
-          'smtp_user' => 'dev.bizdesire@gmail.com',
-          'smtp_pass' => 'Bizdesire@789',
+          'smtp_user' => 'storiesofasiasoa@gmail.com',
+          'smtp_pass' => 'Welcome@123',
           'mailtype'  => 'html', 
           'charset'   => 'iso-8859-1'
       );
-      $this->load->library('email', $config);
+      // $this->load->library('email', $config);
+      $this->email->initialize($config);// add this line
+      
       $this->email->set_newline("\r\n");
       $this->email->set_mailtype("html");
 

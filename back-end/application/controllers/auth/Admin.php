@@ -804,7 +804,19 @@ class Admin extends REST_Controller {
     public function get_stories_by_review_status_get($review_status)
     { 
 
-        $stories = $this->admin_model->get_stories( array('review' => $review_status) );
+        if ( $review_status == 2 ) {
+          // status = draft and review != unapproved
+          $stories = $this->admin_model->get_stories( array('stories.status' => 0, 'stories.review !=' => 0) );
+        } else if ( $review_status == 1 ) {
+          
+          // status = published and review = approved
+          $stories = $this->admin_model->get_stories( array('stories.status' => $review_status, 'stories.review' => $review_status) );
+        } else {
+          
+          $stories = $this->admin_model->get_stories( array('stories.review' => $review_status) );
+        }
+
+        // $stories = $this->admin_model->get_stories( array('review' => $review_status) );
 
         // Check if the stories data store contains stories (in case the database result returns NULL)
         if ( !empty($stories) ) {
@@ -1357,7 +1369,8 @@ class Admin extends REST_Controller {
     public function update_story_status_post()
     { 
       
-        $data = array('review' => $this->input->post('review'), 'status' => $this->input->post('review'));
+        // $data = array('review' => $this->input->post('review'), 'status' => $this->input->post('review'));
+        $data = array('status' => $this->input->post('review'));
         $where = array('story_id' => $this->input->post('story_id'));
 
         // Check if the story data store contains story (in case the database result returns NULL)
