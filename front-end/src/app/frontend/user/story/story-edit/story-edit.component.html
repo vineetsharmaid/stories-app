@@ -6,6 +6,7 @@
 				<div class="col-md-10 offset-md-1" *ngIf="showNewForm" [@slideInOut]>
 					<form [formGroup]="editStoryForm" (ngSubmit)="submitStory()" class="add_story_form">
 						<h5 class="heading-message mb-4">You're writing your story now...</h5>
+						<button type="button" class="theme_btn mr-5" data-toggle="modal" data-target="#where-to-start">Not sure where to start?</button>
 						<div class="form-group">
 							<div style="border-bottom: 1px solid #efefef;">
 								<input type="text" formControlName="title" class="title-field" placeholder="Story Title">
@@ -150,7 +151,6 @@
 						</div> -->
 					</form>
 					<div class="extra-btns">
-						<button class="theme_btn mr-5" data-toggle="modal" data-target="#where-to-start">Not sure where to start?</button>
 						<button class="theme_btn ml-3" (click)="submitStory(true)">Save Draft</button>
 					</div>
 
