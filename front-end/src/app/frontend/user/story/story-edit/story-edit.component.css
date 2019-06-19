@@ -90,7 +90,7 @@
 .invalid-feedback { display: block !important; }
 .tag-input { z-index: 9999; cursor: pointer; }
 .tag-input-arrow { position: absolute; right: 0; }
-
+.modal-body ul li{list-style-position: inside;text-indent: -20px; padding-left: 20px;}
 @media only screen and (max-width: 1199px){
 .theme_btn{width: 100% !important; margin: 0 !important; margin-bottom: 15px !important}
 .extra-btns{position: relative;display: block;padding: 32px; bottom: 0;right: auto; margin-top: -194px}
