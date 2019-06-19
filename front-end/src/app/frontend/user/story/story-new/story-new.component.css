@@ -111,9 +111,9 @@ object-fit: cover;
 -moz-object-fit: cover;
 -o-object-fit: cover;}
 
-.image-upload-container{z-index: 9999}
+.image-upload-container{z-index: 9999; background: #fff}
 
-
+.modal-body ul li{list-style-position: inside;text-indent: -20px; padding-left: 20px;}
 
 @media only screen and (max-width: 1199px){
 .theme_btn{width: 100% !important; margin: 0 !important; margin-bottom: 15px !important}
