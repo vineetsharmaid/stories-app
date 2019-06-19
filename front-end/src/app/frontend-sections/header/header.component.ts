@@ -278,12 +278,14 @@ export class HeaderComponent implements OnInit {
   }
 
   registerUser(user, registerForm=false) {
-  	
-  	this.userService.registerUser(user).subscribe((response: Array<Object>) => {
+    
+    this.userService.registerUser(user).subscribe((response: Array<Object>) => {
 
-  		if ( response['status'] == 200 || user.loginBy == 'facebook' || user.loginBy == 'google' ) {
-  			
-  			// Close login modal
+      console.log('here register');
+
+      if ( response['status'] == 200 && (user.loginBy != 'facebook' && user.loginBy != 'google') ) {
+        
+        // Close login modal
         this.closeLoginModal.nativeElement.click();
         
         if(registerForm) {
@@ -294,18 +296,26 @@ export class HeaderComponent implements OnInit {
                 company: [ '' ],
                 formType: [ 'custom' ]
           });
-
           this.registerFormSuccess.nativeElement.click();
-        } else {
-
-          this.registerSuccess.nativeElement.click();
-    			// set user login
-  				this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], false);
-        }
+        } 
   		}
 
+      if(user.loginBy == 'facebook' || user.loginBy == 'google') {
+
+        this.closeLoginModal.nativeElement.click();
+        if ( response['status'] != 201 ) {
+          // set user login
+          this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], false);
+          this.registerSuccess.nativeElement.click();
+        } else {
+          
+          // set user login
+          this.setUserLogin(response['data']['id'], response['data']['username'], response['token'], true);
+        }
+      }
+
   		// user already exists
-  		if ( response['status'] == 201 ) {
+  		if ( response['status'] == 201 && (user.loginBy != 'facebook' && user.loginBy != 'google') ) {
   			
   			this.accountAlreadyExists = true;
   			this.showHideLoginBtn.nativeElement.click();
@@ -320,17 +330,14 @@ export class HeaderComponent implements OnInit {
 
   		this.loginLoading = false;
 
-  		if ( response['status'] == 200 ) {
-  			
-  			console.log('logged in');
-
-  			// Close login modal
-  			this.closeLoginModal.nativeElement.click();
-				
+        console.log('here login');
+      if ( response['status'] == 200 ) {
+        
+        // Close login modal
+        this.closeLoginModal.nativeElement.click();
   			// set user login
 				this.setUserLogin(response['data']['id'], response['data']['username'], response['token']);
-  			console.log('loggedIn', this.loggedIn);
-
+  			
   		}
 
   		if ( response['status'] == 201 ) {

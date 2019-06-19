@@ -44,24 +44,40 @@
 				<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let point of points">
 					<span *ngIf="point.activity == 'likes'">
 						Your 
-						<a [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						<a *ngIf="point.slug != null" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						<span *ngIf="point.slug == null">{{point.selector}}</span>
 						recommended by {{point.milestone}} readers.
 					</span>
 					<span *ngIf="point.activity == 'approved'">
 						Your 
-						<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						<span *ngIf="point.slug != null">
+							<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						</span>
+						<span *ngIf="point.selector == 'story' && point.slug == null">{{point.selector}}</span>
 						
-						<a *ngIf="point.selector == 'question'" [routerLink]="['/forum/question/', point.question_slug]">{{point.selector}}</a>
+						<span *ngIf="point.question_slug != null">
+							<a *ngIf="point.selector == 'question'" [routerLink]="['/forum/question/', point.question_slug]">{{point.selector}}</a>
+						</span>
+						<span *ngIf="point.selector == 'question' && point.question_slug == null">{{point.selector}}</span>
 						
-						<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+						<span *ngIf="point.answer_slug != null">
+							<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+						</span>
+						<span *ngIf="point.selector == 'answer' && point.answer_slug == null">{{point.selector}}</span>
 
 						 approved by the SOA Team.
 					</span>
 					<span *ngIf="point.activity == 'comments'">
 						Your 
-						<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						<span *ngIf="point.slug != null">
+							<a *ngIf="point.selector == 'story'" [routerLink]="['/story/', point.slug]">{{point.selector}}</a>
+						</span>
+						<span *ngIf="point.selector == 'story' && point.slug == null">{{point.selector}}</span>
 						
-						<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+						<span *ngIf="point.answer_slug != null">
+							<a *ngIf="point.selector == 'answer'" [routerLink]="['/forum/question/', point.answer_slug]">{{point.selector}}</a>
+						</span>
+						<span *ngIf="point.selector == 'answer' && point.answer_slug == null">{{point.selector}}</span>
 						got {{point.milestone}} {{point.activity}} from readers.
 					</span>
 

@@ -94,6 +94,20 @@ export class StoriesService {
 	    );
 	}
 
+	/** POST: delete story */
+	deleteStory (story_id): Observable<any> {
+
+ 		const formData = new FormData();
+    formData.append('story_id', story_id);
+			
+		const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
+
+	  return this.http.post(ADMIN_API_URL+'delete_story', formData, {headers})
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+	}
+
 	/** POST: add a new category to the database */
 	addCategory (category): Observable<any> {
 
