@@ -1,430 +1,430 @@
 <div *ngIf="dataLoading == true" style="min-height: 80vh;">
-  <!-- Loading -->
-  <content-loader>
-  <svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" speed="10"/>
-    <svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" speed="10"/>
-      <svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" speed="10"/>
-        <svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" speed="10"/>
-          <svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" speed="10"/>
-            <svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" speed="10"/>
-              <svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" speed="10"/>
-                <svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" speed="10"/>
-                  <svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" speed="10"/>
-                    <svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" speed="10"/>
-                      <svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" speed="10"/>
-                        <svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" speed="10"/>
-                          <svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" speed="10"/>
-                            <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" speed="10"/>
-                              </content-loader>
-                            </div>
-                            <!-- Section 1 (Content Blocks) -->
-                            <!-- Section 2 -->
-                            <div class="container-fluid section_2" *ngIf="featuredStories?.length > 0 && dataLoading == false">
-                              <div class="work_together_section text-center">
-                                <h3 class="home_heading_top">Tell Your Story, Inspire A Journey</h3>
-                                <div class="inner_divider"></div>
-                              </div>
-                              <div class="row">
-                                <div class="col-lg-8 col-xl-9">
-                                  <div class="big_img_wrap">
-                                    <div class="img_attribution">©
-                                      <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
-                                    </div>
-                                    <a href="#" [routerLink]="['/story/', featuredStories[0].slug]">
-                                      <img [src]="featuredStories[0].preview_image" [alt]="featuredStories[0].preview_title">
-                                    </a>
-                                  </div>
-                                </div>
-                                <div class="col-lg-4 col-xl-3">
-                                  <div class="right_line">
-                                    <div class="right_inner">
-                                      <a href="#" [routerLink]="['/story/', featuredStories[0].slug]" class="right_ancor">
-                                        <span class="diamond_text">
-                                          <span class="diamond_content">Featured Story</span>
-                                        </span>
-                                        <h3>{{featuredStories[0].preview_title}}</h3>
-                                        <div class="inner_divider"></div>
-                                        <p [innerHtml]="(featuredStories[0].preview_subtitle?.length >=139) ? featuredStories[0].preview_subtitle+'...' : featuredStories[0].preview_subtitle"></p>
-                                      </a>
-                                      <div class="inner_link_bottom">
-                                        <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
-                                      </div>
-                                      <div class="right_inner_footer">
-                                        <div class="right_inner_footer_top">
-                                          <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
-                                          <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
-                                          <!-- <a href="#" class="coubt2">Indigenous</a> -->
-                                          <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
-                                        </div>
-                                        <div class="right_inner_footer_bottom">
-                                          <ul>
-                                            <li>
-                                              <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[0].liked > 0">
-                                              <img src="assets/img/like.png" alt="" *ngIf="featuredStories[0].liked == 0">
-                                              {{featuredStories[0].likes}}
-                                            </li>
-                                            <li class="bookmark">
-                                              <div class="share_img_wrap">
-                                                <img src="assets/img/bookmark.png" alt="">
-                                                <div class="social_wrap">
-                                                  <ul>
-                                                    <li (click)="share(featuredStories[0].story_id, 'facebook')">
-                                                      <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[0].shareSlug" target="_blank">
-                                                        
-                                                        <img src="assets/img/facebook.png" [alt]="featuredStories[0].preview_title">
-                                                      </a>
-                                                    </li>
-                                                    <li (click)="share(featuredStories[0].story_id, 'twitter')">
-                                                      <a [href]="'http://twitter.com/share?text='+featuredStories[0].preview_title+'&url='+featuredStories[0].shareSlug" target="_blank">
-                                                        <img src="assets/img/twtr.png" [alt]="featuredStories[0].preview_title">
-                                                      </a>
-                                                    </li>
-                                                    <li (click)="share(featuredStories[0].story_id, 'linkedin')">
-                                                      <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[0].shareSlug+'&title='+featuredStories[0].preview_title+'&source=LinkedIn'" target="_blank">
-                                                        <img src="assets/img/linkedIn.png" [alt]="featuredStories[0].preview_title">
-                                                      </a>
-                                                    </li>
-                                                  </ul>
-                                                </div>
-                                              </div>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Section 2 -->
-                            <!-- Section 3 (Featured Stories) -->
-                            <div class="container-fluid feature_story_title_wrap" *ngIf="featuredStories?.length > 1 && dataLoading == false">
-                              <div class="row1">
-                                <div class="col-md-12">
-                                  <h2>Featured Stories</h2>
-                                </div>
-                              </div>
-                            </div>
-                            <div *ngIf="dataLoading == false" class="container-fluid feature_story_wrap">
-                              <div class="row" *ngIf="featuredStories?.length > 1">
-                                <div class="col-md-12">
-                                  <div class="row">
-                                    <div class="col-md-6">
-                                      <a href="#" [routerLink]="['/story/', featuredStories[1].slug]" *ngIf="featuredStories?.length > 1">
-                                        <div class="story_box" *ngIf="featuredStories?.length > 1">
-                                          <div class="sb_img_big_wrap">
-                                            <div class="wp_big" [ngStyle]="{'background-image': 'url('+featuredStories[1].preview_image+')'}"></div>
-                                            <!-- <img src="assets/img/story_big.jpg" alt=""> -->
-                                            <div class="overlay_dark"></div>
-                                            <div class="story_content_wrap">
-                                              <div class="st_content_top">
-                                                <div class="story_tag_wrap">
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[1].type == 1">Workplace</a>
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[1].type == 2">Business</a>
-                                                  <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                                  <a *ngFor="let tag of featuredStories[1].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
-                                                </div>
-                                                <h3>{{featuredStories[1].preview_title}}</h3>
-                                              </div>
-                                              <p [innerHtml]="(featuredStories[1].preview_subtitle?.length >=139) ? featuredStories[1].preview_subtitle+'...' : featuredStories[1].preview_subtitle"></p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </a>
-                                      <div class="right_inner_footer_bottom featured">
-                                        <ul>
-                                          <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[1].story_id, 1)">
-                                            <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[1]?.liked">
-                                            <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[1]?.liked">
-                                            Recommend
-                                          </li>
-                                          <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
-                                            <img src="assets/img/like_white.png" alt="">
-                                            Recommend
-                                          </li>
-                                          <li class="bookmark">
-                                            <div class="share_img_wrap">
-                                              <img src="assets/img/bookmark.png" alt="">
-                                              <div class="social_wrap">
-                                                <ul>
-                                                  <li (click)="share(featuredStories[1].story_id, 'facebook')">
-                                                    <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[1].shareSlug" target="_blank">
-                                                      
-                                                      <img src="assets/img/facebook.png" [alt]="featuredStories[1].preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(featuredStories[1].story_id, 'twitter')">
-                                                    <a [href]="'http://twitter.com/share?text='+featuredStories[1].preview_title+'&url='+featuredStories[1].shareSlug" target="_blank">
-                                                      <img src="assets/img/twtr.png" [alt]="featuredStories[1].preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(featuredStories[1].story_id, 'linkedin')">
-                                                    <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[1].shareSlug+'&title='+featuredStories[1].preview_title+'&source=LinkedIn'" target="_blank">
-                                                      <img src="assets/img/linkedIn.png" [alt]="featuredStories[1].preview_title">
-                                                    </a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                      <a href="#" [routerLink]="['/story/', featuredStories[2].slug]" *ngIf="featuredStories?.length > 2">
-                                        <div class="story_box" *ngIf="featuredStories?.length > 2">
-                                          <div class="sb_img_small_wrap">
-                                            <div class="wp_big st_small1" [ngStyle]="{'background-image': 'url('+featuredStories[2].preview_image+')'}"></div>
-                                            <!-- <img src="assets/img/story_big.jpg" alt=""> -->
-                                            <div class="overlay_dark"></div>
-                                            <div class="story_content_wrap">
-                                              <div class="st_content_top">
-                                                <div class="story_tag_wrap">
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[2].type == 1">Workplace</a>
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[2].type == 2">Business</a>
-                                                  <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                                  <a *ngFor="let tag of featuredStories[2].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
-                                                </div>
-                                                <h3>{{featuredStories[2].preview_title}}</h3>
-                                              </div>
-                                              <p [innerHtml]="(featuredStories[2].preview_subtitle?.length >=139) ? featuredStories[2].preview_subtitle+'...' : featuredStories[2].preview_subtitle"></p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </a>
-                                      <div class="right_inner_footer_bottom featured">
-                                        <ul>
-                                          <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[2].story_id, 2)">
-                                            <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[2]?.liked">
-                                            <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[2]?.liked">
-                                            Recommend
-                                          </li>
-                                          <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
-                                            <img src="assets/img/like_white.png" alt="">
-                                            Recommend
-                                          </li>
-                                          <li class="bookmark">
-                                            <div class="share_img_wrap">
-                                              <img src="assets/img/bookmark.png" alt="">
-                                              <div class="social_wrap">
-                                                <ul>
-                                                  <li (click)="share(featuredStories[2].story_id, 'facebook')">
-                                                    <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[2].shareSlug" target="_blank">
-                                                      
-                                                      <img src="assets/img/facebook.png" [alt]="featuredStories[2].preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(featuredStories[2].story_id, 'twitter')">
-                                                    <a [href]="'http://twitter.com/share?text='+featuredStories[2].preview_title+'&url='+featuredStories[2].shareSlug" target="_blank">
-                                                      <img src="assets/img/twtr.png" [alt]="featuredStories[2].preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(featuredStories[2].story_id, 'linkedin')">
-                                                    <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[2].shareSlug+'&title='+featuredStories[2].preview_title+'&source=LinkedIn'" target="_blank">
-                                                      <img src="assets/img/linkedIn.png" [alt]="featuredStories[2].preview_title">
-                                                    </a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                      <a href="#" [routerLink]="['/story/', featuredStories[3].slug]" *ngIf="featuredStories?.length > 3">
-                                        <div class="story_box top30" *ngIf="featuredStories?.length > 3">
-                                          <div class="sb_img_small_wrap">
-                                            <div class="wp_big st_small2" [ngStyle]="{'background-image': 'url('+featuredStories[3].preview_image+')'}"></div>
-                                            <!-- <img src="assets/img/story_big.jpg" alt=""> -->
-                                            <div class="overlay_dark"></div>
-                                            <div class="story_content_wrap">
-                                              <div class="st_content_top">
-                                                <div class="story_tag_wrap">
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[3].type == 1">Workplace</a>
-                                                  <a href="#" class="dark_tag" *ngIf="featuredStories[3].type == 2">Business</a>
-                                                  <!-- <a href="#" class="light_tag">Indigenous</a> -->
-                                                  <a *ngFor="let tag of featuredStories[3].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
-                                                </div>
-                                                <h3>{{featuredStories[3].preview_title}}</h3>
-                                              </div>
-                                              <p [innerHtml]="(featuredStories[3].preview_subtitle?.length >=139) ? featuredStories[3].preview_subtitle+'...' : featuredStories[3].preview_subtitle"></p>
-                                            </div>
-                                          </div>
-                                          <div class="right_inner_footer_bottom featured">
-                                            <ul>
-                                              <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[3].story_id, 3)">
-                                                <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[3]?.liked">
-                                                <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[3]?.liked">
-                                                Recommend
-                                              </li>
-                                              <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
-                                                <img src="assets/img/like_white.png" alt="">
-                                                Recommend
-                                              </li>
-                                              <li class="bookmark">
-                                                <div class="share_img_wrap">
-                                                  <img src="assets/img/bookmark.png" alt="">
-                                                  <div class="social_wrap">
-                                                    <ul>
-                                                      <li (click)="share(featuredStories[3].story_id, 'facebook')">
-                                                        <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[3].shareSlug" target="_blank">
-                                                          
-                                                          <img src="assets/img/facebook.png" [alt]="featuredStories[3].preview_title">
-                                                        </a>
-                                                      </li>
-                                                      <li (click)="share(featuredStories[3].story_id, 'twitter')">
-                                                        <a [href]="'http://twitter.com/share?text='+featuredStories[3].preview_title+'&url='+featuredStories[3].shareSlug" target="_blank">
-                                                          <img src="assets/img/twtr.png" [alt]="featuredStories[3].preview_title">
-                                                        </a>
-                                                      </li>
-                                                      <li (click)="share(featuredStories[3].story_id, 'linkedin')">
-                                                        <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[3].shareSlug+'&title='+featuredStories[3].preview_title+'&source=LinkedIn'" target="_blank">
-                                                          <img src="assets/img/linkedIn.png" [alt]="featuredStories[3].preview_title">
-                                                        </a>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </div>
-                                              </li>
-                                            </ul>
-                                          </div>
-                                        </div>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Section 3 (Featured Stories) -->
-                            <!-- Section 4 (Stories) -->
-                            <div *ngIf="dataLoading == false" class="container-fluid feature_story_title_wrap stories_title">
-                              <div class="row1">
-                                <div class="col-md-12">
-                                  <h2>Stories</h2>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="container-fluid main_story_wrap stories_wrap_main_stories_page">
-                              <div class="row search-box-wrap">
-                                <!-- <div class="row search-box-wrap" *ngIf="searchText !== undefined && stories?.length > 0"> -->
-                                <div class="col-md-12 form-group">
-                                  <input type="search" class="search" [(ngModel)]="searchText" placeholder="Search Stories" (keyup)="startCountDown($event)" (keydown)="clearCountDown()">
-                                </div>
+<!-- Loading -->
+<content-loader>
+<svg:rect x="0" y="0" rx="3" ry="3" width="400" height="80" speed="10"/>
+<svg:rect x="0" y="90" rx="3" ry="3" width="250" height="2" speed="10"/>
+<svg:rect x="0" y="95" rx="3" ry="3" width="250" height="2" speed="10"/>
+<svg:rect x="4" y="100" rx="3" ry="3" width="220" height="2" speed="10"/>
+<svg:rect x="4" y="105" rx="3" ry="3" width="220" height="2" speed="10"/>
+<svg:rect x="4" y="110" rx="3" ry="3" width="170" height="2" speed="10"/>
+<svg:rect x="4" y="115" rx="3" ry="3" width="170" height="2" speed="10"/>
+<svg:rect x="4" y="120" rx="3" ry="3" width="250" height="2" speed="10"/>
+<svg:rect x="4" y="125" rx="3" ry="3" width="250" height="2" speed="10"/>
+<svg:rect x="4" y="130" rx="3" ry="3" width="200" height="2" speed="10"/>
+<svg:rect x="4" y="135" rx="3" ry="3" width="200" height="2" speed="10"/>
+<svg:rect x="0" y="140" rx="3" ry="3" width="80" height="2" speed="10"/>
+<svg:rect x="0" y="145" rx="3" ry="3" width="80" height="2" speed="10"/>
+  <svg:rect x="0" y="150" rx="3" ry="3" width="250" height="2" speed="10"/>
+    </content-loader>
+  </div>
+  <!-- Section 1 (Content Blocks) -->
+  <!-- Section 2 -->
+  <div class="container-fluid section_2" *ngIf="featuredStories?.length > 0 && dataLoading == false">
+    <div class="work_together_section text-center">
+      <h3 class="home_heading_top">Tell Your Story, Inspire A Journey</h3>
+      <div class="inner_divider"></div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-xl-9">
+        <div class="big_img_wrap">
+          <div class="img_attribution">©
+            <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+          </div>
+          <a href="#" [routerLink]="['/story/', featuredStories[0].slug]">
+            <img [src]="featuredStories[0].preview_image" [alt]="featuredStories[0].preview_title">
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-xl-3">
+        <div class="right_line">
+          <div class="right_inner">
+            <a href="#" [routerLink]="['/story/', featuredStories[0].slug]" class="right_ancor">
+              <span class="diamond_text">
+                <span class="diamond_content">Featured Story</span>
+              </span>
+              <h3>{{featuredStories[0].preview_title}}</h3>
+              <div class="inner_divider"></div>
+              <p [innerHtml]="(featuredStories[0].preview_subtitle?.length >=139) ? featuredStories[0].preview_subtitle+'...' : featuredStories[0].preview_subtitle"></p>
+            </a>
+            <div class="inner_link_bottom">
+              <a href="#" [routerLink]="['/author/', featuredStories[0].username]">{{featuredStories[0].first_name}} {{featuredStories[0].last_name}}</a>
+            </div>
+            <div class="right_inner_footer">
+              <div class="right_inner_footer_top">
+                <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 1">Workplace</a>
+                <a [routerLink]="['/search']" [queryParams]="{type: featuredStories[0].type}" class="coubt" *ngIf="featuredStories[0].type == 2">Business</a>
+                <!-- <a href="#" class="coubt2">Indigenous</a> -->
+                <a *ngFor="let tag of featuredStories[0].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
+              </div>
+              <div class="right_inner_footer_bottom">
+                <ul>
+                  <li>
+                    <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[0].liked > 0">
+                    <img src="assets/img/like.png" alt="" *ngIf="featuredStories[0].liked == 0">
+                    {{featuredStories[0].likes}}
+                  </li>
+                  <li class="bookmark">
+                    <div class="share_img_wrap">
+                      <img src="assets/img/bookmark.png" alt="">
+                      <div class="social_wrap">
+                        <ul>
+                          <li (click)="share(featuredStories[0].story_id, 'facebook')">
+                            <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[0].shareSlug" target="_blank">
+                              
+                              <img src="assets/img/facebook.png" [alt]="featuredStories[0].preview_title">
+                            </a>
+                          </li>
+                          <li (click)="share(featuredStories[0].story_id, 'twitter')">
+                            <a [href]="'http://twitter.com/share?text='+featuredStories[0].preview_title+'&url='+featuredStories[0].shareSlug" target="_blank">
+                              <img src="assets/img/twtr.png" [alt]="featuredStories[0].preview_title">
+                            </a>
+                          </li>
+                          <li (click)="share(featuredStories[0].story_id, 'linkedin')">
+                            <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[0].shareSlug+'&title='+featuredStories[0].preview_title+'&source=LinkedIn'" target="_blank">
+                              <img src="assets/img/linkedIn.png" [alt]="featuredStories[0].preview_title">
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Section 2 -->
+  <!-- Section 3 (Featured Stories) -->
+  <div class="container-fluid feature_story_title_wrap" *ngIf="featuredStories?.length > 1 && dataLoading == false">
+    <div class="row1">
+      <div class="col-md-12">
+        <h2>Featured Stories</h2>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="dataLoading == false" class="container-fluid feature_story_wrap">
+    <div class="row" *ngIf="featuredStories?.length > 1">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <a href="#" [routerLink]="['/story/', featuredStories[1].slug]" *ngIf="featuredStories?.length > 1">
+              <div class="story_box" *ngIf="featuredStories?.length > 1">
+                <div class="sb_img_big_wrap">
+                  <div class="wp_big" [ngStyle]="{'background-image': 'url('+featuredStories[1].preview_image+')'}"></div>
+                  <!-- <img src="assets/img/story_big.jpg" alt=""> -->
+                  <div class="overlay_dark"></div>
+                  <div class="story_content_wrap">
+                    <div class="st_content_top">
+                      <div class="story_tag_wrap">
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[1].type == 1">Workplace</a>
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[1].type == 2">Business</a>
+                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                        <a *ngFor="let tag of featuredStories[1].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
+                      </div>
+                      <h3>{{featuredStories[1].preview_title}}</h3>
+                    </div>
+                    <p [innerHtml]="(featuredStories[1].preview_subtitle?.length >=139) ? featuredStories[1].preview_subtitle+'...' : featuredStories[1].preview_subtitle"></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <div class="right_inner_footer_bottom featured">
+              <ul>
+                <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[1].story_id, 1)">
+                  <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[1]?.liked">
+                  <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[1]?.liked">
+                  Recommend
+                </li>
+                <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
+                  <img src="assets/img/like_white.png" alt="">
+                  Recommend
+                </li>
+                <li class="bookmark">
+                  <div class="share_img_wrap">
+                    <img src="assets/img/bookmark.png" alt="">
+                    <div class="social_wrap">
+                      <ul>
+                        <li (click)="share(featuredStories[1].story_id, 'facebook')">
+                          <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[1].shareSlug" target="_blank">
+                            
+                            <img src="assets/img/facebook.png" [alt]="featuredStories[1].preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(featuredStories[1].story_id, 'twitter')">
+                          <a [href]="'http://twitter.com/share?text='+featuredStories[1].preview_title+'&url='+featuredStories[1].shareSlug" target="_blank">
+                            <img src="assets/img/twtr.png" [alt]="featuredStories[1].preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(featuredStories[1].story_id, 'linkedin')">
+                          <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[1].shareSlug+'&title='+featuredStories[1].preview_title+'&source=LinkedIn'" target="_blank">
+                            <img src="assets/img/linkedIn.png" [alt]="featuredStories[1].preview_title">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="featuredStories?.length > 3">
+            <a href="#" [routerLink]="['/story/', featuredStories[2].slug]">
+              <div class="story_box" *ngIf="featuredStories?.length > 2">
+                <div class="sb_img_small_wrap">
+                  <div class="wp_big st_small1" [ngStyle]="{'background-image': 'url('+featuredStories[2].preview_image+')'}"></div>
+                  <!-- <img src="assets/img/story_big.jpg" alt=""> -->
+                  <div class="overlay_dark"></div>
+                  <div class="story_content_wrap">
+                    <div class="st_content_top">
+                      <div class="story_tag_wrap">
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[2].type == 1">Workplace</a>
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[2].type == 2">Business</a>
+                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                        <a *ngFor="let tag of featuredStories[2].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
+                      </div>
+                      <h3>{{featuredStories[2].preview_title}}</h3>
+                    </div>
+                    <p [innerHtml]="(featuredStories[2].preview_subtitle?.length >=139) ? featuredStories[2].preview_subtitle+'...' : featuredStories[2].preview_subtitle"></p>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <div class="right_inner_footer_bottom featured">
+              <ul>
+                <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[2].story_id, 2)">
+                  <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[2]?.liked">
+                  <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[2]?.liked">
+                  Recommend
+                </li>
+                <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
+                  <img src="assets/img/like_white.png" alt="">
+                  Recommend
+                </li>
+                <li class="bookmark">
+                  <div class="share_img_wrap">
+                    <img src="assets/img/bookmark.png" alt="">
+                    <div class="social_wrap">
+                      <ul>
+                        <li (click)="share(featuredStories[2].story_id, 'facebook')">
+                          <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[2].shareSlug" target="_blank">
+                            
+                            <img src="assets/img/facebook.png" [alt]="featuredStories[2].preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(featuredStories[2].story_id, 'twitter')">
+                          <a [href]="'http://twitter.com/share?text='+featuredStories[2].preview_title+'&url='+featuredStories[2].shareSlug" target="_blank">
+                            <img src="assets/img/twtr.png" [alt]="featuredStories[2].preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(featuredStories[2].story_id, 'linkedin')">
+                          <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[2].shareSlug+'&title='+featuredStories[2].preview_title+'&source=LinkedIn'" target="_blank">
+                            <img src="assets/img/linkedIn.png" [alt]="featuredStories[2].preview_title">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <a href="#" [routerLink]="['/story/', featuredStories[3].slug]" *ngIf="featuredStories?.length > 3">
+              <div class="story_box top30" *ngIf="featuredStories?.length > 3">
+                <div class="sb_img_small_wrap">
+                  <div class="wp_big st_small2" [ngStyle]="{'background-image': 'url('+featuredStories[3].preview_image+')'}"></div>
+                  <!-- <img src="assets/img/story_big.jpg" alt=""> -->
+                  <div class="overlay_dark"></div>
+                  <div class="story_content_wrap">
+                    <div class="st_content_top">
+                      <div class="story_tag_wrap">
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[3].type == 1">Workplace</a>
+                        <a href="#" class="dark_tag" *ngIf="featuredStories[3].type == 2">Business</a>
+                        <!-- <a href="#" class="light_tag">Indigenous</a> -->
+                        <a *ngFor="let tag of featuredStories[3].tags" [routerLink]="['/search/']" [queryParams]="{tag: tag.tag_id}" class="light_tag">{{tag.name}}</a>
+                      </div>
+                      <h3>{{featuredStories[3].preview_title}}</h3>
+                    </div>
+                    <p [innerHtml]="(featuredStories[3].preview_subtitle?.length >=139) ? featuredStories[3].preview_subtitle+'...' : featuredStories[3].preview_subtitle"></p>
+                  </div>
+                </div>
+                <div class="right_inner_footer_bottom featured">
+                  <ul>
+                    <li *ngIf="isLoggedIn == 'true'" (click)="featuredLike(featuredStories[3].story_id, 3)">
+                      <img src="assets/img/liked.png" alt="" *ngIf="featuredStories[3]?.liked">
+                      <img src="assets/img/like_white.png" alt="" *ngIf="!featuredStories[3]?.liked">
+                      Recommend
+                    </li>
+                    <li *ngIf="isLoggedIn != 'true'" (click)="showLoginPopup()">
+                      <img src="assets/img/like_white.png" alt="">
+                      Recommend
+                    </li>
+                    <li class="bookmark">
+                      <div class="share_img_wrap">
+                        <img src="assets/img/bookmark.png" alt="">
+                        <div class="social_wrap">
+                          <ul>
+                            <li (click)="share(featuredStories[3].story_id, 'facebook')">
+                              <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+featuredStories[3].shareSlug" target="_blank">
                                 
-                                <div class="col-md-4">
-                                  <div class="form-group">
-                                    <mat-form-field class="example-full-width">
-                                    <input type="search" placeholder="Search By Type" aria-label="tag" [(ngModel)]="searchType" matInput [matAutocomplete]="autoType" (ngModelChange)="typeSearchChanged($event)">
-                                    <mat-autocomplete #autoType="matAutocomplete" [displayWith]="displayFnType">
-                                    <mat-option *ngFor="let type of filteredTypes" [value]="type">
-                                    {{type.name}}
-                                    </mat-option>
-                                    </mat-autocomplete>
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="form-group">
-                                    <mat-form-field>
-                                      <mat-label>Select Country</mat-label>
-                                      <mat-select [(ngModel)]="selectedCountry" (ngModelChange)="countryChanged($event)">
-                                        <mat-option [value]="">
-                                          Choose Country
-                                        </mat-option>
-                                        <mat-option *ngFor="let country of allCountries" [value]="country.name">
-                                          {{country.name}}
-                                        </mat-option>
-                                      </mat-select>
-                                    </mat-form-field>
-                                  </div>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="form-group">
-                                    <mat-form-field class="example-full-width">
-                                    <input type="search" placeholder="Search By Tag" aria-label="tag" [(ngModel)]="searchTag" matInput [matAutocomplete]="auto" (ngModelChange)="tagSearchChanged($event)">
-                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                                    <mat-option *ngFor="let tag of filteredTags" [value]="tag">
-                                    {{tag.name}}
-                                    </mat-option>
-                                    </mat-autocomplete>
-                                    </mat-form-field>
-                                    <!-- <mat-form-field class="example-full-width">
-                                    <input type="search" placeholder="Search By Author" aria-label="author" [(ngModel)]="searchAuthor" matInput [matAutocomplete]="autoAuhtor" (ngModelChange)="authorSearchChanged($event)">
-                                    <mat-autocomplete #autoAuhtor="matAutocomplete" [displayWith]="displayFnAuthor">
-                                    <mat-option *ngFor="let author of filteredAuthors" [value]="author">
-                                    {{author.first_name}} {{author.last_name}}
-                                    </mat-option>
-                                    </mat-autocomplete>
-                                    </mat-form-field> -->
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div *ngIf="dataLoading == false" class="container-fluid main_story_wrap stories_wrap_main_stories_page">
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="row" *ngIf="stories?.length > 0" infiniteScroll
-                                    [infiniteScrollDistance]="2"
-                                    [infiniteScrollThrottle]="50"
-                                    (scrolled)="onScroll()">
-                                    <div class="col-md-4" *ngFor="let story of stories; let indx = index">
-                                      <div class="story_outer_wrap">
-                                        <a [routerLink]="['/story/', story.slug]">
-                                          <div class="main_story_img_wrap">
-                                            <img [src]="story.preview_image" [alt]="story.preview_title">
-                                            <div class="overlay_dark"></div>
-                                            <div class="inner_midd_wrap">
-                                              <div class="story_text_block">
-                                                <div class="story_tag_wrap">
-                                                  <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
-                                                  <span class="dark_tag" *ngIf="story.type == 2">Business</span>
-                                                  <span *ngFor="let tag of story.tags" class="light_tag">{{tag.name}}</span>
-                                                </div>
-                                                <h3>{{story.preview_title}}</h3>
-                                                <!-- <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p> -->
-                                              </div>
-                                              <p class="hide_on_hover" [innerHtml]="story.preview_subtitle"></p>
-                                            </div>
-                                          </div>
-                                        </a>
-                                        <div class="right_inner_footer_bottom">
-                                          <ul>
-                                            <li class="fl" (click)="like(story.story_id, indx)">
-                                              <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
-                                              <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0">
-                                              {{story.likes}}
-                                            </li>
-                                            <li class="bookmark fr"><div class="share_img_wrap">
-                                              <img src="assets/img/bookmark.png" alt="">
-                                              <div class="social_wrap">
-                                                <ul>
-                                                  <li (click)="share(story.story_id, 'facebook')">
-                                                    <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+story.shareSlug" target="_blank">
-                                                      
-                                                      <img src="assets/img/facebook.png" [alt]="story.preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(storry.story_id, 'twitter')">
-                                                    <a [href]="'http://twitter.com/share?text='+story.preview_title+'&url='+story.shareSlug" target="_blank">
-                                                      <img src="assets/img/twtr.png" [alt]="story.preview_title">
-                                                    </a>
-                                                  </li>
-                                                  <li (click)="share(story.story_id, 'linkedin')">
-                                                    <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+story.shareSlug+'&title='+story.preview_title+'&source=LinkedIn'" target="_blank">
-                                                      <img src="assets/img/linkedIn.png" [alt]="story.preview_title">
-                                                    </a>
-                                                  </li>
-                                                </ul>
-                                              </div>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                        <div class="clear"></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                              </div>
-                            </div>
-                          </div>
-                          <!-- Section 4 (Stories) -->
+                                <img src="assets/img/facebook.png" [alt]="featuredStories[3].preview_title">
+                              </a>
+                            </li>
+                            <li (click)="share(featuredStories[3].story_id, 'twitter')">
+                              <a [href]="'http://twitter.com/share?text='+featuredStories[3].preview_title+'&url='+featuredStories[3].shareSlug" target="_blank">
+                                <img src="assets/img/twtr.png" [alt]="featuredStories[3].preview_title">
+                              </a>
+                            </li>
+                            <li (click)="share(featuredStories[3].story_id, 'linkedin')">
+                              <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+featuredStories[3].shareSlug+'&title='+featuredStories[3].preview_title+'&source=LinkedIn'" target="_blank">
+                                <img src="assets/img/linkedIn.png" [alt]="featuredStories[3].preview_title">
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Section 3 (Featured Stories) -->
+  <!-- Section 4 (Stories) -->
+  <div *ngIf="dataLoading == false" class="container-fluid feature_story_title_wrap stories_title">
+    <div class="row1">
+      <div class="col-md-12">
+        <h2>Stories</h2>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid main_story_wrap stories_wrap_main_stories_page">
+    <div class="row search-box-wrap">
+      <!-- <div class="row search-box-wrap" *ngIf="searchText !== undefined && stories?.length > 0"> -->
+      <div class="col-md-12 form-group">
+        <input type="search" class="search" [(ngModel)]="searchText" placeholder="Search Stories" (keyup)="startCountDown($event)" (keydown)="clearCountDown()">
+      </div>
+      
+      <div class="col-md-4">
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
+          <input type="search" placeholder="Search By Type" aria-label="tag" [(ngModel)]="searchType" matInput [matAutocomplete]="autoType" (ngModelChange)="typeSearchChanged($event)">
+          <mat-autocomplete #autoType="matAutocomplete" [displayWith]="displayFnType">
+          <mat-option *ngFor="let type of filteredTypes" [value]="type">
+          {{type.name}}
+          </mat-option>
+          </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <mat-form-field>
+            <mat-label>Select Country</mat-label>
+            <mat-select [(ngModel)]="selectedCountry" (ngModelChange)="countryChanged($event)">
+              <mat-option [value]="">
+                Choose Country
+              </mat-option>
+              <mat-option *ngFor="let country of allCountries" [value]="country.name">
+                {{country.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
+          <input type="search" placeholder="Search By Tag" aria-label="tag" [(ngModel)]="searchTag" matInput [matAutocomplete]="auto" (ngModelChange)="tagSearchChanged($event)">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let tag of filteredTags" [value]="tag">
+          {{tag.name}}
+          </mat-option>
+          </mat-autocomplete>
+          </mat-form-field>
+          <!-- <mat-form-field class="example-full-width">
+          <input type="search" placeholder="Search By Author" aria-label="author" [(ngModel)]="searchAuthor" matInput [matAutocomplete]="autoAuhtor" (ngModelChange)="authorSearchChanged($event)">
+          <mat-autocomplete #autoAuhtor="matAutocomplete" [displayWith]="displayFnAuthor">
+          <mat-option *ngFor="let author of filteredAuthors" [value]="author">
+          {{author.first_name}} {{author.last_name}}
+          </mat-option>
+          </mat-autocomplete>
+          </mat-form-field> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="dataLoading == false" class="container-fluid main_story_wrap stories_wrap_main_stories_page">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row" *ngIf="stories?.length > 0" infiniteScroll
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="onScroll()">
+          <div class="col-md-4" *ngFor="let story of stories; let indx = index">
+            <div class="story_outer_wrap">
+              <a [routerLink]="['/story/', story.slug]">
+                <div class="main_story_img_wrap">
+                  <img [src]="story.preview_image" [alt]="story.preview_title">
+                  <div class="overlay_dark"></div>
+                  <div class="inner_midd_wrap">
+                    <div class="story_text_block">
+                      <div class="story_tag_wrap">
+                        <span class="dark_tag" *ngIf="story.type == 1">Workplace</span>
+                        <span class="dark_tag" *ngIf="story.type == 2">Business</span>
+                        <span *ngFor="let tag of story.tags" class="light_tag">{{tag.name}}</span>
+                      </div>
+                      <h3>{{story.preview_title}}</h3>
+                      <!-- <p class="one_liner_content" [innerHtml]="story.preview_subtitle"></p> -->
+                    </div>
+                    <p class="hide_on_hover" [innerHtml]="story.preview_subtitle"></p>
+                  </div>
+                </div>
+              </a>
+              <div class="right_inner_footer_bottom">
+                <ul>
+                  <li class="fl" (click)="like(story.story_id, indx)">
+                    <img src="assets/img/liked.png" alt="" *ngIf="story.liked > 0">
+                    <img src="assets/img/like.png" alt="" *ngIf="story.liked == 0">
+                    {{story.likes}}
+                  </li>
+                  <li class="bookmark fr"><div class="share_img_wrap">
+                    <img src="assets/img/bookmark.png" alt="">
+                    <div class="social_wrap">
+                      <ul>
+                        <li (click)="share(story.story_id, 'facebook')">
+                          <a [href]="'https://www.facebook.com/sharer/sharer.php?u='+story.shareSlug" target="_blank">
+                            
+                            <img src="assets/img/facebook.png" [alt]="story.preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(storry.story_id, 'twitter')">
+                          <a [href]="'http://twitter.com/share?text='+story.preview_title+'&url='+story.shareSlug" target="_blank">
+                            <img src="assets/img/twtr.png" [alt]="story.preview_title">
+                          </a>
+                        </li>
+                        <li (click)="share(story.story_id, 'linkedin')">
+                          <a [href]="'https://www.linkedin.com/shareArticle?mini=true&url='+story.shareSlug+'&title='+story.preview_title+'&source=LinkedIn'" target="_blank">
+                            <img src="assets/img/linkedIn.png" [alt]="story.preview_title">
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="clear"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<!-- Section 4 (Stories) -->f

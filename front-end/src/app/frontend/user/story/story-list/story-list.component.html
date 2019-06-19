@@ -38,7 +38,7 @@
 							</mat-card-content>
 							<mat-card-actions>
 							<button mat-button [routerLink]="['/user/story/edit/', story.story_id]">EDIT</button>
-							<button mat-button (click)="deleteStory(story.story_id, indx)">DELETE</button>
+							<button mat-button (click)="confirmStoryDelete(story.story_id, indx)">DELETE</button>
 							</mat-card-actions>
 							</mat-card>
 						</div>
@@ -68,6 +68,34 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+</div>
+
+
+<button #deleteStoryModal data-toggle="modal" data-target="#confirm-story-delete" [hidden]="true">Delete</button>
+<!-- The Modal -->
+<div class="modal fade" id="confirm-story-delete">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Confirm</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			
+			<!-- Modal body -->
+			<div class="modal-body">
+				<p>Confirm to delete this story.</p>
+			</div>
+			
+			<!-- Modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success" data-dismiss="modal" (click)="deleteStory(deleteStoryId, deleteStoryIndex)">Confirm</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+			
 		</div>
 	</div>
 </div>

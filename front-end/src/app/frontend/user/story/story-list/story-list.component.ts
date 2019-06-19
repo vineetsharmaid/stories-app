@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -14,8 +14,11 @@ export class StoryListComponent implements OnInit {
 	public viewType: string;
 	public draftStories: Array<object>;
 	public publishedStories: Array<object>;
+  public deleteStoryId: number;
+  public deleteStoryIndex: number;
   userSubscription: Subscription;
 
+  @ViewChild('deleteStoryModal')  deleteStoryModal: ElementRef;
 
   constructor(private activatedRoute: ActivatedRoute, private storyService: StoryService) { }
  
@@ -71,6 +74,14 @@ export class StoryListComponent implements OnInit {
       this.publishedStories = [];
       console.log('error', error);
     });
+  }
+
+  confirmStoryDelete(deleteStoryId, deleteIndex) {
+
+    this.deleteStoryId     = deleteStoryId;
+    this.deleteStoryIndex  = deleteIndex;
+    
+    this.deleteStoryModal.nativeElement.click();
   }
 
 }

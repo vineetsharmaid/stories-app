@@ -58,6 +58,9 @@
                       <button class="btn btn-sm btn-success" (click)="changeStatus(0, story.story_id, story.author_id, i)">
                         Unpublish
                       </button>
+                      <button class="btn btn-sm btn-danger" (click)="confirmStoryDelete(story.story_id, i)">
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -75,6 +78,35 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+
+
+<button #deleteStoryModal data-toggle="modal" data-target="#confirm-story-delete" [hidden]="true">Delete</button>
+<!-- The Modal -->
+<div class="modal fade" id="confirm-story-delete">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p>Confirm to delete this story.</p>
+      </div>
+      
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-success" data-dismiss="modal" (click)="deleteStory(deleteStoryId, deleteStoryIndex)">Confirm</button>
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+      </div>
+      
     </div>
   </div>
 </div>
