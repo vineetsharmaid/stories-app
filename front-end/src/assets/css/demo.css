@@ -329,7 +329,7 @@ span.ng-tns-c8-2.ng-star-inserted {font-size: 21px !important;font-weight: 600;m
 
 .container-fluid.single_page_tagline_wrap.single_page_content iframe.ql-video{width: 100% !important; height: 440px !important}
 .modal-body ul li{list-style-position: inside;text-indent: -20px; padding-left: 20px;}
-
+.user_intro_box p{word-wrap: break-word;}
 /*------------------------------Responsive------------------------------*/
 @media only screen and (max-width: 1800px) {
 .nav-link{letter-spacing: 0px; padding: 50px 10px !important; font-size: 12px;}
@@ -341,6 +341,9 @@ ul.navbar-nav{padding-left: 0;}
 .nav-link{padding: 10px !important}
 .navbar-brand{width: auto;}
 .author_page .stories_wrap_full .right_inner_footer_bottom li{margin-bottom: 10px}
+}
+@media only screen and (max-width: 1200px) {
+
 }
 @media only screen and (max-width: 1100px) {
 .navbar{padding: 15px}
@@ -387,6 +390,8 @@ h1.CoFounder_heading{font-size: 34px}
 a#navbarDropdown {width: 100%;text-align: center;}
 .subscribe_wrap form input[type="submit"]{font-size: 15px}
 .theme_btn{letter-spacing: 0; font-size: 15px}
+.header_login_wrap{width: 100% !important; justify-content: center;flex-direction: column;margin: 0 !important;margin-bottom: 20px !important;}
+.add_trory_header_btn{margin-left:0px !important; margin-top: 10px}
 }
 
 @media only screen and (max-width: 767px) {
@@ -491,6 +496,5 @@ h3{font-size: 22px}
 .forgt_pass{margin-top: 20px !important}
 .top-right-nav{ right: auto !important; text-align: center; transform: translateX(-50%); left: 50%}
 
-.user_intro_box p{word-wrap: break-word;}
 }
 /*------------------------------Responsive------------------------------*/

@@ -34,19 +34,11 @@
 <div class="contact_top_wrap" *ngIf="dataLoading == false">
   <div class="container">
     <div class="row">
-      <div class="col-lg-8" [innerHtml]="page.content">
+      <div class="col-lg-12" [innerHtml]="page.content">
         
       </div>
-      <div class="col-lg-4">
-        <div class="aside-right size16">
-          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-          <p class="top20">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's. Learn <a href="#"><u>how to do an interview.</u></a></p>
-          <p class="top20"><a href="#"><u>Follow us on Twitter</u></a></p>
-          <p class="top20"><a href="#"><u>Disclosure about our interviews</u></a></p>
-        </div>
-      </div>
     </div>
-    <div class="row top70">
+    <div class="row">
       <div class="col-lg-8">
         <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
           <div class="form-row">
@@ -87,6 +79,14 @@
         </form>
       </div>
       <div class="col-lg-4">
+
+        <div class="aside-right size16">
+          <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <p class="top20">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's. Learn <a href="#"><u>how to do an interview.</u></a></p>
+          <p class="top20"><a href="#"><u>Follow us on Twitter</u></a></p>
+          <p class="top20"><a href="#"><u>Disclosure about our interviews</u></a></p>
+        </div>
+
         <div class="contact_address_wrap">
           <ul>
             <li><div class="address_icon"><img src="assets/img/location.png" alt=""></div> <p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting Lorem Ipsum is simply dummy text.</p></li>
