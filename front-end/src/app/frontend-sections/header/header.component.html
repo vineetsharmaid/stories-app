@@ -35,13 +35,15 @@
         </div>
         <div class="dropdown-menu profile" aria-labelledby="dropdownMenuButton">          
           <a href="#" class="dropdown-item" [routerLink]="['/user/']">Profile</a>
-          <a href="#" class="dropdown-item" [routerLink]="['/user/story/new']">Add Story</a>
           <a class="dropdown-item" href="#" [routerLink]="['/user/story/list']">Stories</a>          
           <a class="dropdown-item" href="#" [routerLink]="['/user/forum/list']">Community Discussions</a>
           <a class="dropdown-item" href="#" [routerLink]="['/user/points']">Points</a>
           <a href="#" class="dropdown-item" (click)="signOut()">Logout</a>
         </div>
-      </div>      
+      </div>
+
+      <a href="#" class="add_trory_header_btn" [routerLink]="['/user/story/new']">Add Story</a>
+
     </div>
     <div class="main_social_wrap">
       <ul class="team_social_list">

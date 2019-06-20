@@ -65,9 +65,9 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding
 .nik_logo .nav-link{padding:0 20px !important;}
 .nav-link:hover{color: #000 !important}
 .navbar-brand img {max-width: 250px; width: auto;}
-.header_login_wrap{margin-left: 30px}
+.header_login_wrap{margin-left: 20px; width: 170px; display: flex;align-items: center;}
 .header_login_wrap a{color: #000; font-size: 13px; padding: 0 4px}
-.header_right_wrap {width: 350px;text-align: right;display: flex; -webkit-display: flex; -moz-display: flex; -o-display: flex; justify-content: flex-end; align-items: center;}
+.header_right_wrap {width: 430px;text-align: right;display: flex; -webkit-display: flex; -moz-display: flex; -o-display: flex; justify-content: flex-end; align-items: center;}
 
 
 .login_social_wrap select{background:none; height:45px;border:none; border-bottom:1px solid #fff; border-radius:0; position:relative}
@@ -80,6 +80,9 @@ ul.navbar-nav {width: 100%;justify-content: center; align-items: center; padding
 .user_profile_dropdown a{color: #000;font-size: 15px;padding: 5px 10px;text-align: left !important;}
 .user_profile_dropdown .dropdown-menu{justify-content: flex-start;}
 .navbar-light .navbar-nav .nav-link{color: #3C4858}
+
+.add_trory_header_btn{display: inline-block; padding: 7px 20px !important; border: 1px solid #f1663b;border-radius: 20px;color: #000 !important; margin-left: 10px; transition: all .5s;}
+.add_trory_header_btn:hover{background:  #f1663b; color: #fff !important}
 
 
 
