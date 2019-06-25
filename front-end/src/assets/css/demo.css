@@ -390,7 +390,7 @@ h1.CoFounder_heading{font-size: 34px}
 a#navbarDropdown {width: 100%;text-align: center;}
 .subscribe_wrap form input[type="submit"]{font-size: 15px}
 .theme_btn{letter-spacing: 0; font-size: 15px}
-.header_login_wrap{width: 100% !important; justify-content: center;flex-direction: column;margin: 0 !important;margin-bottom: 20px !important;}
+.header_login_wrap{width: 100% !important; justify-content: center;/*flex-direction: column;*/margin: 0 !important;margin-bottom: 20px !important; margin-top: 15px !important}
 .add_trory_header_btn{margin-left:0px !important; margin-top: 10px}
 }
 
@@ -409,7 +409,7 @@ a#navbarDropdown {width: 100%;text-align: center;}
 .footer_link_wrap{display: block;}
 .footer_links_outer{width: 50%; float: left; min-height: 170px; }
 .footer_social_wrap{width: 100%; float: left;}
-.main_social_wrap .team_social_list{margin-top: 0;}
+.main_social_wrap .team_social_list{margin-top: 0; margin-left: 0}
 .header_right_wrap {width: 100%;display: block;text-align: center;}
 .right_inner p {font-size: 14px;line-height: 20px;}
 .feature_story_wrap {padding: 20px;}
