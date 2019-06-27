@@ -312,6 +312,8 @@ export class StoryService {
 
  			const formData = new FormData();
       formData.append('description_image', image);
+      console.log('image', image);
+      console.log('formData', formData);
 
       const headers = new HttpHeaders().set('Authorization', "Bearer " + localStorage.getItem('jwtToken'));
       

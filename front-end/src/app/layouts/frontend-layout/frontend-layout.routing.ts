@@ -10,6 +10,7 @@ import { TeamComponent } from '../../frontend/static-pages/team/team.component';
 import { PrivacyPolicyComponent } from '../../frontend/static-pages/privacy-policy/privacy-policy.component';
 import { TermsAndConditionsComponent } from '../../frontend/static-pages/terms-and-conditions/terms-and-conditions.component';
 import { PartnerComponent } from '../../frontend/static-pages/partner/partner.component';
+import { CompaniesComponent } from '../../frontend/static-pages/companies/companies.component';
 import { ContactComponent } from '../../frontend/static-pages/contact/contact.component';
 import { AuthorProfileComponent } from '../../frontend/author-profile/author-profile.component';
 
@@ -22,6 +23,7 @@ export const FrontendLayoutRoutes: Routes = [
     { path: 'privacy-policy',     component: PrivacyPolicyComponent },
     { path: 'terms-and-conditions',     component: TermsAndConditionsComponent },
     { path: 'partner',     component: PartnerComponent },
+    { path: 'companies',   component: CompaniesComponent },
     { path: 'contact',     component: ContactComponent },
     { path: 'author/:username', component: AuthorProfileComponent },
     { path: 'story/:slug', component: StoryDetailsComponent },
