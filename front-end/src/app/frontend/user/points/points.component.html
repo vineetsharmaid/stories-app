@@ -1,11 +1,18 @@
-<div class="container user_info_wrap">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="heading_gap">
-				<h2>Points</h2>
-			</div>
-		</div>
-		<div class="col-md-3 mb-5 text-center user-info">
+<div class="single_story_page_title">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        
+        <h1>Points</h1>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="profile_wrap_over">
+	<div class="col-md-12 text-center user-info">
       <div class="user_profile_pic_wrap">
           <img *ngIf="userInfo['profile_pic']?.length > 0" [src]="userInfo['profile_pic']" alt="">
           <img *ngIf="userInfo['profile_pic']?.length == 0" src="assets/img/forum/user_pic.png" alt="">
@@ -13,33 +20,45 @@
 
       <h3>{{userInfo['first_name']}}  {{userInfo['last_name']}}</h3>
 
-      <span class="mt-5">
+      <span class="full_span">
           <strong>{{userInfo['badge']}}</strong> ({{userInfo['points']}} Points)
       </span>
 
-      <span class="mt-5">
-        <button class="btn btn-sm btn-success" *ngIf="userInfo['points'] > 1" data-toggle="modal" data-target="#transfer-popup-form">
+      <span class="full_span">
+        <a href="javascript:void(0);" class="underline_btn" *ngIf="userInfo['points'] > 1" data-toggle="modal" data-target="#transfer-popup-form">
 					Transfer Points
-				</button>
+				</a>
       </span>
 
       <ul class="list-group list-group-flush mt-4" *ngIf="avgEngagement?.length > 0;">
       	<li class="list-group-item text-center">
       		<h5 class="m-2">Average Engagement</h5>
       	</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let engagement of avgEngagement">
-					<span class="text-left">
-						{{engagement.type}}
-					</span>
-					
-					<span class="text-right">
-						{{engagement.data}} 
-					</span>
-				</li>
-			</ul>
-		</div>
+		<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let engagement of avgEngagement">
+			<span class="text-left">
+				{{engagement.type}}
+			</span>
+			
+			<span class="text-right">
+				{{engagement.data}} 
+			</span>
+		</li>
+	</ul>
+</div>
+</div>
 
-		<div class="col-md-9 mb-5">
+<div class="container points_heading">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			<h2>Points List</h2>
+		</div>
+	</div>
+</div>
+
+<div class="container user_info_wrap">
+	<div class="row">
+
+		<div class="col-md-10 offset-md-1">
 			<ul class="list-group" *ngIf="points?.length > 0; else noPoints">
 				<li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let point of points">
 					<span *ngIf="point.activity == 'likes'">
