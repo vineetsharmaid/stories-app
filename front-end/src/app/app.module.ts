@@ -1,3 +1,4 @@
+import { GoTopButtonModule } from 'ng2-go-top-button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -5,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http'; 
 import { RouterModule } from '@angular/router';
+
 
 import { SharedService } from "./frontend/services/shared.service";
 import { QuillModule } from 'ngx-quill'
@@ -52,6 +54,7 @@ import { LinkedInSharingComponent } from './linkedin-sharing.component';
 
 @NgModule({
   imports: [
+    GoTopButtonModule,
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,

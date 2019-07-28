@@ -114,6 +114,7 @@
               <div class="story_box" *ngIf="featuredStories?.length > 1">
                 <div class="sb_img_big_wrap">
                   <div class="wp_big" [ngStyle]="{'background-image': 'url('+featuredStories[1].preview_image+')'}"></div>
+                  {{featuredStories[1].preview_image}}
                   <!-- <img src="assets/img/story_big.jpg" alt=""> -->
                   <div class="overlay_dark"></div>
                   <div class="story_content_wrap">
@@ -175,6 +176,7 @@
               <div class="story_box" *ngIf="featuredStories?.length > 2">
                 <div class="sb_img_small_wrap">
                   <div class="wp_big st_small1" [ngStyle]="{'background-image': 'url('+featuredStories[2].preview_image+')'}"></div>
+                  {{featuredStories[2].preview_image}}
                   <!-- <img src="assets/img/story_big.jpg" alt=""> -->
                   <div class="overlay_dark"></div>
                   <div class="story_content_wrap">
@@ -234,6 +236,7 @@
               <div class="story_box top30" *ngIf="featuredStories?.length > 3">
                 <div class="sb_img_small_wrap">
                   <div class="wp_big st_small2" [ngStyle]="{'background-image': 'url('+featuredStories[3].preview_image+')'}"></div>
+                  {{featuredStories[3].preview_image}}
                   <!-- <img src="assets/img/story_big.jpg" alt=""> -->
                   <div class="overlay_dark"></div>
                   <div class="story_content_wrap">

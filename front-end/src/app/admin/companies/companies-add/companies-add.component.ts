@@ -33,6 +33,7 @@ export class CompaniesAddComponent implements OnInit {
 
   		this.addCompanyForm = this.formBuilder.group({ 
   			'name': ['', Validators.required],
+  			'url': ['', Validators.required],
   			'email': ['', Validators.required],
   			'logo': ['', Validators.required] 
   		});
@@ -54,6 +55,7 @@ export class CompaniesAddComponent implements OnInit {
 				
 				var company = {
 					'name': this.addCompanyForm.get('name').value,
+					'url': this.addCompanyForm.get('url').value,
 					'email': this.addCompanyForm.get('email').value,
 					'logo': this.logoFile.file,
 				};

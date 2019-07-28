@@ -78,27 +78,14 @@
 <div class="company_logos_wrap">
   <div class="container">
     <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <h2>DON’T MISS CHECKING OUT THESE COMPANIES WHILE YOU’RE HERE</h2>
-      </div>
-    </div>
-    <div class="row">
-      <div class="colo-md-12">
+      <div class="col-md-12">
           <div class="logos_of_companies">
-              <ul>
-                  <li><a href="#"><img src="/assets/img/companies/lg1.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg2.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg3.jpg" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg4.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg5.jpg" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg6.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg7.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg8.jpg" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg9.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg10.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg11.png" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg12.jpg" alt=" "></a></li>
-                  <li><a href="#"><img src="/assets/img/companies/lg13.jpg" alt=" "></a></li>
+              <ul style="margin: 0 auto;">
+                  <li *ngFor="let company of companies">
+                    <a [href]="company.url" target="_blank">
+                      <img [src]="company['logo']" [alt]="company['name']">
+                    </a>
+                  </li>
               </ul>
           </div>
       </div>

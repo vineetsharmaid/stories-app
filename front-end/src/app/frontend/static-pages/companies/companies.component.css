@@ -12,7 +12,6 @@
 .right_inner_footer_bottom ul li img{margin-right: 5px}
 /*Section 2 Style*/
 
-
 /*Share style*/
 .share_img_wrap{display: inline-block; position: relative;}
 .social_wrap{position: absolute; background: #000; padding: 3px; bottom: 100%; border-radius: 20px; width: 120px; left: 50%; transform: translateX(-50%); visibility: hidden; transition: all .5s; opacity: 0}

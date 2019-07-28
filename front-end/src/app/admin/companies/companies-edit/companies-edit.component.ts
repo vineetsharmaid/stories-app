@@ -33,8 +33,9 @@ export class CompaniesEditComponent implements OnInit {
   		
   		this.editCompanyForm = this.formBuilder.group({ 
   			'name': ['', Validators.required],
+  			'url': ['', Validators.required],
   			'email': ['', Validators.required],
-  			'logo': ['', Validators.required] 
+  			'logo': [''] 
   		});
 
   		this.getCompany();
@@ -46,16 +47,17 @@ export class CompaniesEditComponent implements OnInit {
   	getCompany() {
 	   	
 	   	const companyId = +this.activatedRoute.snapshot.paramMap.get('companyId');
-	   	console.log('companyId', companyId);
 
 	    this.companiesService.getCompany(companyId).subscribe((response: Array<Object>) => {
 
 	      this.company = response['data'];
+	   		// console.log('this.company', this.company);
 	      
 	      this.editCompanyForm.patchValue({
 			    name: this.company['name'],
+			    url: this.company['url'],
 			    email: this.company['email'],
-			    logo: this.company['logo'],
+			    // logo: this.company['logo'],
 				});
 
 	    }, error => {
@@ -76,11 +78,14 @@ export class CompaniesEditComponent implements OnInit {
 				return;
 			} else {
 
+				let logo = typeof this.logoFile == 'undefined' ? "" : this.logoFile.file;
+
 				var company = {
 					'name': this.editCompanyForm.get('name').value,
+					'url': this.editCompanyForm.get('url').value,
 					'email': this.editCompanyForm.get('email').value,
 					'company_id': this.company['company_id'],
-					'logo': this.logoFile.file,
+					'logo': logo,
 				};
 				
 				this.companiesService.editcompany(company).subscribe((response: Array<Object>) => {

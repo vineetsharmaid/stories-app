@@ -24,6 +24,15 @@
 										</div>
 										</mat-form-field>
 						      </div>
+
+									<div class="form-group">
+										<mat-form-field class="example-full-width">
+										<input matInput formControlName="url" type="text" placeholder="URL">
+										<div *ngIf="formSubmitted && fields.url.errors" class="invalid-feedback">
+											<div *ngIf="fields.url.errors.required">URL is required</div>
+										</div>
+										</mat-form-field>
+						      </div>
 									
 									<div class="form-group">
 										<mat-form-field class="example-full-width">

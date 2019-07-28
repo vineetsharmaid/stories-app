@@ -164,6 +164,23 @@ export class UserService {
 	    );
 		}
 
+  	updatePassword(passwordData): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ "Authorization": "Bearer " + localStorage.getItem('jwtToken') })
+			};
+
+	 		const formData = new FormData();
+      formData.append('currentPassword', passwordData.currentPassword);
+      formData.append('newPassword', passwordData.newPassword);
+      formData.append('confirmPassword', passwordData.confirmPassword);
+
+			return this.http.post(USER_API_URL+'update_password/', formData, httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	submitNewsletter(data): Observable<any>{
 
 	 		const formData = new FormData();

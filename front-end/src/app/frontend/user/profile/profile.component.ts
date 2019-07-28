@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ErrorHandler, Injectable, Injector, NgZone, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { UserService } from '../../services/user.service';
 import { StoriesService } from '../../services/stories.service'
@@ -29,13 +30,20 @@ export class ProfileComponent implements OnInit {
   public coverPicFile: any;
   public profilePicFile: any;
   public addCompanyForm: FormGroup;
+  public updatePasswordForm: FormGroup;
   public companyUpdated: boolean = false;
+  public passwordUpdated: boolean = false;
+  public updatePasswordSubmitted: boolean = false;
+  public updatePasswordError: boolean = false;
+  public updatePasswordErrors: Array<string>;
 
   @ViewChild('imageInput') imageInput: ElementRef;
   @ViewChild('imageInputProfile') imageInputProfile: ElementRef;
   @ViewChild('saveCompanyModal') saveCompanyModal: ElementRef;
+  @ViewChild('closePasswordModal') closePasswordModal: ElementRef;
 
   constructor(private userService: UserService, 
+    private router: Router,
     private storiesService : StoriesService,
     private formBuilder: FormBuilder) { }
  
@@ -47,13 +55,76 @@ export class ProfileComponent implements OnInit {
       companyEmail: [' ', Validators.required],
     });
 
+    this.updatePasswordForm = this.formBuilder.group({
+
+      currentPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+    }, {validator: this.checkIfMatchingPasswords('newPassword', 'confirmPassword')});
+
   	this.getUserInfo();
     this.getUserStories();
     this.getUserStoriesCount();
   }
 
+  updatePassword() {
+
+    this.updatePasswordSubmitted = true;
+
+    // stop here if form is invalid
+    if (this.updatePasswordForm.invalid) {
+
+      console.log('Validation error.', this.updatePasswordForm);
+      return;
+    } else {
+
+      var passwordData = {
+        currentPassword: this.updatePasswordForm.get('currentPassword').value,
+        newPassword: this.updatePasswordForm.get('newPassword').value,
+        confirmPassword: this.updatePasswordForm.get('confirmPassword').value,
+      };
+
+      this.userService.updatePassword(passwordData).subscribe((response) => {
+
+        this.passwordUpdated = true;
+        this.updatePasswordError = false;
+        this.updatePasswordForm.reset();
+        setTimeout(() => {
+
+          this.closePasswordModal.nativeElement.click();
+
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('userType');
+          localStorage.removeItem('jwtToken');
+
+          this.router.navigate(['/']);
+        }, 3000);
+      }, (error) => {
+        this.updatePasswordError = true;
+        this.updatePasswordErrors = error['errorData']['error'];
+
+        console.log('error', error);
+      });
+    }
+
+  }
+
+  checkIfMatchingPasswords(passwordKey: string, passwordConfirmationKey: string) {
+    return (group: FormGroup) => {
+      let passwordInput = group.controls[passwordKey],
+          passwordConfirmationInput = group.controls[passwordConfirmationKey];
+      if (passwordInput.value !== passwordConfirmationInput.value) {
+        return passwordConfirmationInput.setErrors({notEquivalent: true})
+      }
+      else {
+          return passwordConfirmationInput.setErrors(null);
+      }
+    }
+  }
+
   // convenience getter for easy access to form fields
   get addC() { return this.addCompanyForm.controls; }
+  get updateP() { return this.updatePasswordForm.controls; }
 
   getUserInfo() {
 

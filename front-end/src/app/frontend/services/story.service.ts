@@ -199,6 +199,18 @@ export class StoryService {
 	    );
 		}
 
+  	getCompanies(): Observable<any>{
+
+			let httpOptions = {
+			  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+			};
+
+			return this.http.get(API_URL+'get_companies_for_page/', httpOptions)
+	    .pipe(
+	      catchError(this.handleError)
+	    );
+		}
+
   	getUserStoryDetails(storyId): Observable<any>{
 
 			let httpOptions = {

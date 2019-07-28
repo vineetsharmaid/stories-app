@@ -97,6 +97,7 @@ export class CompaniesService {
 
 		const formData = new FormData();		
     	formData.append('name', company.name);
+    	formData.append('url', company.url);
     	formData.append('email', company.email);
     	formData.append('logo', company.logo);
 
@@ -115,6 +116,7 @@ export class CompaniesService {
 
 		const formData = new FormData();		
     	formData.append('name', company.name);
+    	formData.append('url', company.url);
     	formData.append('email', company.email);
     	formData.append('logo', company.logo);
 

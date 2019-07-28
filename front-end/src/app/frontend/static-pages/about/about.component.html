@@ -35,7 +35,7 @@
 <div class="container-fluid about_page_wrap" *ngIf="dataLoading == false">
     <div class="container">      
         <div class="row">
-            <div class="col-md-10 offset-md-1 single_page_content" [innerHtml]="page.content">
+            <div class="col-md-10 offset-md-1 single_page_content" [innerHtml]="page.content | safeHtml">
                 
             </div>
         </div>
